@@ -23,6 +23,10 @@ https://trello.com/b/riiTpzzh/proyecto
 
 TODO
 
+### Stack Tecnologico
+
+[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/yoLUkAsss/descrutinio)
+
 
 ### Integrantes del proyecto
 
