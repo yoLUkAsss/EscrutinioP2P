@@ -1,8 +1,4 @@
-# DEscrutinio
-
-### Icono
-
-TODO
+![DEscrutinio Logo](https://github.com/yoLUkAsss/DEscrutinio/blob/master/docs/logo.png)
 
 
 ### Objetivo
