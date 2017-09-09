@@ -37,12 +37,12 @@ Inicializar TESTRPC
 testrpc
 ```
 
-Compilar:                   truffle compile
-Migracion de contratos:     truffle migrate
-Test de contratos:          truffle test
-Test de la app:             npm test
-Run dev server:             npm run start
-Build for production:       npm run build
+*** Compilar:                   truffle compile
+*** Migracion de contratos:     truffle migrate
+*** Test de contratos:          truffle test
+*** Test de la app:             npm test
+*** Run dev server:             npm run start
+*** Build for production:       npm run build
 
 La aplicación se inicia por defecto en localhost:3000
 
