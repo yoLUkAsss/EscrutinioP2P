@@ -22,6 +22,7 @@ class Election extends Component {
         return (
             <div>
                 <h2> Create New Election </h2>
+                <h2> Create New Election </h2>
                 <h4>
                     {this.state.message}
                 </h4>

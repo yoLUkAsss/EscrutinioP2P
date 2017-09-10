@@ -13,6 +13,10 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
+# Dependencias
 node_modules/
+
+# BUILD folders
 build/
+build_webpack/
 yarn-error.log

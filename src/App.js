@@ -8,6 +8,8 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 
+import Center from 'react-center'
+
 //useful functions
 //console.log(JSON.stringify(json, undefined, 2))
 //this.state.web3.toAscii(x)
@@ -53,24 +55,15 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
-        </nav>
-
-        <main className="container">
-
-          <div>
-            <Election submitName={this.instantiateContract.bind(this)}/>
-            <p>
-              Address dep:<br/>
-              {this.state.depAddress}
-            </p>
-          </div>
-
-
-        </main>
+      <Center>      
+      <div>
+        <Election submitName={this.instantiateContract.bind(this)}/>
+        <p>
+          Address dep:<br/>
+          {this.state.depAddress}
+        </p>
       </div>
+      </Center>
     );
   }
 }
