@@ -18,8 +18,10 @@ class App extends Component {
     this.state = {
       depAddress: "",
       electionName: "",
-      web3: null
+      web3: null,
+      addresses: []
     }
+    this.instantiateMesa = this.instantiateMesa.bind(this)
   }
   componentWillMount() {
     getWeb3.then(results => {
@@ -31,6 +33,7 @@ class App extends Component {
     })
   }
 
+  //inicializa el factory del contrato election
   instantiateContract(event) {
     event.preventDefault()
     const name = event.target.election.value
@@ -40,7 +43,7 @@ class App extends Component {
     election.setProvider(this.state.web3.currentProvider)
     this.state.web3.eth.getAccounts((error, accounts) => {
       election.deployed().then((instance) => {
-        console.log(JSON.stringify(instance, undefined, 2))
+        // console.log(JSON.stringify(instance, undefined, 2))
         electionInstance = instance
         return electionInstance.setName(name, {from: accounts[0]})
       }).then((setResult) => {
@@ -51,6 +54,38 @@ class App extends Component {
     })
   }
 
+  //crea una mesa utilizando el factory election
+  instantiateMesa(event) {
+    event.preventDefault()
+    // const mesa = event.target.election.value
+    const contract = require('truffle-contract')
+    // const election = contract(ElectionContract).at(this.state.depAddress)
+    const election = contract(ElectionContract)
+    // console.log(election)
+    var electionInstance
+    election.setProvider(this.state.web3.currentProvider)
+    this.state.web3.eth.getAccounts((error, accounts) => {
+      election.deployed().then((instance) => {
+        electionInstance = instance
+        // console.log(JSON.stringify(electionInstance, undefined, 2))
+        return electionInstance.createMesa.call([],[], 5, {from: accounts[0]})
+      }).then((addrs) => {
+        return this.setState({addresses : this.state.addresses.concat(addrs)})
+      })
+    })
+  }
+
+  toLi(ls){
+    console.log(ls)
+    return (<ul>
+    {
+      ls.map(x => {
+        return (<li>{x}</li>)
+      }
+    )}
+    </ul>)
+  }
+
   render() {
     return (
       <div className="App">
@@ -59,16 +94,17 @@ class App extends Component {
         </nav>
 
         <main className="container">
-
           <div>
             <Election submitName={this.instantiateContract.bind(this)}/>
             <p>
               Address dep:<br/>
               {this.state.depAddress}
             </p>
+            <button type="button" onClick={this.instantiateMesa}>
+              Create Mesa
+            </button>
+            {this.toLi(this.state.addresses)}
           </div>
-
-
         </main>
       </div>
     );
