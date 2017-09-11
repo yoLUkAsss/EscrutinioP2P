@@ -1,11 +1,12 @@
 pragma solidity ^0.4.11;
 
+import "./Mesa.sol";
+
 contract Election {
 
   address owner;
   bytes32 electionName;
-  bytes32[] participants;
-  bytes32[] candidates;
+  address[] deployedContracts;
 
   function Election () {
       owner = msg.sender;
@@ -19,16 +20,13 @@ contract Election {
     return electionName;
   }
 
-  function setElection(bytes32[] parts, bytes32[] cands) {
-    participants = parts;
-    candidates = cands;
+  function createMesa(bytes32[] participantList, bytes32[] candidateList, uint8 totalVotes) returns (address){
+    address depAddress = new Mesa(participantList, candidateList, totalVotes);
+    deployedContracts.push(depAddress);
+    return depAddress;
   }
 
-  function getParticipants() constant returns (bytes32[]){
-    return participants;
+  function getDeployedAddress() constant returns (address[]){
+    return deployedContracts;
   }
-  function getCandidates() constant returns (bytes32[]){
-    return candidates;
-  }
-
 }
