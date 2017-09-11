@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import ElectionContract from '../build/contracts/Election.json'
+import MesaContract from '../build/contracts/Mesa.json'
 import Election from './Election.js'
 import getWeb3 from './utils/getWeb3'
+import contract from 'truffle-contract'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -24,6 +26,7 @@ class App extends Component {
       addresses: []
     }
     this.instantiateMesa = this.instantiateMesa.bind(this)
+    this.getName = this.getName.bind(this)
   }
   componentWillMount() {
     getWeb3.then(results => {
@@ -39,7 +42,6 @@ class App extends Component {
   instantiateContract(event) {
     event.preventDefault()
     const name = event.target.election.value
-    const contract = require('truffle-contract')
     const election = contract(ElectionContract)
     var electionInstance
     election.setProvider(this.state.web3.currentProvider)
@@ -60,7 +62,6 @@ class App extends Component {
   instantiateMesa(event) {
     event.preventDefault()
     // const mesa = event.target.election.value
-    const contract = require('truffle-contract')
     // const election = contract(ElectionContract).at(this.state.depAddress)
     const election = contract(ElectionContract)
     // console.log(election)
@@ -70,15 +71,44 @@ class App extends Component {
       election.deployed().then((instance) => {
         electionInstance = instance
         // console.log(JSON.stringify(electionInstance, undefined, 2))
-        return electionInstance.createMesa.call([],[], 5, {from: accounts[0]})
-      }).then((addrs) => {
-        return this.setState({addresses : this.state.addresses.concat(addrs)})
+        return electionInstance.createNMesas.call([],[], 5, 5,{from: accounts[0]})
+      }).then((mesas) => {
+        console.log(mesas)
+        return this.setState({addresses : mesas})
       })
     })
   }
 
+  getName(event){
+    event.preventDefault()
+    const mesa = contract(MesaContract)
+
+    mesa.setProvider(this.state.web3.currentProvider)
+    console.log(mesa)
+    const mesaInstance = mesa.at(this.state.addresses[2])
+    console.log(mesaInstance)
+    this.state.web3.eth.getAccounts((error, accounts) => {
+      mesaInstance.getCandidates.call({from: accounts[0]}).then((candidates) => {
+        console.log(candidates)
+      })
+
+      mesaInstance.getName.call({from: accounts[0]}).then((name) => {
+        console.log(this.state.web3.toAscii(name))
+        return
+      })
+    })
+
+    // this.state.web3.eth.getAccounts((error, accounts) => {
+    //   mesa.deployed().then((instance) => {
+    //     mesaInstance = instance
+    //     return mesaInstance
+    //   }
+    // })
+
+  }
+
   toLi(ls){
-    console.log(ls)
+    // console.log(ls)
     return (<ul>
     {
       ls.map(x => {
@@ -90,7 +120,7 @@ class App extends Component {
 
   render() {
     return (
-      <Center>      
+      <Center>
       <div>
         <Election submitName={this.instantiateContract.bind(this)}/>
         <p>
@@ -101,6 +131,9 @@ class App extends Component {
           Create Mesa
         </button>
         {this.toLi(this.state.addresses)}
+        <button type="button" onClick={this.getName}>
+          Get Name
+        </button>
       </div>
       </Center>
     );

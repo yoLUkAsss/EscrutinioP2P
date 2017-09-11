@@ -6,7 +6,7 @@ contract Election {
 
   address owner;
   bytes32 electionName;
-  address[] deployedContracts;
+  address[] mesas;
 
   function Election () {
       owner = msg.sender;
@@ -21,12 +21,20 @@ contract Election {
   }
 
   function createMesa(bytes32[] participantList, bytes32[] candidateList, uint8 totalVotes) returns (address){
-    address depAddress = new Mesa(participantList, candidateList, totalVotes);
+    return new Mesa(participantList, candidateList, totalVotes);
+    /*address depAddress = new Mesa(participantList, candidateList, totalVotes);
     deployedContracts.push(depAddress);
-    return depAddress;
+    return depAddress;*/
   }
 
-  function getDeployedAddress() constant returns (address[]){
-    return deployedContracts;
+  function createNMesas(bytes32[] participantList, bytes32[] candidateList, uint8 totalVotes, uint cantidadDeMesas) returns (address[]){
+    for(uint8 i=0; i<cantidadDeMesas; i++){
+      mesas.push(createMesa(participantList, candidateList, totalVotes));
+    }
+    return mesas;
+  }
+
+  function getMesas() constant returns (address[]){
+    return mesas;
   }
 }
