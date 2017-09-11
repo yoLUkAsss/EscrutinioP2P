@@ -1,5 +1,6 @@
 //var Contract = artifacts.require("./path/to/Contract.sol");
 var Election = artifacts.require("./Election.sol");
+
 module.exports = function(deployer) {
   //deployer.deploy(SimpleStorage);
 
@@ -10,5 +11,4 @@ module.exports = function(deployer) {
    *
    */
    deployer.deploy(Election);
-
 };

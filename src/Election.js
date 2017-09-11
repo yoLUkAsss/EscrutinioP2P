@@ -5,7 +5,7 @@ class Election extends Component {
         super();
         this.state = {
             name: 'Not election yet',
-            message : ''
+            message : '',
         };
         this.showName = this.showName.bind(this);
     }
@@ -17,6 +17,7 @@ class Election extends Component {
             message: 'Preselected name: ' + event.target.value
         });
     }
+
 
     render () {
         return (
