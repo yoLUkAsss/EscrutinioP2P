@@ -8,9 +8,7 @@ cache:
     - node_modules
 
 before_install:
-  - npm install -g ethereumjs-testrpc
-  - testrpc &
-  - truffle migrate
+  - truffle migrate dev
 
 script:
   - truffle test
