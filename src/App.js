@@ -70,8 +70,12 @@ class App extends Component {
     this.state.web3.eth.getAccounts((error, accounts) => {
       election.deployed().then((instance) => {
         electionInstance = instance
-        // console.log(JSON.stringify(electionInstance, undefined, 2))
-        return electionInstance.createNMesas.call([],[], 5, 5,{from: accounts[0]})
+        return electionInstance.createNMesas.estimateGas([], [], 5, 5, {from: accounts[0]})
+      }).then((gasEstimated) => {
+        return electionInstance.createNMesas.sendTransaction([],[], 5, 5,{from: accounts[0], gas: gasEstimated})
+      }).then((idTx) => {
+        console.log(idTx)
+        return electionInstance.getMesas.call({from: accounts[0]})
       }).then((mesas) => {
         console.log(mesas)
         return this.setState({addresses : mesas})
@@ -82,16 +86,9 @@ class App extends Component {
   getName(event){
     event.preventDefault()
     const mesa = contract(MesaContract)
-
     mesa.setProvider(this.state.web3.currentProvider)
-    console.log(mesa)
     const mesaInstance = mesa.at(this.state.addresses[2])
-    console.log(mesaInstance)
     this.state.web3.eth.getAccounts((error, accounts) => {
-      mesaInstance.getCandidates.call({from: accounts[0]}).then((candidates) => {
-        console.log(candidates)
-      })
-
       mesaInstance.getName.call({from: accounts[0]}).then((name) => {
         console.log(this.state.web3.toAscii(name))
         return

@@ -20,18 +20,16 @@ contract Election {
     return electionName;
   }
 
-  function createMesa(bytes32[] participantList, bytes32[] candidateList, uint8 totalVotes) returns (address){
+  /*function createMesa(bytes32[] participantList, bytes32[] candidateList, uint8 totalVotes) {
     return new Mesa(participantList, candidateList, totalVotes);
-    /*address depAddress = new Mesa(participantList, candidateList, totalVotes);
-    deployedContracts.push(depAddress);
-    return depAddress;*/
   }
+  */
 
-  function createNMesas(bytes32[] participantList, bytes32[] candidateList, uint8 totalVotes, uint cantidadDeMesas) returns (address[]){
+  function createNMesas(bytes32[] participantList, bytes32[] candidateList, uint8 totalVotes, uint cantidadDeMesas){
     for(uint8 i=0; i<cantidadDeMesas; i++){
-      mesas.push(createMesa(participantList, candidateList, totalVotes));
+      mesas.push(new Mesa(participantList, candidateList, totalVotes));
     }
-    return mesas;
+    /*return mesas;*/
   }
 
   function getMesas() constant returns (address[]){
