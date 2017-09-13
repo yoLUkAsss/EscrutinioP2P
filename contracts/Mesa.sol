@@ -8,7 +8,6 @@ contract Mesa {
         mapping (bytes32 => uint8) votes;
     }
 
-    bytes32 name;
     address owner;
     uint8 total;
     bytes32[] candidateList;
@@ -18,7 +17,6 @@ contract Mesa {
     // Constructor... msg.sender es duenio de mesa
     function Mesa(bytes32[] inputParticipants, bytes32[] inputCandidates, uint8 inputTotalVotes){
         owner = msg.sender;
-        name = "Mesa";
         total = inputTotalVotes;
         participantList = inputParticipants;
         candidateList = inputCandidates;
@@ -47,9 +45,5 @@ contract Mesa {
     }
     function getParticipantDataVotesForCandidate(bytes32 participant, bytes32 candidate) constant returns (uint8){
         return participants[participant].votes[candidate];
-    }
-
-    function getName() returns (bytes32) {
-      return name;
     }
 }
