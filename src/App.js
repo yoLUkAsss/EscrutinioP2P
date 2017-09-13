@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import ElectionContract from '../build/contracts/Election.json'
-import MesaContract from '../build/contracts/Mesa.json'
 import Election from './Election.js'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
+
+import MesaForm from './MesaForm.js'
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -25,8 +26,7 @@ class App extends Component {
       web3: null,
       addresses: []
     }
-    this.instantiateMesa = this.instantiateMesa.bind(this)
-    this.getName = this.getName.bind(this)
+    this.updateMesas = this.updateMesas.bind(this)
   }
   componentWillMount() {
     getWeb3.then(results => {
@@ -39,7 +39,7 @@ class App extends Component {
   }
 
   //inicializa el factory del contrato election
-  instantiateContract(event) {
+  createElection(event) {
     event.preventDefault()
     const name = event.target.election.value
     const election = contract(ElectionContract)
@@ -58,54 +58,22 @@ class App extends Component {
     })
   }
 
-  //crea una mesa utilizando el factory election
-  instantiateMesa(event) {
+  updateMesas(event) {
     event.preventDefault()
-    // const mesa = event.target.election.value
-    // const election = contract(ElectionContract).at(this.state.depAddress)
     const election = contract(ElectionContract)
-    // console.log(election)
     var electionInstance
     election.setProvider(this.state.web3.currentProvider)
     this.state.web3.eth.getAccounts((error, accounts) => {
       election.deployed().then((instance) => {
         electionInstance = instance
-        return electionInstance.createNMesas.estimateGas([], [], 5, 5, {from: accounts[0]})
-      }).then((gasEstimated) => {
-        return electionInstance.createNMesas.sendTransaction([],[], 5, 5,{from: accounts[0], gas: gasEstimated})
-      }).then((idTx) => {
-        console.log(idTx)
-        return electionInstance.getMesas.call({from: accounts[0]})
+        return electionInstance.getMesas.call(accounts[0])
       }).then((mesas) => {
-        console.log(mesas)
-        return this.setState({addresses : mesas})
+        return this.setState({addresses: mesas})
       })
     })
-  }
-
-  getName(event){
-    event.preventDefault()
-    const mesa = contract(MesaContract)
-    mesa.setProvider(this.state.web3.currentProvider)
-    const mesaInstance = mesa.at(this.state.addresses[2])
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      mesaInstance.getName.call({from: accounts[0]}).then((name) => {
-        console.log(this.state.web3.toAscii(name))
-        return
-      })
-    })
-
-    // this.state.web3.eth.getAccounts((error, accounts) => {
-    //   mesa.deployed().then((instance) => {
-    //     mesaInstance = instance
-    //     return mesaInstance
-    //   }
-    // })
-
   }
 
   toLi(ls){
-    // console.log(ls)
     return (<ul>
     {
       ls.map(x => {
@@ -119,18 +87,16 @@ class App extends Component {
     return (
       <Center>
       <div>
-        <Election submitName={this.instantiateContract.bind(this)}/>
+        <Election submitName={this.createElection.bind(this)}/>
         <p>
-          Address dep:<br/>
+          Direccion de la eleccion:<br/>
           {this.state.depAddress}
         </p>
-        <button type="button" onClick={this.instantiateMesa}>
-          Create Mesa
+        <button type="button" onClick={this.updateMesas}>
+          Ver direcciones de las mesas
         </button>
         {this.toLi(this.state.addresses)}
-        <button type="button" onClick={this.getName}>
-          Get Name
-        </button>
+        <MesaForm/>
       </div>
       </Center>
     );
