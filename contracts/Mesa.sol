@@ -44,12 +44,21 @@ contract Mesa {
         return participantMap[participant].counts;
     }
 
-    function getParticipantVotes(bytes32 participant) constant returns (bytes32[], uint8[]){
-      uint8[] memory vls = new uint8[](candidateList.length);
-      for(uint i=0; i<candidateList.length; i++){
-        vls[i] = participantMap[participant].votes[candidateList[i]];
+    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) constant returns (uint8){
+      if(isValidParticipant(participant) && isValidCandidate(candidate)){
+        //return participantMap[participant].votes[candidate];
+        return participantMap[participant].counts;
       }
-      return (candidateList, vls);
+      return 0;
+    }
+
+    function isValidCandidate(bytes32 candidate) constant returns (bool){
+      for(uint i=0; i < candidateList.length; i++){
+        if(candidate == candidateList[i]){
+          return true;
+        }
+      }
+      return false;
     }
 
     function isValidParticipant(bytes32 participant) constant returns (bool){
@@ -63,6 +72,7 @@ contract Mesa {
 
     function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos) returns (bool){
       if(isValidParticipant(participant)){
+        participantMap[participant].counts += votos;
         participantMap[participant].votes[candidato] = votos;
         return true;
       } else {

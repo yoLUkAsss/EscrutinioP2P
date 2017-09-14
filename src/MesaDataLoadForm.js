@@ -11,12 +11,14 @@ class MesaDataLoadForm extends Component {
         super();
         this.state = {
           nombreParticipante : '',
+          nombreCandidato : '',
           mesaAddress: '',
           candidatos : [],
           web3 : null
         }
         this.handleCargarMesa = this.handleCargarMesa.bind(this)
         this.handleBuscarMesa = this.handleBuscarMesa.bind(this)
+        this.handleBuscarInfoDeParticipante = this.handleBuscarInfoDeParticipante.bind(this)
     }
 
     componentWillMount() {
@@ -44,6 +46,9 @@ class MesaDataLoadForm extends Component {
       })
       this.setState({ candidatos: newCandidatos})
     }
+    handleNombreCandidatoChange = (event) => {
+      this.setState({nombreCandidato : event.target.value})
+    }
     ////////////////////////////////////////////////////////////////////////////////
     // for(var i = 0; i < this.state.candidatos.length; i++){
     // }
@@ -62,10 +67,10 @@ class MesaDataLoadForm extends Component {
           cnd = this.state.candidatos[0]
           console.log(mesaInstance)
           console.log("antes de estimar")
-          return mesaInstance.loadVotesForParticipant.estimateGas("pepe", "pepe", 10, {from:accounts[0]})
+          return mesaInstance.loadVotesForParticipant.estimateGas(this.state.nombreParticipante, cnd.name, cnd.counts, {from:accounts[0]})
         }).then((gasEstimated) => {
           console.log("desupues de estimar")
-          return mesaInstance.loadVotesForParticipant.sendTransaction("pepe", "pepe", 10, {from:accounts[0], gas: gasEstimated})
+          return mesaInstance.loadVotesForParticipant.sendTransaction(this.state.nombreParticipante, cnd.name, cnd.counts, {from:accounts[0], gas: gasEstimated})
         }).then((wasLoaded) => {
           if(wasLoaded){
             console.log("cargado correctamente")
@@ -95,7 +100,24 @@ class MesaDataLoadForm extends Component {
           })
           return this.setState({candidatos : res})
           })
+      })
+    }
+
+    handleBuscarInfoDeParticipante = (event) => {
+      event.preventDefault()
+      var mesaInstance
+      const mesa = contract(MesaContract)
+      mesa.setProvider(this.state.web3.currentProvider)
+      this.state.web3.eth.getAccounts((error, accounts) => {
+        mesa.at(this.state.mesaAddress).then((mInstance) => {
+          mesaInstance = mInstance
+          console.log("antes de buscar votos")
+          return mesaInstance.getParticipantVotesForACandidate.call(this.state.nombreParticipante, this.state.nombreCandidato, {from : accounts[0]})
+        }).then((obj) => {
+          //this.state.web3.toAscii(x)
+          console.log(obj)
         })
+      })
     }
 
     render () {
@@ -134,6 +156,24 @@ class MesaDataLoadForm extends Component {
                 ))}
                 <button>Cargar Mesa</button>
             </form>
+
+            <form onSubmit={this.handleBuscarInfoDeParticipante}>
+            <h2>Buscar Info de participante</h2>
+              <input
+                type="text"
+                placeholder="Nombre del participante"
+                value={this.state.nombreParticipante}
+                onChange={this.handleNombreParticipanteChange}
+              />
+              <input
+                type="text"
+                placeholder="Nombre del candidato"
+                value={this.state.nombreCandidato}
+                onChange={this.handleNombreCandidatoChange}
+              />
+              <button>Buscar Info</button>
+            </form>
+
           </div>
         );
     }
