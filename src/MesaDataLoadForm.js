@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import ElectionContract from '../build/contracts/Election.json'
+// import ElectionContract from '../build/contracts/Election.json'
 import MesaContract from '../build/contracts/Mesa.json'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
+
+// const util = require('ethereumjs-util');
 
 class MesaDataLoadForm extends Component {
     constructor() {
@@ -13,6 +15,8 @@ class MesaDataLoadForm extends Component {
           candidatos : [],
           web3 : null
         }
+        this.handleCargarMesa = this.handleCargarMesa.bind(this)
+        this.handleBuscarMesa = this.handleBuscarMesa.bind(this)
     }
 
     componentWillMount() {
@@ -25,13 +29,14 @@ class MesaDataLoadForm extends Component {
       })
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //Manejan los cambios del nomre de participante y de la mesa y de los conteos
     handleNombreParticipanteChange = (event) => {
       this.setState({nombreParticipante : event.target.value})
     }
     handleMesaAddressChange = (evt) => {
       this.setState({mesaAddress : evt.target.value})
     }
-
     handleCandidatoCountsChange = (idx) => (evt) => {
       const newCandidatos = this.state.candidatos.map((candidato, pidx) => {
         if (idx !== pidx) return candidato
@@ -39,22 +44,34 @@ class MesaDataLoadForm extends Component {
       })
       this.setState({ candidatos: newCandidatos})
     }
-
+    ////////////////////////////////////////////////////////////////////////////////
+    // for(var i = 0; i < this.state.candidatos.length; i++){
+    // }
+    //this.state.web3.toHex(cnd.name)
+    //this.state.nombreParticipante
+    // no funciona hay un error en alguno de los parametros del load
     handleCargarMesa(event){
       event.preventDefault()
-      // var address = event.target.value
       var mesaInstance
+      var cnd
       const mesa = contract(MesaContract)
       mesa.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
         mesa.at(this.state.mesaAddress).then((mInstance) => {
           mesaInstance = mInstance
+          cnd = this.state.candidatos[0]
           console.log(mesaInstance)
-          // for(var i = 0; i < this.state.candidatos.length; i++){
-          // }
-            mesaInstance.loadVotesForParticipant.estimateGas(this.state.nombreParticipante, this.state.candidatos[0].name, this.state.candidatos[0].counts, {from:accounts[0]}).then((gasEstimated) => {
-              return mesaInstance.loadVotesForParticipant.sendTransaction(this.state.nombreParticipante, this.state.candidatos[0].name, this.state.candidatos[0].counts, {from:accounts[0], gas: gasEstimated})
-            })
+          console.log("antes de estimar")
+          return mesaInstance.loadVotesForParticipant.estimateGas("pepe", "pepe", 10, {from:accounts[0]})
+        }).then((gasEstimated) => {
+          console.log("desupues de estimar")
+          return mesaInstance.loadVotesForParticipant.sendTransaction("pepe", "pepe", 10, {from:accounts[0], gas: gasEstimated})
+        }).then((wasLoaded) => {
+          if(wasLoaded){
+            console.log("cargado correctamente")
+          } else{
+            console.log("no fue cargado")
+          }
         })
       })
     }
@@ -68,13 +85,12 @@ class MesaDataLoadForm extends Component {
       mesa.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
         mesa.at(this.state.mesaAddress).then((mInstance) => {
+          console.log(mInstance)
           mesaInstance = mInstance
-          console.log(mesaInstance)
           return mesaInstance.getCandidates.call(accounts[0])
         }).then((cands) => {
-          console.log(cands)
           //this.state.web3.toAscii(x)
-          var res = cands.map(c => {
+          const res = cands.map(c => {
             return {name: this.state.web3.toAscii(c), counts: 0}
           })
           return this.setState({candidatos : res})
@@ -96,27 +112,27 @@ class MesaDataLoadForm extends Component {
               <button>Buscar Mesa</button>
             </form>
             <form onSubmit={this.handleCargarMesa}>
-            <h2>Cargar Mesa</h2>
-              <input
-                type="text"
-                placeholder="Nombre del participante"
-                value={this.state.nombreParticipante}
-                onChange={this.handleNombreParticipanteChange}
-              />
-              <h4>Candidatos</h4>
-              {this.state.candidatos.map((candidato, idx) => (
-                <div className="candidatos">
-                <label htmlFor={`count${idx}`}>{`Candidato #${idx + 1} ${candidato.name}`}</label>
-                  <input
-                    type="number"
-                    id={`count${idx}`}
-                    placeholder={`Candidato #${idx + 1} counts`}
-                    value={candidato.counts}
-                    onChange={this.handleCandidatoCountsChange(idx)}
-                  />
-                </div>
-              ))}
-              <button>Cargar Mesa</button>
+              <h2>Cargar Mesa</h2>
+                <input
+                  type="text"
+                  placeholder="Nombre del participante"
+                  value={this.state.nombreParticipante}
+                  onChange={this.handleNombreParticipanteChange}
+                />
+                <h4>Candidatos</h4>
+                {this.state.candidatos.map((candidato, idx) => (
+                  <div className="candidatos">
+                  <label htmlFor={`count${idx}`}>{`Candidato #${idx + 1} ${candidato.name}`}</label>
+                    <input
+                      type="number"
+                      id={`count${idx}`}
+                      placeholder={`Candidato #${idx + 1} counts`}
+                      value={candidato.counts}
+                      onChange={this.handleCandidatoCountsChange(idx)}
+                    />
+                  </div>
+                ))}
+                <button>Cargar Mesa</button>
             </form>
           </div>
         );
