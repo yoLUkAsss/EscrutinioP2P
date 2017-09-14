@@ -43,7 +43,17 @@ contract Mesa {
     function getParticipantDataCounts(bytes32 participant) constant returns (uint8){
         return participants[participant].counts;
     }
-    function getParticipantDataVotesForCandidate(bytes32 participant, bytes32 candidate) constant returns (uint8){
-        return participants[participant].votes[candidate];
+
+    function getParticipantVotes(bytes32 participant) constant returns (bytes32[], uint8[]){
+      uint8[] memory vls = new uint8[](candidateList.length);
+      for(uint i=0; i<candidateList.length; i++){
+        vls[i] = participants[participant].votes[candidateList[i]];
+      }
+      return (candidateList, vls);
     }
+
+    function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos){
+      participants[participant].votes[candidato] = votos;
+    }
+
 }

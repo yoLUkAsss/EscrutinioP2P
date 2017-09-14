@@ -67,12 +67,14 @@ class MesaForm extends Component {
       const election = contract(ElectionContract)
       var electionInstance
       election.setProvider(this.state.web3.currentProvider)
+      var ps = this.state.participantes.map(x => {return x.name}).filter(x => {return x !== ""})
+      var cs = this.state.candidatos.map(x => {return x.name}).filter(x => {return x !== ""})
       this.state.web3.eth.getAccounts((error, accounts) => {
         election.deployed().then((instance) => {
           electionInstance = instance
-          return electionInstance.createNMesas.estimateGas(this.state.participantes, this.state.candidatos, 10, 1, {from: accounts[0]})
+          return electionInstance.createNMesas.estimateGas(ps, cs, 10, 1, {from: accounts[0]})
         }).then((gasEstimated) => {
-          return electionInstance.createNMesas.sendTransaction(this.state.participantes, this.state.candidatos, 10, 1, {from: accounts[0], gas: gasEstimated})
+          return electionInstance.createNMesas.sendTransaction(ps, cs, 10, 1, {from: accounts[0], gas: gasEstimated})
         })
       })
     }

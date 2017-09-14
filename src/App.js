@@ -5,6 +5,8 @@ import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
 
 import MesaForm from './MesaForm.js'
+import MesaDataLoadForm from './MesaDataLoadForm.js'
+
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -97,6 +99,9 @@ class App extends Component {
         </button>
         {this.toLi(this.state.addresses)}
         <MesaForm/>
+
+        <MesaDataLoadForm/>
+
       </div>
       </Center>
     );
