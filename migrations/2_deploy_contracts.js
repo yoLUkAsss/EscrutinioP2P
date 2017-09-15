@@ -1,8 +1,9 @@
 //var Contract = artifacts.require("./path/to/Contract.sol");
+var SimpleStorage = artifacts.require("./SimpleStorage.sol");
 var Election = artifacts.require("./Election.sol");
 // var Mesa = artifacts.require("./Mesa.sol");
 module.exports = function(deployer) {
-  //deployer.deploy(SimpleStorage);
+  deployer.deploy(SimpleStorage);
 
   /**
    * Example of use :
