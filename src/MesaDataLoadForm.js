@@ -6,19 +6,21 @@ import contract from 'truffle-contract'
 
 // const util = require('ethereumjs-util');
 
+import Center from 'react-center'
+
 class MesaDataLoadForm extends Component {
     constructor() {
         super();
         this.state = {
           nombreParticipante : '',
           nombreCandidato : '',
+          candidatoAValidar : '',
           mesaAddress: '',
           candidatos : [],
           web3 : null
         }
         this.handleCargarMesa = this.handleCargarMesa.bind(this)
         this.handleBuscarMesa = this.handleBuscarMesa.bind(this)
-        this.handleBuscarInfoDeParticipante = this.handleBuscarInfoDeParticipante.bind(this)
     }
 
     componentWillMount() {
@@ -38,6 +40,9 @@ class MesaDataLoadForm extends Component {
     }
     handleMesaAddressChange = (evt) => {
       this.setState({mesaAddress : evt.target.value})
+    }
+    handleCandidatoAValidar = (evt) => {
+      this.setState({candidatoAValidar : evt.target.value})
     }
     handleCandidatoCountsChange = (idx) => (evt) => {
       const newCandidatos = this.state.candidatos.map((candidato, pidx) => {
@@ -66,10 +71,8 @@ class MesaDataLoadForm extends Component {
           mesaInstance = mInstance
           cnd = this.state.candidatos[0]
           console.log(mesaInstance)
-          console.log("antes de estimar")
           return mesaInstance.loadVotesForParticipant.estimateGas(this.state.nombreParticipante, cnd.name, cnd.counts, {from:accounts[0]})
         }).then((gasEstimated) => {
-          console.log("desupues de estimar")
           return mesaInstance.loadVotesForParticipant.sendTransaction(this.state.nombreParticipante, cnd.name, cnd.counts, {from:accounts[0], gas: gasEstimated})
         }).then((wasLoaded) => {
           if(wasLoaded){
@@ -90,7 +93,6 @@ class MesaDataLoadForm extends Component {
       mesa.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
         mesa.at(this.state.mesaAddress).then((mInstance) => {
-          console.log(mInstance)
           mesaInstance = mInstance
           return mesaInstance.getCandidates.call(accounts[0])
         }).then((cands) => {
@@ -98,31 +100,20 @@ class MesaDataLoadForm extends Component {
           const res = cands.map(c => {
             return {name: this.state.web3.toAscii(c), counts: 0}
           })
+          console.log(JSON.stringify(res, undefined, 2))
           return this.setState({candidatos : res})
-          })
-      })
-    }
-
-    handleBuscarInfoDeParticipante = (event) => {
-      event.preventDefault()
-      var mesaInstance
-      const mesa = contract(MesaContract)
-      mesa.setProvider(this.state.web3.currentProvider)
-      this.state.web3.eth.getAccounts((error, accounts) => {
-        mesa.at(this.state.mesaAddress).then((mInstance) => {
-          mesaInstance = mInstance
-          console.log("antes de buscar votos")
-          return mesaInstance.getParticipantVotesForACandidate.call(this.state.nombreParticipante, this.state.nombreCandidato, {from : accounts[0]})
-        }).then((obj) => {
-          //this.state.web3.toAscii(x)
-          console.log(obj)
         })
       })
     }
 
     render () {
         return (
+          <Center>
           <div>
+
+            {/* 
+              BUSCAR UNA MESA POR ADDRESS
+             */}
             <form onSubmit={this.handleBuscarMesa}>
               <h2>Buscar Mesa</h2>
               <input
@@ -133,6 +124,10 @@ class MesaDataLoadForm extends Component {
               />
               <button>Buscar Mesa</button>
             </form>
+            
+            {/* 
+              CARGAR UNA MESA
+             */}
             <form onSubmit={this.handleCargarMesa}>
               <h2>Cargar Mesa</h2>
                 <input
@@ -156,25 +151,8 @@ class MesaDataLoadForm extends Component {
                 ))}
                 <button>Cargar Mesa</button>
             </form>
-
-            <form onSubmit={this.handleBuscarInfoDeParticipante}>
-            <h2>Buscar Info de participante</h2>
-              <input
-                type="text"
-                placeholder="Nombre del participante"
-                value={this.state.nombreParticipante}
-                onChange={this.handleNombreParticipanteChange}
-              />
-              <input
-                type="text"
-                placeholder="Nombre del candidato"
-                value={this.state.nombreCandidato}
-                onChange={this.handleNombreCandidatoChange}
-              />
-              <button>Buscar Info</button>
-            </form>
-
           </div>
+          </Center>
         );
     }
 }

@@ -4,9 +4,6 @@ import Election from './Election.js'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
 
-import MesaForm from './MesaForm.js'
-import MesaDataLoadForm from './MesaDataLoadForm.js'
-
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -26,9 +23,7 @@ class App extends Component {
       depAddress: "",
       electionName: "",
       web3: null,
-      addresses: []
     }
-    this.updateMesas = this.updateMesas.bind(this)
   }
   componentWillMount() {
     getWeb3.then(results => {
@@ -60,31 +55,6 @@ class App extends Component {
     })
   }
 
-  updateMesas(event) {
-    event.preventDefault()
-    const election = contract(ElectionContract)
-    var electionInstance
-    election.setProvider(this.state.web3.currentProvider)
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      election.deployed().then((instance) => {
-        electionInstance = instance
-        return electionInstance.getMesas.call(accounts[0])
-      }).then((mesas) => {
-        return this.setState({addresses: mesas})
-      })
-    })
-  }
-
-  toLi(ls){
-    return (<ul>
-    {
-      ls.map(x => {
-        return (<li>{x}</li>)
-      }
-    )}
-    </ul>)
-  }
-
   render() {
     return (
       <Center>
@@ -94,14 +64,6 @@ class App extends Component {
           Direccion de la eleccion:<br/>
           {this.state.depAddress}
         </p>
-        <button type="button" onClick={this.updateMesas}>
-          Ver direcciones de las mesas
-        </button>
-        {this.toLi(this.state.addresses)}
-        <MesaForm/>
-
-        <MesaDataLoadForm/>
-
       </div>
       </Center>
     );

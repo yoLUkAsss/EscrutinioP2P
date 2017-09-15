@@ -3,6 +3,8 @@ import ElectionContract from '../build/contracts/Election.json'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
 
+import Center from 'react-center'
+
 class MesaForm extends Component {
     constructor() {
         super();
@@ -10,9 +12,11 @@ class MesaForm extends Component {
           name: '',
           participantes : [{name: ''}],
           candidatos : [{name: ''}],
-          web3 : null
+          web3 : null,
+          addresses : []
         }
         this.handleCreateMesa = this.handleCreateMesa.bind(this)
+        this.updateMesas = this.updateMesas.bind(this)
     }
 
     componentWillMount() {
@@ -22,6 +26,21 @@ class MesaForm extends Component {
         })
       }).catch(() => {
         console.log('Error finding web3.')
+      })
+    }
+
+    updateMesas(event) {
+      event.preventDefault()
+      const election = contract(ElectionContract)
+      var electionInstance
+      election.setProvider(this.state.web3.currentProvider)
+      this.state.web3.eth.getAccounts((error, accounts) => {
+        election.deployed().then((instance) => {
+          electionInstance = instance
+          return electionInstance.getMesas.call(accounts[0])
+        }).then((mesas) => {
+          return this.setState({addresses: mesas})
+        })
       })
     }
 
@@ -79,46 +98,68 @@ class MesaForm extends Component {
       })
     }
 
+    toLi(ls){
+      return (<ul>
+      {
+        ls.map(x => {
+          return (<li>{x}</li>)
+        }
+      )}
+      </ul>)
+    }
+
     render () {
         return (
-          <form onSubmit={this.handleCreateMesa}>
-          <h2> Crear Mesa </h2>
-          <h4>Nombre de la Mesa: {this.state.name}</h4>
-            <input
-              type="text"
-              placeholder="Nombre de la mesa"
-              value={this.state.name}
-              onChange={this.handleNameChange}
-            />
-            <h4>Participantes</h4>
-            {this.state.participantes.map((participante, idx) => (
-              <div className="participante">
-                <input
-                  type="text"
-                  placeholder={`Participante #${idx + 1} name`}
-                  value={participante.name}
-                  onChange={this.handleParticipanteNameChange(idx)}
-                />
-                <button type="button" onClick={this.handleRemoveParticipante(idx)} className="small">-</button>
-              </div>
-            ))}
-            <button type="button" onClick={this.handleAddParticipante} className="small">Add Participante</button><br/>
+          <Center>
+          <div>  
+            <form onSubmit={this.handleCreateMesa}>
+            <h2> Crear Mesa </h2>
+            <h4>Nombre de la Mesa: {this.state.name}</h4>
+              <input
+                type="text"
+                placeholder="Nombre de la mesa"
+                value={this.state.name}
+                onChange={this.handleNameChange}
+              />
+              <h4>Participantes</h4>
+              {this.state.participantes.map((participante, idx) => (
+                <div className="participante">
+                  <input
+                    type="text"
+                    placeholder={`Participante #${idx + 1} name`}
+                    value={participante.name}
+                    onChange={this.handleParticipanteNameChange(idx)}
+                  />
+                  <button type="button" onClick={this.handleRemoveParticipante(idx)} className="small">-</button>
+                </div>
+              ))}
+              <button type="button" onClick={this.handleAddParticipante} className="small">Add Participante</button><br/>
 
-            <h4>Candidatos</h4>
-            {this.state.candidatos.map((candidato, idx) => (
-              <div className="candidatos">
-                <input
-                  type="text"
-                  placeholder={`Candidato #${idx + 1} name`}
-                  value={candidato.name}
-                  onChange={this.handleCandidatoNameChange(idx)}
-                />
-                <button type="button" onClick={this.handleRemoveCandidato(idx)} className="small">-</button>
-              </div>
-            ))}
-            <button type="button" onClick={this.handleAddCandidato} className="small">Add Candidatos</button><br/>
-            <button>Crear Mesa</button>
-          </form>
+              <h4>Candidatos</h4>
+              {this.state.candidatos.map((candidato, idx) => (
+                <div className="candidatos">
+                  <input
+                    type="text"
+                    placeholder={`Candidato #${idx + 1} name`}
+                    value={candidato.name}
+                    onChange={this.handleCandidatoNameChange(idx)}
+                  />
+                  <button type="button" onClick={this.handleRemoveCandidato(idx)} className="small">-</button>
+                </div>
+              ))}
+              <button type="button" onClick={this.handleAddCandidato} className="small">Add Candidatos</button><br/>
+              <button>Crear Mesa</button>
+            </form>
+
+            <div>
+              <button type="button" onClick={this.updateMesas}>
+                Ver direcciones de las mesas
+              </button>
+              {this.toLi(this.state.addresses)}
+            </div>
+
+          </div>
+          </Center>
         );
     }
 }
