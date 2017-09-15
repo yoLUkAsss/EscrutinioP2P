@@ -1,16 +1,18 @@
-sudo: required
+dist: trusty
+sudo: false
 language: node_js
 node_js:
-  - 4
-  - 6
-cache:
-  directories:
-    - node_modules
+  - "7"
 
-before_install:
+install:
+  - npm install -g truffle
+  - npm install -g truffle-expect
+  - npm install -g truffle-config
   - npm install -g ethereumjs-testrpc
+  - npm install -g web3
+
+before_script:
+  - testrpc > testrpc.log &
 
 script:
-  - npm test
-  - npm run build
-
+  - truffle test
