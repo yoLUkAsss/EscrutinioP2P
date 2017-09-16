@@ -2,7 +2,10 @@ pragma solidity ^0.4.11;
 
 contract Mesa {
 
+    enum CategoriaParticipante {Fiscal, ApoderadoMesa}
+
     struct ParticipantData {
+        CategoriaParticipante categoria;
         uint8 counts;
         bool finished;
         mapping (bytes32 => uint8) votes;
@@ -15,22 +18,32 @@ contract Mesa {
     mapping (bytes32 => ParticipantData) participantMap;
 
     // Constructor... msg.sender es duenio de mesa
-    function Mesa(bytes32[] inputParticipants, bytes32[] inputCandidates, uint8 inputTotalVotes){
+    function Mesa(bytes32 apoderado, bytes32[] fiscales, bytes32[] inputCandidates, uint8 inputTotalVotes){
         owner = msg.sender;
         total = inputTotalVotes;
-        participantList = inputParticipants;
+        participantList = fiscales;
         candidateList = inputCandidates;
         candidateList.push("Votos en Blanco");
         candidateList.push("Votos Inpugnados");
         candidateList.push("Votos Nulos");
-        //para cada participante
+
+        //para el apoderado
+        participantMap[apoderado] = ParticipantData(CategoriaParticipante.ApoderadoMesa, 0, false);
+        for ( uint k = 0; k<candidateList.length; k++ ) {
+            participantMap[apoderado].votes[candidateList[k]] = 0;
+        }
+        
+        //para cada fiscal
         for(uint i=0; i<participantList.length; i++){
-          participantMap[participantList[i]] = ParticipantData(0, false);
+          participantMap[participantList[i]] = ParticipantData(CategoriaParticipante.Fiscal, 0, false);
           //para cada candidato
-          for(uint j=0; j<candidateList.length; j++){
+          for(uint j = 0; j<candidateList.length; j++){
             participantMap[participantList[i]].votes[candidateList[j]] = 0;
           }
         }
+
+        // al final se agregao al apoderado como un participante mas de la mesa
+        participantList.push(apoderado);
     }
 
     function getCandidates() constant returns (bytes32[]){
@@ -62,6 +75,9 @@ contract Mesa {
       return false;
     }
 
+    /**
+     * Es participante valido en el contexto de esta mesa
+     */
     function isValidParticipant(bytes32 participant) constant returns (bool){
       for(uint i=0; i < participantList.length; i++){
         if(participant == participantList[i]){
@@ -76,6 +92,22 @@ contract Mesa {
             //participantMap[participant].counts = participantMap[participant].counts + votos;
             participantMap[participant].votes[candidato] = votos;
             return true;
+        } else {
+            return false;
+        }
+    }
+
+    function isApoderadoDeMesa(bytes32 participant) constant returns (bool) {
+        return isCategory(participant, CategoriaParticipante.ApoderadoMesa);
+    }
+
+    function isFiscal(bytes32 participant) constant returns (bool) {
+        return isCategory(participant, CategoriaParticipante.Fiscal);
+    }
+
+    function isCategory(bytes32 participant, CategoriaParticipante category) constant returns (bool) {
+        if (isValidParticipant(participant)) {
+            return participantMap[participant].categoria == category;
         } else {
             return false;
         }

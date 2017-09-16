@@ -13,7 +13,7 @@ class Home extends Component {
             <Center>
             <div>
                 <h4> Welcome to DEscrutinio </h4>
-                <h1> Welcome to DEscrutinio </h1>
+                <h1> Escrutinio DAPP - Ethereum App </h1>
             </div>
             </Center>
         )
