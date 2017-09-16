@@ -76,6 +76,7 @@ class MesaDataLoadForm extends Component {
           return mesaInstance.loadVotesForParticipant.sendTransaction(this.state.nombreParticipante, cnd.name, cnd.counts, {from:accounts[0], gas: gasEstimated})
         }).then((wasLoaded) => {
           console.log("Transaction Completed")
+          alert("Transaccion enviada")
         })
       })
     }

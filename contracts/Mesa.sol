@@ -93,7 +93,7 @@ contract Mesa {
             participantMap[participant].votes[candidato] = votos;
             return true;
         } else {
-            return false;
+            revert();
         }
     }
 

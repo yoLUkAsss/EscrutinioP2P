@@ -49,6 +49,7 @@ class SearchMesa extends Component {
           }).then((obj) => {
             //this.state.web3.toAscii(x)
             console.log("El valor es: " + JSON.stringify(obj, undefined, 2))
+            alert(obj)            
           })
         })
     }
@@ -65,6 +66,7 @@ class SearchMesa extends Component {
           }).then((obj) => {
             //this.state.web3.toAscii(x)
             console.log("El resultado es: " + JSON.stringify(obj, undefined, 2))
+            alert(obj)            
           })
         })
     }
@@ -81,6 +83,7 @@ class SearchMesa extends Component {
           }).then((obj) => {
             //this.state.web3.toAscii(x)
             console.log("El resultado es: " + JSON.stringify(obj, undefined, 2))
+            alert(obj)
           })
         })
     }
@@ -97,6 +100,7 @@ class SearchMesa extends Component {
           }).then((obj) => {
             //this.state.web3.toAscii(x)
             console.log("El resultado es: " + JSON.stringify(obj, undefined, 2))
+            alert(obj)            
           })
         })
     }
@@ -141,7 +145,7 @@ class SearchMesa extends Component {
                     <h3> Validar Participante </h3>
                     <input
                         type="text"
-                        placeholder="Direccion de mesa"
+                        placeholder="Nombre de participante"
                         value={this.state.isParticipant}
                         onChange={(evt) => {this.setState({ isParticipant : evt.target.value })}}
                     />
@@ -154,7 +158,7 @@ class SearchMesa extends Component {
                     <h3> Validar Fiscal </h3>
                     <input
                         type="text"
-                        placeholder="Direccion de mesa"
+                        placeholder="Nombre de fiscal"
                         value={this.state.isFiscal}
                         onChange={(evt) => {this.setState({ isFiscal : evt.target.value })}}
                     />
@@ -167,7 +171,7 @@ class SearchMesa extends Component {
                     <h3> Validar Apoderado de Mesa </h3>
                     <input
                         type="text"
-                        placeholder="Direccion de mesa"
+                        placeholder="Nombre de apoderado"
                         value={this.state.isApoderado}
                         onChange={(evt) => {this.setState({ isApoderado : evt.target.value })}}
                     />

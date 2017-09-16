@@ -103,6 +103,8 @@ class MesaForm extends Component {
           return electionInstance.createNMesas.estimateGas(apoderado, ps, cs, 10, 1, {from: accounts[0]})
         }).then((gasEstimated) => {
           return electionInstance.createNMesas.sendTransaction(apoderado, ps, cs, 10, 1, {from: accounts[0], gas: gasEstimated})
+        }).then((idtx) => {
+          alert("Transaccion enviada")
         })
       })
     }
