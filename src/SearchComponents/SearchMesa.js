@@ -6,8 +6,6 @@ import contract from 'truffle-contract'
 
 import Center from 'react-center'
 
-
-
 class SearchMesa extends Component {
 
     constructor() {
@@ -40,6 +38,7 @@ class SearchMesa extends Component {
         this.state.web3.eth.getAccounts((error, accounts) => {
           mesa.at(this.state.mesaAddress).then((mInstance) => {
             mesaInstance = mInstance
+            console.log(mesaInstance)
             return mesaInstance.getParticipantVotesForACandidate.call(this.state.nombreParticipante, this.state.nombreCandidato, {from : accounts[0]})
           }).then((obj) => {
             //this.state.web3.toAscii(x)
@@ -52,7 +51,7 @@ class SearchMesa extends Component {
         return (
             <Center>
             <div>
-            
+
                 <h4> Will be covered </h4>
 
                 <h1> Busqueda de conteo </h1>

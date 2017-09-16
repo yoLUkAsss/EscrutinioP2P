@@ -4,6 +4,7 @@ import Election from './Election.js'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
 
+import 'semantic-ui-css/semantic.min.css'
 
 import './css/oswald.css'
 import './css/open-sans.css'

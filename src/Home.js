@@ -7,7 +7,7 @@ import './App.css'
 import Center from 'react-center'
 
 class Home extends Component {
-  
+
     render() {
         return (
             <Center>

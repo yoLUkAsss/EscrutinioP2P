@@ -15,13 +15,13 @@ class About extends Component {
             <div>
                 <h4> About Page </h4>
                 <h1> About Page </h1>
-                <p> 
-                    Somos estudiantes de la Tecnicatura en Programación Informática y Licenciatura en Informática de 
+                <p>
+                    Somos estudiantes de la Tecnicatura en Programación Informática y Licenciatura en Informática de
                     la Universidad Nacional de Quilmes.
                 </p>
 
                 <p>
-                    Nos encontramos desarrollando una aplicación web como Trabajo de Inserción Profesional en el marco de 
+                    Nos encontramos desarrollando una aplicación web como Trabajo de Inserción Profesional en el marco de
                     material final de Tecnicatura.
                 </p>
 

@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import MesaContract from '../build/contracts/Mesa.json'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
-
+import { Button, Modal } from 'semantic-ui-react'
+// import 'semantic-ui-css/semantic.min.css'
 // const util = require('ethereumjs-util');
 
 import Center from 'react-center'
@@ -111,7 +112,7 @@ class MesaDataLoadForm extends Component {
           <Center>
           <div>
 
-            {/* 
+            {/*
               BUSCAR UNA MESA POR ADDRESS
              */}
             <form onSubmit={this.handleBuscarMesa}>
@@ -124,8 +125,8 @@ class MesaDataLoadForm extends Component {
               />
               <button>Buscar Mesa</button>
             </form>
-            
-            {/* 
+
+            {/*
               CARGAR UNA MESA
              */}
             <form onSubmit={this.handleCargarMesa}>
@@ -149,8 +150,27 @@ class MesaDataLoadForm extends Component {
                     />
                   </div>
                 ))}
-                <button>Cargar Mesa</button>
+                <Modal
+                  trigger={<Button>Load table</Button>}
+                  header='Reminder!'
+                  content='Data was loaded'
+                  actions={[
+                    'Close',
+                    { key: 'done', content: 'Done', positive: true },
+                  ]}
+                />
             </form>
+            <Modal
+              size='small'
+              trigger={<Button>show modal</Button>}
+              header='Reminder!'
+              content='Data was loaded'
+              actions={[
+                'Close',
+                { key: 'done', content: 'Done', positive: true },
+              ]}
+            />
+
           </div>
           </Center>
         );

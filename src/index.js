@@ -20,9 +20,9 @@ ReactDOM.render(
 
           {/* Paths for Router React */}
           <Route exact path="/" component={Home}/>
-          
+
           <Route exact path="/app" component={App}/>
-          <Route exact path="/mesa" component={MesaForm}/> 
+          <Route exact path="/mesa" component={MesaForm}/>
           <Route exact path="/about" component={About}/>
           <Route exact path="/tabla" component={Tabla}/>
           <Route exact path="/loadMesa" component={MesaDataLoadForm}/>

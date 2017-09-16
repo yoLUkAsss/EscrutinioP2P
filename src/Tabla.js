@@ -26,7 +26,7 @@ class Tabla extends Component {
                     id: "Apoderado",
                     name: 12,
                     price: 45
-                }, 
+                },
                 {
                     id: "Fiscal 1",
                     name: 12,
@@ -48,11 +48,11 @@ class Tabla extends Component {
                 <h3> Welcome to DEscrutinio </h3>
                 <h1> Información de Mesa </h1>
 
-                <BootstrapTable 
-                    data={this.state.products} 
-                    striped 
-                    hover 
-                    pagination 
+                <BootstrapTable
+                    data={this.state.products}
+                    striped
+                    hover
+                    pagination
                     tableContainerClass='tableSize'
                     height={410}>
                     {
