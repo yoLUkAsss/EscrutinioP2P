@@ -62,14 +62,6 @@ class MesaForm extends Component {
       this.setState({ participantes: newParticipantes})
     }
 
-    handleAddParticipante = () => {
-      this.setState({ participantes: this.state.participantes.concat([{ name: '' }]) })
-    }
-
-    handleRemoveParticipante = (idx) => () => {
-      this.setState({ participantes: this.state.participantes.filter((s, sidx) => idx !== sidx) })
-    }
-
     handleCandidatoNameChange = (idx) => (evt) => {
       const newCandidatos = this.state.candidatos.map((candidato, pidx) => {
         if (idx !== pidx) return candidato
@@ -120,6 +112,42 @@ class MesaForm extends Component {
       </ul>)
     }
 
+
+
+    //manejo de lista de participantes
+    handleAddParticipante = () => {
+      this.setState({ participantes: this.state.participantes.concat([{ name: '' }]) })
+    }
+
+    handleUpdateParticipante = (idx) => (evt) => {
+      const newParticipantes = this.state.participantes.map((participante, pidx) => {
+        if (idx !== pidx) return participante
+        return { ...participante, name: evt.target.value }
+      })
+      this.setState({ participantes: newParticipantes})
+    }
+
+    handleRemoveParticipante = (idx) => () => {
+      this.setState({ participantes: this.state.participantes.filter((s, sidx) => idx !== sidx) })
+    }
+
+    //manejo de lista de  candidato
+    handleAddCandidato = () => {
+      this.setState({ candidatos: this.state.candidatos.concat([{ name: '' }]) })
+    }
+
+    handleUpdateCandidato = (idx) => (evt) => {
+      const newCandidatos = this.state.candidatos.map((candidato, pidx) => {
+        if (idx !== pidx) return candidato
+        return { ...candidato, name: evt.target.value }
+      })
+      this.setState({ candidatos: newCandidatos})
+    }
+
+    handleRemoveCandidato = (idx) => () => {
+      this.setState({ candidatos: this.state.candidatos.filter((s, sidx) => idx !== sidx) })
+    }
+
     render () {
         return (
           <Center>
@@ -139,33 +167,24 @@ class MesaForm extends Component {
                 value={this.state.apoderado.name}
                 onChange={this.handleApoderadoChange}
               />
-              <h4>Participantes</h4>
-              {this.state.participantes.map((participante, idx) => (
-                <div className="participante">
-                  <input
-                    type="text"
-                    placeholder={`Participante #${idx + 1} name`}
-                    value={participante.name}
-                    onChange={this.handleParticipanteNameChange(idx)}
-                  />
-                  <button type="button" onClick={this.handleRemoveParticipante(idx)} className="small">-</button>
-                </div>
-              ))}
-              <button type="button" onClick={this.handleAddParticipante} className="small">Add Participante</button><br/>
+              <DinamicListForm
+              title='Participantes'
+              type='text'
+              placeholder='Nombre de Participante'
+              items={this.state.participantes}
+              onAdd={this.handleAddParticipante}
+              onDelete={this.handleRemoveParticipante}
+              onUpdate={this.handleUpdateParticipante}/>
 
-              <h4>Candidatos</h4>
-              {this.state.candidatos.map((candidato, idx) => (
-                <div className="candidatos">
-                  <input
-                    type="text"
-                    placeholder={`Candidato #${idx + 1} name`}
-                    value={candidato.name}
-                    onChange={this.handleCandidatoNameChange(idx)}
-                  />
-                  <button type="button" onClick={this.handleRemoveCandidato(idx)} className="small">-</button>
-                </div>
-              ))}
-              <button type="button" onClick={this.handleAddCandidato} className="small">Add Candidatos</button><br/>
+              <DinamicListForm
+              title='Candidatos'
+              type='text'
+              placeholder='Nombre de Candidato'
+              items={this.state.candidatos}
+              onAdd={this.handleAddCandidato}
+              onDelete={this.handleRemoveCandidato}
+              onUpdate={this.handleUpdateCandidato}/>
+
               <button>Crear Mesa</button>
             </form>
 
@@ -175,8 +194,6 @@ class MesaForm extends Component {
               </button>
               {this.toLi(this.state.addresses)}
             </div>
-
-            <DinamicListForm type='text' placeholder='Nombre'/>
 
           </div>
           </Center>

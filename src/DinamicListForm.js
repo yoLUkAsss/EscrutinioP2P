@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
-import {Container, List, Button, Icon, Form, Input} from 'semantic-ui-react'
+import {Header, Container, List, Button, Icon, Form, Input} from 'semantic-ui-react'
 
 class DinamicListForm extends Component {
-
-  constructor(props){
-    super(props)
-    this.state = {
-      items : [{name : ''}],
-      type : props.type,
-      placeholder : props.placeholder
-    }
-  }
 
   handleChangeNameItem = (idItem) => (evt) => {
     const newItems = this.state.items.map((item, idIterator) => {
@@ -31,22 +22,23 @@ class DinamicListForm extends Component {
   render(){
     return (
       <Container>
+      <Header as='h3'>{this.props.title}</Header>
       <List>
-      {this.state.items.map((item, idItem) => (
+      {this.props.items.map((item, idItem) => (
         <List.Item>
           <Form.Field inline>
-            <Input focus type={this.state.type}
-            placeholder={this.state.placeholder}
+            <Input focus type={this.props.type}
+            placeholder={this.props.placeholder}
             value={item.name}
-            onChange={this.handleChangeNameItem(idItem)}/>
-            <Button icon onClick={this.handleRemoveItem(idItem)}>
+            onChange={this.props.onUpdate(idItem)}/>
+            <Button icon onClick={this.props.onDelete(idItem)}>
               <Icon name='remove'/>
             </Button>
           </Form.Field>
         </List.Item>
       ))}
       </List>
-      <Button icon onClick={this.handleAddItem}>
+      <Button icon onClick={this.props.onAdd}>
         <Icon name='plus'/>
       </Button>
       </Container>
