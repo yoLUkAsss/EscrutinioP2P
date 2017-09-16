@@ -4,7 +4,10 @@ import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
 
 import Center from 'react-center'
+import {Form, Header} from 'semantic-ui-react'
 import DinamicListForm from './DinamicListForm.js'
+
+
 
 class MesaForm extends Component {
     constructor() {
@@ -152,21 +155,23 @@ class MesaForm extends Component {
         return (
           <Center>
           <div>
-            <form onSubmit={this.handleCreateMesa}>
-            <h2> Crear Mesa </h2>
-            <h4>Nombre de la Mesa: {this.state.name}</h4>
-              <input
-                type="text"
-                placeholder="Nombre de la mesa"
-                value={this.state.name}
-                onChange={this.handleNameChange}
-              />
-              <input
-                type="text"
-                placeholder="Nombre del apoderado"
-                value={this.state.apoderado.name}
-                onChange={this.handleApoderadoChange}
-              />
+          <Form>
+            <Header as='h1'>Crear Mesa</Header>
+            <Form.Group>
+              <Form.Input focus
+              type='text'
+              label='Nombre de la Mesa'
+              placeholder='Nombre de la Mesa'
+              value={this.state.name}
+              onChange={this.handleNameChange}/>
+              <Form.Input focus
+              type='text'
+              label='Nombre del apoderado'
+              placeholder='Nombre del apoderado'
+              value={this.state.apoderado.name}
+              onChange={this.handleApoderadoChange}/>
+            </Form.Group>
+            <Form.Group>
               <DinamicListForm
               title='Participantes'
               type='text'
@@ -175,7 +180,8 @@ class MesaForm extends Component {
               onAdd={this.handleAddParticipante}
               onDelete={this.handleRemoveParticipante}
               onUpdate={this.handleUpdateParticipante}/>
-
+            </Form.Group>
+            <Form.Group>
               <DinamicListForm
               title='Candidatos'
               type='text'
@@ -184,9 +190,9 @@ class MesaForm extends Component {
               onAdd={this.handleAddCandidato}
               onDelete={this.handleRemoveCandidato}
               onUpdate={this.handleUpdateCandidato}/>
-
-              <button>Crear Mesa</button>
-            </form>
+            </Form.Group>
+            <Form.Button onClick={this.handleCreateMesa}>Crear Mesa</Form.Button>
+          </Form>
 
             <div>
               <button type="button" onClick={this.updateMesas}>
