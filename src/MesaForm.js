@@ -4,6 +4,7 @@ import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
 
 import Center from 'react-center'
+import DinamicListForm from './DinamicListForm.js'
 
 class MesaForm extends Component {
     constructor() {
@@ -91,7 +92,7 @@ class MesaForm extends Component {
       const election = contract(ElectionContract)
       var electionInstance
       election.setProvider(this.state.web3.currentProvider)
-      
+
       // .filter(x => {return x !== ""}) LIMPIA LOS VACIOS o BLANCOS
       var apoderado = this.state.apoderado.name
       var ps = this.state.participantes.map(x => {return x.name}).filter(x => {return x !== ""})
@@ -122,7 +123,7 @@ class MesaForm extends Component {
     render () {
         return (
           <Center>
-          <div>  
+          <div>
             <form onSubmit={this.handleCreateMesa}>
             <h2> Crear Mesa </h2>
             <h4>Nombre de la Mesa: {this.state.name}</h4>
@@ -174,6 +175,8 @@ class MesaForm extends Component {
               </button>
               {this.toLi(this.state.addresses)}
             </div>
+
+            <DinamicListForm type='text' placeholder='Nombre'/>
 
           </div>
           </Center>
