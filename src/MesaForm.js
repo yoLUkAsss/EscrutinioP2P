@@ -10,6 +10,7 @@ class MesaForm extends Component {
         super();
         this.state = {
           name: '',
+          apoderado : {name : ''},
           participantes : [{name: ''}],
           candidatos : [{name: ''}],
           web3 : null,
@@ -46,6 +47,10 @@ class MesaForm extends Component {
 
     handleNameChange = (evt) => {
       this.setState({ name: evt.target.value })
+    }
+
+    handleApoderadoChange = (evt) => {
+      this.setState({ apoderado: {name : evt.target.value} })
     }
 
     handleParticipanteNameChange = (idx) => (evt) => {
@@ -86,14 +91,20 @@ class MesaForm extends Component {
       const election = contract(ElectionContract)
       var electionInstance
       election.setProvider(this.state.web3.currentProvider)
+      
+      // .filter(x => {return x !== ""}) LIMPIA LOS VACIOS o BLANCOS
+      var apoderado = this.state.apoderado.name
       var ps = this.state.participantes.map(x => {return x.name}).filter(x => {return x !== ""})
       var cs = this.state.candidatos.map(x => {return x.name}).filter(x => {return x !== ""})
+      console.log("Apoderado: " + apoderado +" ps: " + JSON.stringify(ps) + " cs: " + JSON.stringify(cs))
       this.state.web3.eth.getAccounts((error, accounts) => {
         election.deployed().then((instance) => {
           electionInstance = instance
-          return electionInstance.createNMesas.estimateGas(ps, cs, 10, 1, {from: accounts[0]})
+          return electionInstance.createNMesas.estimateGas(apoderado, ps, cs, 10, 1, {from: accounts[0]})
         }).then((gasEstimated) => {
-          return electionInstance.createNMesas.sendTransaction(ps, cs, 10, 1, {from: accounts[0], gas: gasEstimated})
+          return electionInstance.createNMesas.sendTransaction(apoderado, ps, cs, 10, 1, {from: accounts[0], gas: gasEstimated})
+        }).then((idtx) => {
+          alert("Transaccion enviada")
         })
       })
     }
@@ -120,6 +131,12 @@ class MesaForm extends Component {
                 placeholder="Nombre de la mesa"
                 value={this.state.name}
                 onChange={this.handleNameChange}
+              />
+              <input
+                type="text"
+                placeholder="Nombre del apoderado"
+                value={this.state.apoderado.name}
+                onChange={this.handleApoderadoChange}
               />
               <h4>Participantes</h4>
               {this.state.participantes.map((participante, idx) => (

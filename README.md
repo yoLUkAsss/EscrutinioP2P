@@ -3,7 +3,7 @@
 
 ### Objetivo
 
-Desarrollar una plataforma capaz de armar contratos inteligentes entre las personas a cargo del conteo de votos, de manera que se pueda verificar el cumplimiento de estos contratos.
+Desarrollar una plataforma capaz de armar contratos inteligentes entre las personas a cargo del conteo de votos, de manera que se pueda verificar el cumplimiento de estos contratos. 
 
 ### Trello (Organización)
 ![Organización](https://trello.com/b/TcThyUPk/organizaci%C3%B3n-y-entregas)
