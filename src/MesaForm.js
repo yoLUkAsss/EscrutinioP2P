@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import ElectionContract from '../build/contracts/Election.json'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
-
-import Center from 'react-center'
-import {Form, Header} from 'semantic-ui-react'
+import {Form, Header, Button, List, Divider, Container} from 'semantic-ui-react'
 import DinamicListForm from './DinamicListForm.js'
 
 
@@ -57,30 +55,6 @@ class MesaForm extends Component {
       this.setState({ apoderado: {name : evt.target.value} })
     }
 
-    handleParticipanteNameChange = (idx) => (evt) => {
-      const newParticipantes = this.state.participantes.map((participante, pidx) => {
-        if (idx !== pidx) return participante
-        return { ...participante, name: evt.target.value }
-      })
-      this.setState({ participantes: newParticipantes})
-    }
-
-    handleCandidatoNameChange = (idx) => (evt) => {
-      const newCandidatos = this.state.candidatos.map((candidato, pidx) => {
-        if (idx !== pidx) return candidato
-        return { ...candidato, name: evt.target.value }
-      })
-      this.setState({ candidatos: newCandidatos})
-    }
-
-    handleAddCandidato = () => {
-      this.setState({ candidatos: this.state.candidatos.concat([{ name: '' }]) })
-    }
-
-    handleRemoveCandidato = (idx) => () => {
-      this.setState({ candidatos: this.state.candidatos.filter((s, sidx) => idx !== sidx) })
-    }
-
     //esta harcodeado la cantidad de mesas creadas deberia ser una
     handleCreateMesa(event){
       event.preventDefault()
@@ -104,18 +78,6 @@ class MesaForm extends Component {
         })
       })
     }
-
-    toLi(ls){
-      return (<ul>
-      {
-        ls.map(x => {
-          return (<li>{x}</li>)
-        }
-      )}
-      </ul>)
-    }
-
-
 
     //manejo de lista de participantes
     handleAddParticipante = () => {
@@ -153,56 +115,54 @@ class MesaForm extends Component {
 
     render () {
         return (
-          <Center>
-          <div>
-          <Form>
-            <Header as='h1'>Crear Mesa</Header>
-            <Form.Group>
-              <Form.Input focus
-              type='text'
-              label='Nombre de la Mesa'
-              placeholder='Nombre de la Mesa'
-              value={this.state.name}
-              onChange={this.handleNameChange}/>
-              <Form.Input focus
-              type='text'
-              label='Nombre del apoderado'
-              placeholder='Nombre del apoderado'
-              value={this.state.apoderado.name}
-              onChange={this.handleApoderadoChange}/>
-            </Form.Group>
-            <Form.Group>
-              <DinamicListForm
-              title='Participantes'
-              type='text'
-              placeholder='Nombre de Participante'
-              items={this.state.participantes}
-              onAdd={this.handleAddParticipante}
-              onDelete={this.handleRemoveParticipante}
-              onUpdate={this.handleUpdateParticipante}/>
-            </Form.Group>
-            <Form.Group>
-              <DinamicListForm
-              title='Candidatos'
-              type='text'
-              placeholder='Nombre de Candidato'
-              items={this.state.candidatos}
-              onAdd={this.handleAddCandidato}
-              onDelete={this.handleRemoveCandidato}
-              onUpdate={this.handleUpdateCandidato}/>
-            </Form.Group>
-            <Form.Button onClick={this.handleCreateMesa}>Crear Mesa</Form.Button>
-          </Form>
+          <Container>
 
-            <div>
-              <button type="button" onClick={this.updateMesas}>
-                Ver direcciones de las mesas
-              </button>
-              {this.toLi(this.state.addresses)}
-            </div>
+            <Form>
+              <Header as='h1'>Crear Mesa</Header>
+                <Form.Input focus
+                type='text'
+                label='Nombre de la Mesa'
+                placeholder='Nombre de la Mesa'
+                value={this.state.name}
+                onChange={this.handleNameChange}/>
+                <Form.Input focus
+                type='text'
+                label='Nombre del apoderado'
+                placeholder='Nombre del apoderado'
+                value={this.state.apoderado.name}
+                onChange={this.handleApoderadoChange}/>
+                <DinamicListForm
+                title='Participantes'
+                type='text'
+                placeholder='Nombre de Participante'
+                items={this.state.participantes}
+                onAdd={this.handleAddParticipante}
+                onDelete={this.handleRemoveParticipante}
+                onUpdate={this.handleUpdateParticipante}/>
+                <DinamicListForm
+                title='Candidatos'
+                type='text'
+                placeholder='Nombre de Candidato'
+                items={this.state.candidatos}
+                onAdd={this.handleAddCandidato}
+                onDelete={this.handleRemoveCandidato}
+                onUpdate={this.handleUpdateCandidato}/>
+                <Form.Button onClick={this.handleCreateMesa}>Crear Mesa</Form.Button>
+            </Form>
 
-          </div>
-          </Center>
+            <Divider section />
+            <Header as='h3'>Ver direcciones de mesas</Header>
+            <Button onClick={this.updateMesas}>
+              Ver direcciones de las mesas
+            </Button>
+            {
+              <List>
+                {this.state.addresses.map((a, indA) => {
+                  return (<List.Item>{a}</List.Item>)
+                })}
+              </List>
+            }
+            </Container>
         );
     }
 }
