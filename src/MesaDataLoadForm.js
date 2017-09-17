@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import MesaContract from '../build/contracts/Mesa.json'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
-import { Button } from 'semantic-ui-react'
+import { Button, Form, Header} from 'semantic-ui-react'
 // import 'semantic-ui-css/semantic.min.css'
 // const util = require('ethereumjs-util');
 
@@ -108,47 +108,39 @@ class MesaDataLoadForm extends Component {
         return (
           <Center>
           <div>
-
-            {/*
-              BUSCAR UNA MESA POR ADDRESS
-             */}
-            <form onSubmit={this.handleBuscarMesa}>
-              <h2>Buscar Mesa</h2>
-              <input
+            <Header as='h2'>vi</Header>
+            <Form onSubmit={this.handleBuscarMesa}>
+              <Header as='h2'>Buscar Mesa</Header>
+              <Form.Input
                 type="text"
                 placeholder="Direccion de la mesa"
                 value={this.state.mesaAddress}
                 onChange={this.handleMesaAddressChange}
               />
-              <button>Buscar Mesa</button>
-            </form>
+              <Button>Buscar Mesa</Button>
+            </Form>
 
-            {/*
-              CARGAR UNA MESA
-             */}
-            <form onSubmit={this.handleCargarMesa}>
-              <h2>Cargar Mesa</h2>
-                <input
+            <Form onSubmit={this.handleCargarMesa}>
+              <Header as='h3'>Cargar Mesa</Header>
+                <Form.Input
                   type="text"
+                  label='Nombre del Participante'
                   placeholder="Nombre del participante"
                   value={this.state.nombreParticipante}
                   onChange={this.handleNombreParticipanteChange}
                 />
-                <h4>Candidatos</h4>
+                <Header as='h3'>Candidatos</Header>
                 {this.state.candidatos.map((candidato, idx) => (
-                  <div className="candidatos">
-                  <label htmlFor={`count${idx}`}>{`Candidato #${idx + 1} ${candidato.name}`}</label>
-                    <input
-                      type="number"
-                      id={`count${idx}`}
-                      placeholder={`Candidato #${idx + 1} counts`}
-                      value={candidato.counts}
-                      onChange={this.handleCandidatoCountsChange(idx)}
+                  <Form.Input
+                    type='number'
+                    label={`Candidato: ${candidato.name}`}
+                    placeholder={`Candidato: ${idx + 1}`}
+                    value={candidato.counts}
+                    onChange={this.handleCandidatoCountsChange(idx)}
                     />
-                  </div>
                 ))}
                 <Button>Load table</Button>
-            </form>
+            </Form>
           </div>
           </Center>
         );
