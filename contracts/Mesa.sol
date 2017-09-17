@@ -32,7 +32,6 @@ contract Mesa {
         for ( uint k = 0; k<candidateList.length; k++ ) {
             participantMap[apoderado].votes[candidateList[k]] = 0;
         }
-        
         //para cada fiscal
         for(uint i=0; i<participantList.length; i++){
           participantMap[participantList[i]] = ParticipantData(CategoriaParticipante.Fiscal, 0, false);
