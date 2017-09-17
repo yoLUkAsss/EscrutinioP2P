@@ -6,6 +6,8 @@ import contract from 'truffle-contract'
 
 import Center from 'react-center'
 
+import SearchMesaForm from './SearchMesaForm.js'
+
 class SearchMesa extends Component {
 
     constructor() {
@@ -15,7 +17,7 @@ class SearchMesa extends Component {
           nombreParticipante : '',
           nombreCandidato : '',
           mesaAddress : '',
-          
+
         //   Estos hay que borrar
           isParticipant : '',
           isFiscal : '',
@@ -48,7 +50,7 @@ class SearchMesa extends Component {
           }).then((obj) => {
             //this.state.web3.toAscii(x)
             console.log("El valor es: " + JSON.stringify(obj, undefined, 2))
-            alert(obj)            
+            alert(obj)
           })
         })
     }
@@ -65,7 +67,7 @@ class SearchMesa extends Component {
           }).then((obj) => {
             //this.state.web3.toAscii(x)
             console.log("El resultado es: " + JSON.stringify(obj, undefined, 2))
-            alert(obj)            
+            alert(obj)
           })
         })
     }
@@ -99,7 +101,7 @@ class SearchMesa extends Component {
           }).then((obj) => {
             //this.state.web3.toAscii(x)
             console.log("El resultado es: " + JSON.stringify(obj, undefined, 2))
-            alert(obj)            
+            alert(obj)
           })
         })
     }
@@ -178,6 +180,7 @@ class SearchMesa extends Component {
                     <input type="submit" value="Validar" />
                 </form>
 
+                <SearchMesaForm/>
             </div>
             </Center>
         )

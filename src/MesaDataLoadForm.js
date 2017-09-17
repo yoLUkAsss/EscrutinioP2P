@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import MesaContract from '../build/contracts/Mesa.json'
 import getWeb3 from './utils/getWeb3'
 import contract from 'truffle-contract'
-import { Button, Modal } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 // import 'semantic-ui-css/semantic.min.css'
 // const util = require('ethereumjs-util');
 
@@ -147,27 +147,8 @@ class MesaDataLoadForm extends Component {
                     />
                   </div>
                 ))}
-                <Modal
-                  trigger={<Button>Load table</Button>}
-                  header='Reminder!'
-                  content='Data was loaded'
-                  actions={[
-                    'Close',
-                    { key: 'done', content: 'Done', positive: true },
-                  ]}
-                />
+                <Button>Load table</Button>
             </form>
-            <Modal
-              size='small'
-              trigger={<Button>show modal</Button>}
-              header='Reminder!'
-              content='Data was loaded'
-              actions={[
-                'Close',
-                { key: 'done', content: 'Done', positive: true },
-              ]}
-            />
-
           </div>
           </Center>
         );
