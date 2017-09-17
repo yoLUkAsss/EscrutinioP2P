@@ -5,7 +5,7 @@ import contract from 'truffle-contract'
 import {Form, Header, Button, List, Divider, Container} from 'semantic-ui-react'
 import DinamicListForm from './DinamicListForm.js'
 
-
+import * as utils from './utils/utils.js'
 
 class MesaForm extends Component {
     constructor() {
@@ -61,18 +61,14 @@ class MesaForm extends Component {
       const election = contract(ElectionContract)
       var electionInstance
       election.setProvider(this.state.web3.currentProvider)
-
-      // .filter(x => {return x !== ""}) LIMPIA LOS VACIOS o BLANCOS
-      var apoderado = this.state.apoderado.name
-      var ps = this.state.participantes.map(x => {return x.name}).filter(x => {return x !== ""})
-      var cs = this.state.candidatos.map(x => {return x.name}).filter(x => {return x !== ""})
-      console.log("Apoderado: " + apoderado +" ps: " + JSON.stringify(ps) + " cs: " + JSON.stringify(cs))
+      var ps = utils.filterNoBlanks(utils.getNames(this.state.participantes))
+      var cs = utils.filterNoBlanks(utils.getNames(this.state.candidatos))
       this.state.web3.eth.getAccounts((error, accounts) => {
         election.deployed().then((instance) => {
           electionInstance = instance
-          return electionInstance.createNMesas.estimateGas(apoderado, ps, cs, 10, 1, {from: accounts[0]})
+          return electionInstance.createNMesas.estimateGas(this.state.apoderado.name, ps, cs, 10, 1, {from: accounts[0]})
         }).then((gasEstimated) => {
-          return electionInstance.createNMesas.sendTransaction(apoderado, ps, cs, 10, 1, {from: accounts[0], gas: gasEstimated})
+          return electionInstance.createNMesas.sendTransaction(this.state.apoderado.name, ps, cs, 10, 1, {from: accounts[0], gas: gasEstimated})
         }).then((idtx) => {
           alert("Transaccion enviada")
         })
