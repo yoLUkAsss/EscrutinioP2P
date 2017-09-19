@@ -20,6 +20,7 @@ class DinamicListForm extends Component {
   }
 
   render(){
+
     return (
       <div>
         <Header as='h3'>{this.props.title}</Header>

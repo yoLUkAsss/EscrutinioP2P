@@ -5,6 +5,8 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 
+import ComponentTitle from './utils/ComponentTitle.js'
+
 import Center from 'react-center'
 
 class About extends Component {
@@ -13,8 +15,9 @@ class About extends Component {
         return (
             <Center>
             <div>
-                <h4> About Page </h4>
-                <h1> About Page </h1>
+
+                <ComponentTitle title='Sobre Nosotros'/>
+
                 <p>
                     Somos estudiantes de la Tecnicatura en Programación Informática y Licenciatura en Informática de
                     la Universidad Nacional de Quilmes.
