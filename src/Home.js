@@ -6,14 +6,15 @@ import './App.css'
 
 import Center from 'react-center'
 
+import ComponentTitle from './utils/ComponentTitle.js'
+
 class Home extends Component {
 
     render() {
         return (
             <Center>
             <div>
-                <h4> Welcome to DEscrutinio </h4>
-                <h1> Escrutinio DAPP - Ethereum App </h1>
+                <ComponentTitle title='Bienvenido a DEscrutinio'/>
             </div>
             </Center>
         )

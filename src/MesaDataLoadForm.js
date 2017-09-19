@@ -139,7 +139,7 @@ class MesaDataLoadForm extends Component {
                     onChange={this.handleCandidatoCountsChange(idx)}
                     />
                 ))}
-                <Button>Load table</Button>
+                <Button>Cargar Mesa</Button>
             </Form>
           </div>
           </Center>

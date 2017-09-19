@@ -5,6 +5,7 @@ import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
 import Center from 'react-center'
+import ComponentTitle from '../utils/ComponentTitle.js'
 
 import SearchMesaForm from './SearchMesaForm.js'
 
@@ -111,9 +112,7 @@ class SearchMesa extends Component {
             <Center>
             <div>
 
-                <h4> Will be covered </h4>
-
-                <h1> Busqueda de conteo </h1>
+                <ComponentTitle title='Busqueda de conteo'/>
 
                 <form onSubmit={this.buscarInfoDeParticipanteCandidato.bind(this)}>
                     <h3> Buscar conteo de un participante a un candidato </h3>

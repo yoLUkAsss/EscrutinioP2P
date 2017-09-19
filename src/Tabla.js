@@ -13,6 +13,8 @@ import './css/table.css'
 
 import Center from 'react-center'
 
+import ComponentTitle from './utils/ComponentTitle.js'
+
 class Tabla extends Component {
 
     constructor() {
@@ -45,8 +47,8 @@ class Tabla extends Component {
         return (
             <Center>
             <div>
-                <h3> Welcome to DEscrutinio </h3>
-                <h1> Información de Mesa </h1>
+
+                <ComponentTitle title="Tabla"/>
 
                 <BootstrapTable
                     data={this.state.products}

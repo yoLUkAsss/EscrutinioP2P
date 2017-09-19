@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import ComponentTitle from './utils/ComponentTitle.js'
+
 class Election extends Component {
     constructor() {
         super();
@@ -22,8 +24,8 @@ class Election extends Component {
     render () {
         return (
             <div>
-                <h2> Create New Election </h2>
-                <h2> Create New Election </h2>
+                <ComponentTitle title='Crear Elección'/>
+
                 <h4>
                     {this.state.message}
                 </h4>
