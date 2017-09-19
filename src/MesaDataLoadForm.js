@@ -6,7 +6,7 @@ import contract from 'truffle-contract'
 import { Button, Form, Header} from 'semantic-ui-react'
 // import 'semantic-ui-css/semantic.min.css'
 // const util = require('ethereumjs-util');
-
+// console.log(JSON.stringify(res, undefined, 2))
 import Center from 'react-center'
 
 class MesaDataLoadForm extends Component {
@@ -85,7 +85,6 @@ class MesaDataLoadForm extends Component {
     //busca una mesa y setea la lista de candidatos en 0, luego elegimos con q nombre de particiapnte cargar esa lista
     handleBuscarMesa = (event) => {
       event.preventDefault()
-      // var address = event.target.value
       var mesaInstance
       const mesa = contract(MesaContract)
       mesa.setProvider(this.state.web3.currentProvider)
@@ -94,11 +93,9 @@ class MesaDataLoadForm extends Component {
           mesaInstance = mInstance
           return mesaInstance.getCandidates.call(accounts[0])
         }).then((cands) => {
-          //this.state.web3.toAscii(x)
-          const res = cands.map(c => {
+          const res = cands.map( (c) => {
             return {name: this.state.web3.toAscii(c), counts: 0}
           })
-          console.log(JSON.stringify(res, undefined, 2))
           return this.setState({candidatos : res})
         })
       })
