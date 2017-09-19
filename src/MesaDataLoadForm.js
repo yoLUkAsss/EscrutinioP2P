@@ -56,28 +56,21 @@ class MesaDataLoadForm extends Component {
       this.setState({nombreCandidato : event.target.value})
     }
     ////////////////////////////////////////////////////////////////////////////////
-    // for(var i = 0; i < this.state.candidatos.length; i++){
-    // }
-    //this.state.web3.toHex(cnd.name)
-    //this.state.nombreParticipante
-    // no funciona hay un error en alguno de los parametros del load
+
+    //carga los datos de un participante
     handleCargarMesa(event){
       event.preventDefault()
       var mesaInstance
-      var cnd
       const mesa = contract(MesaContract)
       mesa.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
         mesa.at(this.state.mesaAddress).then((mInstance) => {
           mesaInstance = mInstance
-          cnd = this.state.candidatos[0]
-          console.log(mesaInstance)
-          return mesaInstance.loadVotesForParticipant.estimateGas(this.state.nombreParticipante, cnd.name, cnd.counts, {from:accounts[0]})
-        }).then((gasEstimated) => {
-          return mesaInstance.loadVotesForParticipant.sendTransaction(this.state.nombreParticipante, cnd.name, cnd.counts, {from:accounts[0], gas: gasEstimated})
-        }).then((wasLoaded) => {
-          console.log("Transaction Completed")
-          alert("Transaccion enviada")
+          this.state.candidatos.forEach((candidato, idc) => {
+            mesaInstance.loadVotesForParticipant.estimateGas(this.state.nombreParticipante, candidato.name, candidato.counts, {from:accounts[0]}).then((gasEstimated) => {
+              mesaInstance.loadVotesForParticipant.sendTransaction(this.state.nombreParticipante, candidato.name, candidato.counts, {from:accounts[0], gas: gasEstimated})
+            })
+          })
         })
       })
     }
