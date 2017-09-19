@@ -19,8 +19,6 @@ class SearchMesaForm extends Component {
           conteos : new Map(),
           candidatos : []
         }
-
-
     }
 
     componentWillMount() {
@@ -33,49 +31,38 @@ class SearchMesaForm extends Component {
         })
     }
 
+    //this.state.web3.toAscii(x)
     buscarConteoDeUnParticipante = (event) => {
         event.preventDefault()
         var mesaInstance
         const mesa = contract(MesaContract)
         var mapped = []
         var promises = []
-        let res = new Map()
+        var res = new Map()
+        const realThis = this
         mesa.setProvider(this.state.web3.currentProvider)
         this.state.web3.eth.getAccounts((error, accounts) => {
           mesa.at(this.state.mesaAddress).then((mInstance) => {
             mesaInstance = mInstance
             return mesaInstance.getCandidates.call({from : accounts[0]})
-          }).then((list) => {
-              //this.state.web3.toAscii(x)
-              //this.state.web3.toAscii(x)
-              mapped = list.map(x => {return this.state.web3.toAscii(x)})
-              this.setState({candidatos : mapped})
-              promises = mapped.map(candidato => {
+          }).then((allCandidates) => {
+              mapped = allCandidates.map((x) => {
+                return this.state.web3.toAscii(x)
+              })
+              promises = mapped.map((candidato) => {
                 return mesaInstance.getParticipantVotesForACandidate.call(this.state.nombreParticipante, candidato,{from : accounts[0]})
               })
           }).then(() => {
             Promise.all(promises).then(function(data){
               for(var i = 0; i < data.length; i++){
-                console.log(mapped[i].length)
-                for(var j=0;j < mapped[i].length; j++){
-                  var ss = mapped[i][j].replace(/^[a-z0-9]+$/i)
-                  if(ss !== ''){
-                    console.log(ss)
-                  }
-                }
-                res.set(mapped[i], data[i].toNumber())
+                res.set(realThis.state.web3.toAscii(data[i][0]), data[i][1].toNumber())
               }
-              console.log(res)
-              console.log("Antes de asignar map")
-
-              this.setState({conteos : res})
+              realThis.setState({conteos : res, candidatos : mapped})
             }).catch(reason => {
               console.log(reason)
             })
           })
         })
-        console.log(this.state.conteos)
-
     }
 
     render() {
