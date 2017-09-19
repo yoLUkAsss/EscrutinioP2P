@@ -56,12 +56,12 @@ contract Mesa {
         return participantMap[participant].counts;
     }
 
-    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) constant returns (uint8) {
+    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) constant returns (bytes32, uint8) {
         if (isValidParticipant(participant) && isValidCandidate(candidate)) {
           //return participantMap[participant].votes[candidate];
-            return participantMap[participant].votes[candidate];
+            return (candidate, participantMap[participant].votes[candidate]);
         } else {
-            return 0;
+            return ('', 0);
         }
     }
 
