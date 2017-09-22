@@ -73,4 +73,21 @@ contract('UserCRUD', function(accounts) {
     })
   })
 
+  it("delete an user by id decrease the quantity of users", () => {
+    return UserCRUD.deployed()
+    .then( (instance) => {
+      userCRUDInstance = instance
+      return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 0, {from: accounts[0]})
+    }).then( (idTx) => {
+      return userCRUDInstance.getUsers()
+    }).then( (users) => {
+      expected = users.length
+      return userCRUDInstance.deleteUser(0)
+    }).then( (idTx) => {
+      return userCRUDInstance.getUsers()
+    }).then( (users) => {
+      assert.equal(expected-1, users.length , "they have same length")
+    })
+  })
+
 })
