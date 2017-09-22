@@ -1,7 +1,13 @@
 const Web3 = require('web3')
-const Web3Utils = require('web3-utils')
-// Instantiate new web3 object pointing toward an Ethereum node.
+// const Web3Utils = require('web3-utils')
+// // Instantiate new web3 object pointing toward an Ethereum node.
 let web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
+
+// import getWeb3 from '../src/utils/getWeb3'
+//
+// let web3 = getWeb3.then(results => {
+//   return results.web3
+// })
 
 let UserCRUD = artifacts.require("./UserCRUD.sol")
 
