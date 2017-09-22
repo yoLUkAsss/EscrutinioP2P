@@ -18,6 +18,7 @@ contract UserCRUD {
       owner = msg.sender;
   }
 
+  //falta usar sha3 o keccak256 dentro de solidity o por web3
   function createUser(bytes32 mail, bytes32 password, UserCategory category){
     /*validarCreacion(mail, password, categoria);*/
     userMapping[userIds.length] = User(userIds.length, mail, password, category);
@@ -38,4 +39,11 @@ contract UserCRUD {
     return (id, userMapping[id].mail, userMapping[id].password, userMapping[id].category);
   }
 
+  //falta usar sha3 o keccak256 dentro de solidity o por web3
+  function updateUser(uint8 id, bytes32 mail, bytes32 password, UserCategory category){
+    /*validarExiste(id)*/
+    userMapping[id].mail = mail;
+    userMapping[id].password = password;
+    userMapping[id].category = category;
+  }
 }

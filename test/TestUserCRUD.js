@@ -33,27 +33,43 @@ contract('UserCRUD', function(accounts) {
       return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, {from:accounts[0]})
     }).then( (idTx) => {
       return userCRUDInstance.getUser(0)
-    }).then( (usuario) => {
-      //usuario[0] id
-      //usuario[1] mail
+    }).then( (user) => {
+      //user[0] id
+      //user[1] mail
       // let expectedMail = web3.fromAscii("jesus@gmail.com", 32)
-      // let currentMail = usuario[1]
+      // let currentMail = user[1]
       let expectedMail = "jesus@gmail.com"
-      let currentMail = web3.toUtf8(usuario[1])
+      let currentMail = web3.toUtf8(user[1])
       assert.equal(expectedMail, currentMail, "mails are equals")
       //chequear password
-      //usuario[2] password
+      //user[2] password
       //problema: no puedo hashear la password del usuario cuando este se lo crea
       // let expectedPassword = Web3Utils.keccak256("jesus")
-      // let currentPassword = usuario[2]
+      // let currentPassword = user[2]
       let expectedPassword = "jesus"
-      let currentPassword = web3.toUtf8(usuario[2])
+      let currentPassword = web3.toUtf8(user[2])
       assert.equal(expectedPassword, currentPassword, "passwords are equals")
       //chequear role
-      //usuario[3] role(es un int)
+      //user[3] role(es un int)
       let expectedRole = 1
-      let currentRole = usuario[3].toNumber()
+      let currentRole = user[3].toNumber()
       assert.equal(expectedRole, currentRole, "categories are equals")
+    })
+  })
+
+  it("update some fields of an existent User should update that User field", () => {
+    return UserCRUD.deployed()
+    .then( (instance) => {
+      userCRUDInstance = instance
+      return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, {from: accounts[0]})
+    }).then( (idTx) => {
+      return userCRUDInstance.updateUser(0, "laime@gmail.com", "laime", 0, {from: accounts[0]})
+    }).then( (idTx) => {
+      return userCRUDInstance.getUser(0)
+    }).then( (user) => {
+      assert.equal("laime@gmail.com", web3.toUtf8(user[1]), "mail was changed")
+      assert.equal("laime", web3.toUtf8(user[2]), "password was changed")
+      assert.equal(0, user[3].toNumber(), "role was changed")
     })
   })
 
