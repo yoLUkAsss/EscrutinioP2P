@@ -10,6 +10,7 @@ import MesaForm from './MesaForm.js'
 import MesaDataLoadForm from './MesaDataLoadForm.js'
 import Error404 from './ErrorComponents/Error404.js'
 import SearchMesa from './SearchComponents/SearchMesa.js'
+import AuthHome from './Auth/AuthHome.js'
 
 import FixedNavbarComponent from './FixedNavbarComponent.js'
 import './ErrorComponents/Error404.css'
@@ -33,6 +34,7 @@ ReactDOM.render(
         <Route exact path="/searchMesa" component={SearchMesa}/>
         <Route exact path="/about" component={About}/>
         <Route exact path="/tabla" component={Tabla}/>
+        <Route exact path="/auth" component={AuthHome}/>
 
         {/* Final matches every other path - renders Error 404 not found */}
         <Route component={Error404} />

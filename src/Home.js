@@ -14,7 +14,7 @@ class Home extends Component {
         return (
             <Center>
             <div>
-                <ComponentTitle title='Bienvenido a DEscrutinio'/>
+                <ComponentTitle title='Bienvenido a EP2P'/>
             </div>
             </Center>
         )

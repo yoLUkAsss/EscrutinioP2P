@@ -39,7 +39,7 @@ class DinamicListForm extends Component {
           </List.Item>
         ))}
         </List>
-        <Button icon onClick={this.props.onAdd}>
+        <Button fluid icon onClick={this.props.onAdd}>
           <Icon name='plus'/>
         </Button>
       </div>
