@@ -74,12 +74,15 @@ contract('UserCRUD', function(accounts) {
     }).then( (idTx) => {
       return userCRUDInstance.getUsers()
     }).then( (users) => {
-      expected = users.length
+      expected = users.length-1
       return userCRUDInstance.deleteUser(0)
     }).then( (idTx) => {
       return userCRUDInstance.getUsers()
     }).then( (users) => {
-      assert.equal(expected-1, users.length , "they have same length")
+      assert.equal(expected, users.length , "they have same length")
+      return userCRUDInstance.existsUser(0)
+    }).then( (exists) => {
+      assert.ok(!exists, "the user doesnt exists anymore")
     })
   })
 

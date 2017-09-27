@@ -41,13 +41,13 @@ contract UserCRUD {
   }
 
   function getUser(uint id) constant returns(uint, bytes32, bytes32, UserCategory){
-    /*if(existsUser(id)) revert();*/
+    if(!existsUser(id)) revert();
     return (id, userMapping[id].email, userMapping[id].password, userMapping[id].category);
   }
 
   //falta usar sha3 o keccak256 dentro de solidity o por web3
   function updateUser(uint id, bytes32 email, bytes32 password, UserCategory category){
-    /*if(existsUser(id)) revert();*/
+    if(!existsUser(id)) revert();
     userMapping[id].email = email;
     userMapping[id].password = password;
     userMapping[id].category = category;
@@ -55,13 +55,13 @@ contract UserCRUD {
   }
 
   function deleteUser(uint id){
-    /*if(existsUser(id)) revert();*/
+    if(!existsUser(id)) revert();
     uint toDelete = userMapping[id].index;
     uint idToMove = userIds[userIds.length - 1];
     userIds[toDelete] = idToMove;
     userMapping[idToMove].index = toDelete;
     userIds.length--;
-
+    delete userMapping[id];
     LogDeleteUser(msg.sender, id);
   }
 
