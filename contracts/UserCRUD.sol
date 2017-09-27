@@ -65,6 +65,26 @@ contract UserCRUD {
     LogDeleteUser(msg.sender, id);
   }
 
+  /*functions defined to be used for election contract*/
+
+  function createApoderadoDePartido(bytes32 email, bytes32 password){
+    createUser(email, password, UserCategory.ApoderadoPartido);
+  }
+  function createDelegadoDeDistrito(bytes32 email, bytes32 password){
+    createUser(email, password, UserCategory.DelegadoDistrito);
+  }
+  function createAutoridadElectoral(bytes32 email, bytes32 password){
+    createUser(email, password, UserCategory.AutoridadElectoral);
+  }
+
+  function isApoderadoDePartido(bytes32 email) returns(bool){
+    return true;
+  }
+
+  function isDelegadoGeneral(bytes32 email) returns(bool){
+    return true;
+  }
+
   /*Geerate a event function for each function that modify the blockchain
   * ex: createUser
   */

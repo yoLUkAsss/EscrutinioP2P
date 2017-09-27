@@ -59,6 +59,22 @@ contract MesaCRUD {
     LogDeleteMesa(msg.sender, id);
   }
 
+
+  //functions to be used for election
+
+  function setFiscal(uint id, bytes32 fiscal){
+
+  }
+
+  function setPresidenteDeMesa(uint id, bytes32 pdm){
+
+  }
+
+  function setVicepresidenteDeMesa(uint id, bytes32 pdm){
+
+  }
+
+
   /*Generate an event function for each function that modify the blockchain
   * ex: createMesa
   */

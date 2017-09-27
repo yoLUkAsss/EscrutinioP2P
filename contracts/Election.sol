@@ -2,18 +2,30 @@ pragma solidity ^0.4.11;
 
 import "./Mesa.sol";
 import "./UserCRUD.sol";
+import "./MesaCRUD.sol";
 
 contract Election {
 
+/*
+AutoridadElectoral 0
+DelegadoDistrito 1
+DelegadoEscolar 2
+PresidenteMesa 3
+VicepresidenteMesa 4
+ApoderadoPartido 5
+FiscalMesa 6
+*/
 
-    address userCrud;
+    address owner;
+    address userCrudAddress;
+    address mesaCrudAddress;
     UserCRUD userCrud;
     MesaCRUD mesaCrud;
     bool created;
 
-
     function Election () {
-        created = false;
+      owner = msg.sender;
+      created = false;
     }
 
     function createElection (
@@ -33,54 +45,61 @@ contract Election {
 
         // La eleccion no puede haber sido instanciada.
         if ( isCreated() ) { revert(); }
-        
+
         // Debe existir misma cantidad de apoderados que de partidos politicos.
-        if ( false == apoderadosCompletos(apoderados, listaDePartidosPoliticos) ) { revert(); }  
+        if ( false == apoderadosCompletos(apoderados, listaDePartidosPoliticos) ) { revert(); }
 
 
         /**
                 Se muestra a continuación la creación de la elección en la red.
-        
+
          */
 
         // Se crea una instancia de CRUD de usuarios.
-        userCrud = new UserCRUD();
+        userCrudAddress = new UserCRUD();
 
         // Se crea una instancia de CRUD de mesas.
-        mesaCrud = new MesaCRUD();
+        mesaCrudAddress = new MesaCRUD();
+
+        userCrud = UserCRUD(userCrudAddress);
+        mesaCrud = MesaCRUD(mesaCrudAddress);
 
         // Se crea una usuario con categoria Autoridad de Comicio con el correo enviado.
-        userCrud.createUser(mailDelCreador, UserCategory.AutoridadDeComicio);
-
-        // Se generan nMesas Mesas 
-        for (var index = 0; index < nMesas; index++) {
-            mesaCrud.createMesa(listaDePartidosPoliticos);
-        }
-
+        /*userCrud.createUser(mailDelCreador, "", UserCRUD.AutoridadElectoral);*/
+        /*userCrud.createUser(mailDelCreador, "", 0);*/
+        userCrud.createAutoridadElectoral(mailDelCreador, "");
         // Se genera un usuario para el delegado general
-        userCrud.createUser(delegado, UserCategory.DelegadoGeneral);
-
+        /*userCrud.createUser(delegado, "", UserCRUD.DelegadoDistrito);*/
+        /*userCrud.createUser(delegado, "", 1);*/
+        userCrud.createDelegadoDeDistrito(delegado, "");
         // Se generan usuarios para cada apoderado de partido
-        for (var index = 0; index < apoderados.length; index++) {
-            userCrud.createUser(apoderados[index], UserCategory.ApoderadoDePartido);
+        uint index;
+        for (index = 0; index < apoderados.length; index++) {
+          //userCrud.createUser(apoderados[index], "", UserCRUD.ApoderadoDePartido);
+          userCrud.createApoderadoDePartido(apoderados[index], "");
         }
+        // Se generan nMesas Mesas
+        for (index = 0; index < nMesas; index++) {
+          mesaCrud.createMesa(delegado, listaDePartidosPoliticos, listaDePartidosPoliticos, 0);
+        }
+
     }
 
-    funcion definirFiscal(bytes32 requester, bytes32 fiscal, uint8 idMesa) {
+    function definirFiscal(bytes32 requester, bytes32 fiscal, uint8 idMesa) {
 
         if ( false == isApoderadoDePartido(requester) ) { revert(); }
         mesaCrud.setFiscal(idMesa, fiscal);
 
     }
 
-    funcion definirPresidenteDeMesa(bytes32 requester, bytes32 presidente, uint8 idMesa) {
+    function definirPresidenteDeMesa(bytes32 requester, bytes32 presidente, uint8 idMesa) {
 
         if ( false == isDelegadoGeneral(requester) ) { revert(); }
         mesaCrud.setPresidenteDeMesa(idMesa, presidente);
 
     }
 
-    funcion definirVicepresidenteDeMesa(bytes32 requester, bytes32 vicepresidente, uint8 idMesa) {
+    function definirVicepresidenteDeMesa(bytes32 requester, bytes32 vicepresidente, uint8 idMesa) {
 
         if ( false == isDelegadoGeneral(requester) ) { revert(); }
         mesaCrud.setVicepresidenteDeMesa(idMesa, vicepresidente);
@@ -90,7 +109,7 @@ contract Election {
 
     /**
             Funciones utilizadas para validar ciertos comportamientos.
-    
+
      */
     function isCreated() constant returns (bool) {
         return created;
@@ -101,13 +120,11 @@ contract Election {
     }
 
     function isApoderadoDePartido(bytes32 correo) returns (bool) {
-        usuario = userCrud.get(correo);
-        return usuario.category == UserCategory.ApoderadoDePartido;
+      return userCrud.isApoderadoDePartido(correo);
     }
 
     function isDelegadoGeneral(bytes32 correo) returns (bool) {
-        usuario = userCrud.get(correo);
-        return usuario.category == UserCategory.DelegadoGeneral;
+      return userCrud.isDelegadoGeneral(correo);
     }
 
 }
