@@ -112,4 +112,8 @@ contract Mesa {
         }
     }
 
+    function destroy(address parent){
+      selfdestruct(parent);
+    }
+
 }
