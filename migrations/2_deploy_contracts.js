@@ -2,6 +2,7 @@
 var SimpleStorage = artifacts.require("./SimpleStorage.sol");
 var Election = artifacts.require("./Election.sol");
 var UserCRUD = artifacts.require("./UserCRUD.sol");
+var MesaCRUD = artifacts.require("./MesaCRUD.sol");
 // var Mesa = artifacts.require("./Mesa.sol");
 // var Mesa = artifacts.require("./Mesa.sol");
 module.exports = function(deployer) {
@@ -15,6 +16,7 @@ module.exports = function(deployer) {
    */
    deployer.deploy(Election);
    deployer.deploy(UserCRUD);
+   deployer.deploy(MesaCRUD);
   //  deployer.deploy(Mesa);
   //  deployer.deploy(Mesa);
 };
