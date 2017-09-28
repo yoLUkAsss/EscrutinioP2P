@@ -3,6 +3,7 @@ let SimpleStorage = artifacts.require("./SimpleStorage.sol")
 let UserCRUD = artifacts.require("./UserCRUD.sol")
 let UserElectionCRUD = artifacts.require("./UserElectionCRUD.sol")
 let MesaCRUD = artifacts.require("./MesaCRUD.sol")
+let MesaElectionCRUD = artifacts.require("./MesaElectionCRUD.sol")
 let Election = artifacts.require("./Election.sol")
 
 /**
@@ -13,7 +14,7 @@ let Election = artifacts.require("./Election.sol")
  */
 module.exports = (deployer) => {
   deployer.deploy(SimpleStorage)
-  deployer.deploy([UserCRUD, UserElectionCRUD, MesaCRUD, Election])
+  deployer.deploy([UserCRUD, UserElectionCRUD, MesaCRUD, MesaElectionCRUD, Election])
   // deployer.deploy(UserCRUD);
   // deployer.deploy(UserElectionCRUD);
   // deployer.deploy(MesaCRUD);
