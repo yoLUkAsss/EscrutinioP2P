@@ -17,36 +17,40 @@ contract UserCRUD {
   uint lastId;
   mapping (uint => User) userMapping;
 
-  function UserCRUD () {
+  function UserCRUD () public{
       owner = msg.sender;
   }
 
   //falta usar sha3 o keccak256 dentro de solidity o por web3
-  function createUser(bytes32 email, bytes32 password, UserCategory category){
+  function createUser(bytes32 email, bytes32 password, UserCategory category) public{
     /*validarCreacion(mail, password, categoria);*/
     /*if(existsUser(id)) revert();*/
-    userMapping[userIds.length] = User(lastId, email, password, category, userIds.length, true);
-    userIds.push(userIds.length);
-    LogCreateUser(msg.sender, lastId, email, password, category);
     lastId += 1;
+    userMapping[lastId] = User(lastId, email, password, category, userIds.length, true);
+    userIds.push(lastId);
+    LogCreateUser(msg.sender, lastId, email, password, category);
   }
 
-  function existsUser(uint id) constant returns(bool){
-    return userIds.length > 0 && userMapping[id].isUser;
+  function isEmpty() internal constant returns(bool){
+      return userIds.length == uint256(0);
+  }
+
+  function existsUser(uint id) public constant returns(bool){
+    return !isEmpty() && userMapping[id].isUser;
   }
 
   /*Devuelve la lista con los id de todos los usuarios*/
-  function getUsers() constant returns(uint[]){
+  function getUsers() public constant returns(uint[]){
     return userIds;
   }
 
-  function getUser(uint id) constant returns(uint, bytes32, bytes32, UserCategory){
+  function getUser(uint id) public constant returns(uint, bytes32, bytes32, UserCategory){
     if(!existsUser(id)) revert();
     return (id, userMapping[id].email, userMapping[id].password, userMapping[id].category);
   }
 
   //falta usar sha3 o keccak256 dentro de solidity o por web3
-  function updateUser(uint id, bytes32 email, bytes32 password, UserCategory category){
+  function updateUser(uint id, bytes32 email, bytes32 password, UserCategory category) public{
     if(!existsUser(id)) revert();
     userMapping[id].email = email;
     userMapping[id].password = password;
@@ -54,7 +58,7 @@ contract UserCRUD {
     LogUpdateUser(msg.sender, id, email, password, category);
   }
 
-  function deleteUser(uint id){
+  function deleteUser(uint id) public{
     if(!existsUser(id)) revert();
     uint toDelete = userMapping[id].index;
     uint idToMove = userIds[userIds.length - 1];
@@ -63,26 +67,6 @@ contract UserCRUD {
     userIds.length--;
     delete userMapping[id];
     LogDeleteUser(msg.sender, id);
-  }
-
-  /*functions defined to be used for election contract*/
-
-  function createApoderadoDePartido(bytes32 email, bytes32 password){
-    createUser(email, password, UserCategory.ApoderadoPartido);
-  }
-  function createDelegadoDeDistrito(bytes32 email, bytes32 password){
-    createUser(email, password, UserCategory.DelegadoDistrito);
-  }
-  function createAutoridadElectoral(bytes32 email, bytes32 password){
-    createUser(email, password, UserCategory.AutoridadElectoral);
-  }
-
-  function isApoderadoDePartido(bytes32 email) returns(bool){
-    return true;
-  }
-
-  function isDelegadoGeneral(bytes32 email) returns(bool){
-    return true;
   }
 
   /*Geerate a event function for each function that modify the blockchain

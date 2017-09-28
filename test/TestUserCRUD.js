@@ -24,7 +24,7 @@ contract('UserCRUD', function(accounts) {
       userCRUDInstance = instance
       return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, {from:accounts[0]})
     }).then( (idTx) => {
-      return userCRUDInstance.existsUser(0)
+      return userCRUDInstance.existsUser(1)
     }).then( (exists) => {
       assert.ok(exists, "Exists user with id 0")
     })
@@ -36,7 +36,7 @@ contract('UserCRUD', function(accounts) {
       userCRUDInstance = instance
       return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, {from:accounts[0]})
     }).then( (idTx) => {
-      return userCRUDInstance.getUser(0)
+      return userCRUDInstance.getUser(1)
     }).then( (user) => {
       //user[0] id
       //check email: user[1] email
@@ -56,9 +56,9 @@ contract('UserCRUD', function(accounts) {
       userCRUDInstance = instance
       return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, {from: accounts[0]})
     }).then( (idTx) => {
-      return userCRUDInstance.updateUser(0, "laime@gmail.com", "laime", 0, {from: accounts[0]})
+      return userCRUDInstance.updateUser(1, "laime@gmail.com", "laime", 0, {from: accounts[0]})
     }).then( (idTx) => {
-      return userCRUDInstance.getUser(0)
+      return userCRUDInstance.getUser(1)
     }).then( (user) => {
       // assert.equal("laime@gmail.com", web3.toUtf8(user[1]), "mail was changed")
       // assert.equal("laime", web3.toUtf8(user[2]), "password was changed")
@@ -75,12 +75,12 @@ contract('UserCRUD', function(accounts) {
       return userCRUDInstance.getUsers()
     }).then( (users) => {
       expected = users.length-1
-      return userCRUDInstance.deleteUser(0)
+      return userCRUDInstance.deleteUser(1)
     }).then( (idTx) => {
       return userCRUDInstance.getUsers()
     }).then( (users) => {
       assert.equal(expected, users.length , "they have same length")
-      return userCRUDInstance.existsUser(0)
+      return userCRUDInstance.existsUser(1)
     }).then( (exists) => {
       assert.ok(!exists, "the user doesnt exists anymore")
     })
