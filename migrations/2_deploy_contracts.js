@@ -1,24 +1,21 @@
 //var Contract = artifacts.require("./path/to/Contract.sol");
-var SimpleStorage = artifacts.require("./SimpleStorage.sol");
-var Election = artifacts.require("./Election.sol");
-var UserCRUD = artifacts.require("./UserCRUD.sol");
-var MesaCRUD = artifacts.require("./MesaCRUD.sol");
-var UserElectionCRUD = artifacts.require("./UserElectionCRUD.sol");
-// var Mesa = artifacts.require("./Mesa.sol");
-// var Mesa = artifacts.require("./Mesa.sol");
-module.exports = function(deployer) {
-  deployer.deploy(SimpleStorage);
+let SimpleStorage = artifacts.require("./SimpleStorage.sol")
+let UserCRUD = artifacts.require("./UserCRUD.sol")
+let UserElectionCRUD = artifacts.require("./UserElectionCRUD.sol")
+let MesaCRUD = artifacts.require("./MesaCRUD.sol")
+let Election = artifacts.require("./Election.sol")
 
-  /**
-   * Example of use :
-   *
-   * deployer.deploy(Contract);
-   *
-   */
-   deployer.deploy(Election);
-   deployer.deploy(UserCRUD);
-   deployer.deploy(MesaCRUD);
-   deployer.deploy(UserElectionCRUD);
-  //  deployer.deploy(Mesa);
-  //  deployer.deploy(Mesa);
+/**
+ * Example of use :
+ *
+ * deployer.deploy(Contract);
+ *
+ */
+module.exports = (deployer) => {
+  deployer.deploy(SimpleStorage)
+  deployer.deploy([UserCRUD, UserElectionCRUD, MesaCRUD, Election])
+  // deployer.deploy(UserCRUD);
+  // deployer.deploy(UserElectionCRUD);
+  // deployer.deploy(MesaCRUD);
+  // deployer.deploy(Election);
 };

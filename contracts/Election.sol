@@ -1,26 +1,15 @@
 pragma solidity ^0.4.11;
 
 import "./Mesa.sol";
-import "./UserCRUD.sol";
-import "./MesaCRUD.sol";
+import "./UserElectionCRUD.sol";
+import "./MesaElectionCRUD.sol";
 
 contract Election {
-
-/*
-AutoridadElectoral 0
-DelegadoDistrito 1
-DelegadoEscolar 2
-PresidenteMesa 3
-VicepresidenteMesa 4
-ApoderadoPartido 5
-FiscalMesa 6
-*/
-
     address owner;
     address userCrudAddress;
     address mesaCrudAddress;
-    UserCRUD userCrud;
-    MesaCRUD mesaCrud;
+    UserElectionCRUD userCrud;
+    MesaElectionCRUD mesaCrud;
     bool created;
 
     function Election () {
@@ -61,8 +50,8 @@ FiscalMesa 6
         // Se crea una instancia de CRUD de mesas.
         mesaCrudAddress = new MesaCRUD();
 
-        userCrud = UserCRUD(userCrudAddress);
-        mesaCrud = MesaCRUD(mesaCrudAddress);
+        userCrud = UserElectionCRUD(userCrudAddress);
+        mesaCrud = MesaElectionCRUD(mesaCrudAddress);
 
         // Se crea una usuario con categoria Autoridad de Comicio con el correo enviado.
         /*userCrud.createUser(mailDelCreador, "", UserCRUD.AutoridadElectoral);*/
@@ -120,7 +109,7 @@ FiscalMesa 6
     }
 
     function isApoderadoDePartido(bytes32 correo) returns (bool) {
-      return userCrud.isApoderadoDePartido(correo);
+      return userCrud.isApoderadoPartido(correo);
     }
 
     function isDelegadoGeneral(bytes32 correo) returns (bool) {

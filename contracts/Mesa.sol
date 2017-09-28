@@ -18,7 +18,7 @@ contract Mesa {
     mapping (bytes32 => ParticipantData) participantMap;
 
     // Constructor... msg.sender es duenio de mesa
-    function Mesa(bytes32 apoderado, bytes32[] fiscales, bytes32[] inputCandidates, uint8 inputTotalVotes){
+    function Mesa(bytes32 apoderado, bytes32[] fiscales, bytes32[] inputCandidates, uint8 inputTotalVotes) public{
         owner = msg.sender;
         total = inputTotalVotes;
         participantList = fiscales;
@@ -41,31 +41,30 @@ contract Mesa {
           }
         }
 
-        // al final se agregao al apoderado como un participante mas de la mesa
+        // al final se agrega al apoderado como un participante mas de la mesa
         participantList.push(apoderado);
     }
 
-    function getCandidates() constant returns (bytes32[]){
+    function getCandidates() public constant returns (bytes32[]){
         return candidateList;
     }
-    function getParticipantList() constant returns (bytes32[]){
+    function getParticipantList() public constant returns (bytes32[]){
         return participantList;
     }
 
-    function getParticipantDataCounts(bytes32 participant) constant returns (uint8){
+    function getParticipantDataCounts(bytes32 participant) public constant returns (uint8){
         return participantMap[participant].counts;
     }
 
-    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) constant returns (bytes32, uint8) {
+    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) public constant returns (bytes32, uint8) {
         if (isValidParticipant(participant) && isValidCandidate(candidate)) {
-          //return participantMap[participant].votes[candidate];
             return (candidate, participantMap[participant].votes[candidate]);
         } else {
             return ('', 0);
         }
     }
 
-    function isValidCandidate(bytes32 candidate) constant returns (bool){
+    function isValidCandidate(bytes32 candidate) public constant returns (bool){
       for(uint i=0; i < candidateList.length; i++){
         if(candidate == candidateList[i]){
           return true;
@@ -77,7 +76,7 @@ contract Mesa {
     /**
      * Es participante valido en el contexto de esta mesa
      */
-    function isValidParticipant(bytes32 participant) constant returns (bool){
+    function isValidParticipant(bytes32 participant) public constant returns (bool){
       for(uint i=0; i < participantList.length; i++){
         if(participant == participantList[i]){
           return true;
@@ -86,34 +85,38 @@ contract Mesa {
       return false;
     }
 
-    function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos) returns (bool){
-        if (isValidParticipant(participant) && isValidCandidate(candidato)) {
-            //participantMap[participant].counts = participantMap[participant].counts + votos;
-            participantMap[participant].votes[candidato] = votos;
-            return true;
-        } else {
-            revert();
-        }
+    function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos) public {
+      if(!isValidParticipant(participant) || !isValidCandidate(candidato)) revert();
+      participantMap[participant].votes[candidato] = votos;
     }
 
-    function isApoderadoDeMesa(bytes32 participant) constant returns (bool) {
+    function isApoderadoDeMesa(bytes32 participant) public constant returns (bool) {
         return isCategory(participant, CategoriaParticipante.ApoderadoMesa);
     }
 
-    function isFiscal(bytes32 participant) constant returns (bool) {
+    function isFiscal(bytes32 participant) public constant returns (bool) {
         return isCategory(participant, CategoriaParticipante.Fiscal);
     }
 
-    function isCategory(bytes32 participant, CategoriaParticipante category) constant returns (bool) {
-        if (isValidParticipant(participant)) {
-            return participantMap[participant].categoria == category;
-        } else {
-            return false;
-        }
+    function isCategory(bytes32 participant, CategoriaParticipante category) internal constant returns (bool) {
+        return isValidParticipant(participant) && participantMap[participant].categoria == category;
     }
 
-    function destroy(address parent){
-      selfdestruct(parent);
+    function destroy(address parent) {
+        selfdestruct(parent);
     }
+
+    //latest functions added
+    function setFiscal(bytes32 fiscal) public{
+        SetRole(msg.sender, fiscal);
+    }
+
+    function setPresidenteDeMesa(bytes32 presidente) public{
+        SetRole(msg.sender, presidente);
+    }
+    function setVicePresidenteDeMesa(bytes32 vicepresidente) public{
+        SetRole(msg.sender, vicepresidente);
+    }
+    event SetRole(address indexed userAddress, bytes32 fiscal);
 
 }

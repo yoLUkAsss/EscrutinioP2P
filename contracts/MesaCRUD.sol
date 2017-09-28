@@ -11,76 +11,68 @@ contract MesaCRUD {
   struct MesaStruct {
     uint id;
     address mesaAddress;
+
     uint index;
     bool isMesa;
   }
 
   mapping (uint => MesaStruct) mesasMapping;
 
-  function MesaCRUD(){
+  function MesaCRUD() public{
     owner = msg.sender;
   }
 
-  function createMesa(bytes32 apoderado, bytes32[] fiscales, bytes32[] inputCandidates, uint8 inputTotalVotes){
-    address mesaAddress = new Mesa(apoderado, fiscales, inputCandidates, inputTotalVotes);
-    mesasMapping[mesasIds.length] = MesaStruct(lastId, mesaAddress, mesasIds.length, true);
-    mesasIds.push(mesasIds.length);
-    LogCreateMesa(msg.sender, lastId, mesaAddress);
+  function createMesa(bytes32 apoderado, bytes32[] fiscales, bytes32[] inputCandidates, uint8 inputTotalVotes) public{
     lastId += 1;
+    address mesaAddress = new Mesa(apoderado, fiscales, inputCandidates, inputTotalVotes);
+    mesasMapping[lastId] = MesaStruct(lastId, mesaAddress, mesasIds.length, true);
+    mesasIds.push(lastId);
+    LogCreateMesa(msg.sender, lastId, mesaAddress);
   }
-  function existsMesa(uint id) constant returns(bool){
-    return mesasIds.length > 0 && mesasMapping[id].isMesa;
+
+  function isEmpty() internal constant returns(bool){
+      return mesasIds.length == 0;
   }
-  /*Devuelve la lista con los id de todos los usuarios*/
-  function getMesas() constant returns(uint[]){
+
+  function existsMesa(uint id) public constant returns(bool){
+    return !isEmpty() && mesasMapping[id].isMesa;
+  }
+
+  function getMesas() public constant returns(uint[]){
     return mesasIds;
   }
 
-  function getMesa(uint id) constant returns(address){
+  function getMesa(uint id) public constant returns(uint, address){
     if(!existsMesa(id)) revert();
-    return mesasMapping[id].mesaAddress;
+    return (id, mesasMapping[id].mesaAddress);
   }
 
-  function updateMesa(uint id){
+  function updateMesa(uint id) public{
     if(!existsMesa(id)) revert();
     LogUpdateMesa(msg.sender, id);
   }
 
-  function deleteMesa(uint id){
+  function deleteMesa(uint id) public{
     if(!existsMesa(id)) revert();
     uint toDeleteIndex = mesasMapping[id].index;
     uint toMoveIndex = mesasIds[mesasIds.length - 1];
     mesasIds[toDeleteIndex] = toMoveIndex;
     mesasMapping[toMoveIndex].index = toDeleteIndex;
+
     var m = Mesa(mesasMapping[id].mesaAddress);
     m.destroy(owner);
     delete mesasMapping[id];
     mesasIds.length--;
+
     LogDeleteMesa(msg.sender, id);
   }
-
-
-  //functions to be used for election
-
-  function setFiscal(uint id, bytes32 fiscal){
-
-  }
-
-  function setPresidenteDeMesa(uint id, bytes32 pdm){
-
-  }
-
-  function setVicepresidenteDeMesa(uint id, bytes32 pdm){
-
-  }
-
 
   /*Generate an event function for each function that modify the blockchain
   * ex: createMesa
   */
 
-  event LogCreateMesa(address indexed userAddress, uint userId, address mesaAddress);
-  event LogUpdateMesa(address indexed userAddress, uint userId);
-  event LogDeleteMesa(address indexed userAddress, uint userId);
+  event LogCreateMesa(address indexed senderAddress, uint mesaId, address mesaAddress);
+  event LogUpdateMesa(address indexed senderAddress, uint mesaId);
+  event LogDeleteMesa(address indexed senderAddress, uint mesaId);
 
 }

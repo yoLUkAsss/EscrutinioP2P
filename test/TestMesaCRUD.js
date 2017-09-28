@@ -15,9 +15,9 @@ contract('MesaCRUD', function(accounts) {
       mesaCRUDInstance = instance
       return mesaCRUDInstance.createMesa("jesus@gmail.com", [], [], 9, {from:accounts[0]})
     }).then( (idTx) => {
-      return mesaCRUDInstance.existsMesa(0)
+      return mesaCRUDInstance.existsMesa(1)
     }).then( (exists) => {
-      assert.ok(exists, "Exists mesa with id 0")
+      assert.ok(exists, "Exists mesa with id 1")
     })
   })
 
@@ -27,9 +27,9 @@ contract('MesaCRUD', function(accounts) {
       mesaCRUDInstance = instance
       return mesaCRUDInstance.createMesa("jesus@gmail.com", [], [], 1, {from:accounts[0]})
     }).then( (idTx) => {
-      return mesaCRUDInstance.getMesa(0)
+      return mesaCRUDInstance.getMesa(1)
     }).then( (mesa) => {
-      assert.equal(mesa[0], 0, "ids are equals")
+      assert.equal(mesa[0], 1, "ids are equals")
       assert.ok(mesa[1] !== undefined, "has address")
     })
   })
@@ -43,12 +43,12 @@ contract('MesaCRUD', function(accounts) {
       return mesaCRUDInstance.getMesas()
     }).then( (mesas) => {
       expected = mesas.length-1
-      return mesaCRUDInstance.deleteMesa(0)
+      return mesaCRUDInstance.deleteMesa(1)
     }).then( (idTx) => {
       return mesaCRUDInstance.getMesas()
     }).then( (mesas) => {
       assert.equal(expected, mesas.length , "they have same length")
-      return mesaCRUDInstance.existsMesa(0)
+      return mesaCRUDInstance.existsMesa(1)
     }).then( (exists) => {
       assert.ok(!exists, "that mesa doesnt exists anymore")
     })

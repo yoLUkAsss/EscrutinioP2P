@@ -26,7 +26,7 @@ contract('UserCRUD', function(accounts) {
     }).then( (idTx) => {
       return userCRUDInstance.existsUser(1)
     }).then( (exists) => {
-      assert.ok(exists, "Exists user with id 0")
+      assert.ok(exists, "Exists user with id 1")
     })
   })
 
