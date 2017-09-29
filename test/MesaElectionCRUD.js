@@ -1,13 +1,31 @@
 let MesaElectionCRUD = artifacts.require("./MesaElectionCRUD.sol")
 
+let getId = (idTx) => {
+  // console.log(idTx.logs[0].args)
+  return idTx.logs[0].args.mesaId.toNumber()
+}
+
+
 contract('MesaElectionCRUD', function(accounts) {
 
-  it("create an MesaElectionCRUD contract should create this with 0 mesas.", () => {
-    return MesaElectionCRUD.deployed().then( (instance) => {
-      return instance.getMesas.call({from: accounts[0]})
-    }).then( (mesas) => {
-      assert.equal(mesas.length, 0, "There are 0 mesas.")
-    })
+  let fromObject = {from: accounts[0]}
+
+  it("create an MesaElectionCRUD contract should create this with 0 mesas.", async () => {
+    let mesaElectionCRUDInstance = await MesaElectionCRUD.deployed()
+    let mesas = await mesaElectionCRUDInstance.getMesas.call(fromObject)
+    assert.equal(mesas.length, 0, "There are 0 mesas.")
+  })
+
+  it("set PresidenteDeMesa to a mesa should be logged", async () => {
+    let mesaElectionCRUDInstance = await MesaElectionCRUD.deployed()
+    let args = ["jesus@gmail.com", [], [], 9]
+    let tx = await mesaElectionCRUDInstance.createMesa(args[0], args[1], args[2], args[3], fromObject)
+    let exists = await mesaElectionCRUDInstance.existsMesa.call(getId(tx), fromObject)
+    assert.ok(exists, "Exists mesa")
+
+    let txSet = await mesaElectionCRUDInstance.setPresidenteDeMesa(getId(tx), "jesus", fromObject)
+    assert.equal(getId(txSet), getId(tx), "mesas ids are equals")
+    await mesaElectionCRUDInstance.deleteMesa(getId(tx), fromObject)
   })
 
 })
