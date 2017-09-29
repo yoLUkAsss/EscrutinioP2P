@@ -1,57 +1,49 @@
 let MesaCRUD = artifacts.require("./MesaCRUD.sol")
 
+let getId = (idTx) => {
+  // console.log(idTx.logs[0].args)
+  return idTx.logs[0].args.mesaId.toNumber()
+}
+
 contract('MesaCRUD', function(accounts) {
 
-  it("create an MesaCRUD contract should create this contract with 0 mesas.", () => {
-    return MesaCRUD.deployed().then( (instance) => {
-      return instance.getMesas.call({from: accounts[0]})
-    }).then( (mesas) => {
-      assert.equal(mesas.length, 0, "There are 0 mesas.")
-    })
+  let fromObject = {from : accounts[0]}
+
+  it("create an MesaCRUD contract should create this contract with 0 mesas.", async () => {
+    let mesaCRUDInstance = await MesaCRUD.deployed()
+    let mesas = await mesaCRUDInstance.getMesas.call(fromObject)
+    assert.equal(0, mesas.length, "There are 0 mesas")
   })
 
-  it("create an Mesa Contract should add a new mesa into MesaCRUD.", () => {
-    return MesaCRUD.deployed().then( (instance) => {
-      mesaCRUDInstance = instance
-      return mesaCRUDInstance.createMesa("jesus@gmail.com", [], [], 9, {from:accounts[0]})
-    }).then( (idTx) => {
-      return mesaCRUDInstance.existsMesa(1)
-    }).then( (exists) => {
-      assert.ok(exists, "Exists mesa with id 1")
-    })
+  it("create an Mesa Contract should add a new mesa into MesaCRUD.", async () => {
+    let mesaCRUDInstance = await MesaCRUD.deployed()
+    let args = ["jesus@gmail.com", [], [], 9]
+    let tx = await mesaCRUDInstance.createMesa(args[0], args[1], args[2], args[3], fromObject)
+    let exists = await mesaCRUDInstance.existsMesa.call(getId(tx))
+    assert.ok(exists, "Exists mesa")
+    await mesaCRUDInstance.deleteMesa(getId(tx), fromObject)
   })
 
-  it("get an existent Mesa should returns its id and address.", () => {
-    return MesaCRUD.deployed()
-      .then( (instance) => {
-      mesaCRUDInstance = instance
-      return mesaCRUDInstance.createMesa("jesus@gmail.com", [], [], 1, {from:accounts[0]})
-    }).then( (idTx) => {
-      return mesaCRUDInstance.getMesa(1)
-    }).then( (mesa) => {
-      assert.equal(mesa[0], 1, "ids are equals")
-      assert.ok(mesa[1] !== undefined, "has address")
-    })
+  it("get an existent Mesa should returns its id and address.", async () => {
+    let mesaCRUDInstance = await MesaCRUD.deployed()
+    let args = ["jesus@gmail.com", [], [], 9]
+    let tx = await mesaCRUDInstance.createMesa(args[0], args[1], args[2], args[3], fromObject)
+    let mesa = await mesaCRUDInstance.getMesa.call(getId(tx), fromObject)
+    assert.equal(mesa[0].toNumber(), getId(tx), "ids are equals")
+    assert.ok(mesa[1] !== undefined, "has address")
+    await mesaCRUDInstance.deleteMesa(getId(tx), fromObject)
   })
 
-  it("delete an mesa by id decrease the length of mesas", () => {
-    return MesaCRUD.deployed()
-    .then( (instance) => {
-      mesaCRUDInstance = instance
-      return mesaCRUDInstance.createMesa("jesus@gmail.com", [], [], 1, {from: accounts[0]})
-    }).then( (idTx) => {
-      return mesaCRUDInstance.getMesas()
-    }).then( (mesas) => {
-      expected = mesas.length-1
-      return mesaCRUDInstance.deleteMesa(1)
-    }).then( (idTx) => {
-      return mesaCRUDInstance.getMesas()
-    }).then( (mesas) => {
-      assert.equal(expected, mesas.length , "they have same length")
-      return mesaCRUDInstance.existsMesa(1)
-    }).then( (exists) => {
-      assert.ok(!exists, "that mesa doesnt exists anymore")
-    })
+  it("delete an mesa by id decrease the length of mesas", async () => {
+    let mesaCRUDInstance = await MesaCRUD.deployed()
+    let args = ["jesus@gmail.com", [], [], 9]
+    let txcreate = await mesaCRUDInstance.createMesa(args[0], args[1], args[2], args[3], fromObject)
+    let exists = await mesaCRUDInstance.existsMesa.call(getId(txcreate), fromObject)
+    assert.ok(exists, "Exists mesa created")
+    let txdelete = await mesaCRUDInstance.deleteMesa(getId(txcreate), fromObject)
+    let notexists = await mesaCRUDInstance.existsMesa.call(getId(txcreate), fromObject)
+    assert.ok(!notexists, "Not exists mesa deleted")
+    assert.equal(getId(txcreate), getId(txdelete), "ids are equals")
   })
 
 })
