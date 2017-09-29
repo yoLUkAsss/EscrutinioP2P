@@ -1,89 +1,66 @@
-// const Web3 = require('web3')
-// const Web3Utils = require('web3-utils')
-// let web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
-
-// import getWeb3 from '../src/utils/getWeb3'
-// let web3 = getWeb3.then(results => {
-//   return results.web3
-// })
-
 let UserCRUD = artifacts.require("./UserCRUD.sol")
 
-contract('UserCRUD', function(accounts) {
-
-  it("create an UserCRUD contract should create this contract with 0 users.", () => {
-    return UserCRUD.deployed().then( (instance) => {
-      return instance.getUsers.call({from: accounts[0]})
-    }).then( (users) => {
-      assert.equal(users.length, 0, "There are 0 users.")
+let cleanDB = (userDB, fromObj) => {
+  userDB.getUsers.call(fromObj).then((users) => {
+    users.forEach((id) => {
+      userDB.deleteUser(id.toNumber(), fromObj)
     })
   })
+}
 
-  it("create an User should add that user into UserCRUD.", () => {
-    return UserCRUD.deployed().then( (instance) => {
-      userCRUDInstance = instance
-      return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, {from:accounts[0]})
-    }).then( (idTx) => {
-      return userCRUDInstance.existsUser(1)
-    }).then( (exists) => {
-      assert.ok(exists, "Exists user with id 1")
-    })
+let getId = (idTx) => {
+  // console.log(idTx.logs[0].args)
+  return idTx.logs[0].args.userId.toNumber()
+}
+
+contract('UserCRUD' ,function(accounts) {
+  let fromObject = {from : accounts[0]}
+
+  it("create an UserCRUD contract should create this contract with 0 users", async () => {
+    let userCRUDInstance = await UserCRUD.deployed()
+    let users = await userCRUDInstance.getUsers.call(fromObject)
+    assert.equal(users.length, 0, "There are 0 users")
   })
 
-  it("get an existent User should returns its id, mail, role id.", () => {
-    return UserCRUD.deployed()
-      .then( (instance) => {
-      userCRUDInstance = instance
-      return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, {from:accounts[0]})
-    }).then( (idTx) => {
-      return userCRUDInstance.getUser(1)
-    }).then( (user) => {
-      //user[0] id
-      //check email: user[1] email
-      // assert.equal("jesus@gmail.com", web3.toUtf8(user[1]), "mails are equals")
-      //check password: user[2] password
-      // assert.equal("jesus", web3.toUtf8(user[2]), "passwords are equals")
-      //check role: user[3] role(type int)
-      let expectedRole = 1
-      let currentRole = user[3].toNumber()
-      assert.equal(expectedRole, currentRole, "categories are equals")
-    })
+  it("create an User should add that user into UserCRUD", async () => {
+    let userCRUDInstance = await UserCRUD.deployed()
+    let tx = await userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, fromObject)
+    let exists = await userCRUDInstance.existsUser.call(getId(tx), fromObject)
+    assert.ok(exists, "Exists user by id")
+    await userCRUDInstance.deleteUser(getId(tx), fromObject)
   })
 
-  it("update some fields of an existent User should update that User field", () => {
-    return UserCRUD.deployed()
-    .then( (instance) => {
-      userCRUDInstance = instance
-      return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, {from: accounts[0]})
-    }).then( (idTx) => {
-      return userCRUDInstance.updateUser(1, "laime@gmail.com", "laime", 0, {from: accounts[0]})
-    }).then( (idTx) => {
-      return userCRUDInstance.getUser(1)
-    }).then( (user) => {
-      // assert.equal("laime@gmail.com", web3.toUtf8(user[1]), "mail was changed")
-      // assert.equal("laime", web3.toUtf8(user[2]), "password was changed")
-      assert.equal(0, user[3].toNumber(), "role was changed")
-    })
+  it("get an existent User should returns its id, mail, role id", async () => {
+    let userCRUDInstance = await UserCRUD.deployed()
+    let tx = await userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, fromObject)
+    let user = await userCRUDInstance.getUser.call(getId(tx), fromObject)
+    let expectedRole = 1
+    let currentRole = user[3].toNumber()
+    assert.equal(expectedRole,currentRole, "categories are equals")
+    await userCRUDInstance.deleteUser(getId(tx), fromObject)
+    // assert.equal("jesus@gmail.com", web3.toUtf8(user[1]), "mails are equals")
+    // assert.equal("jesus", web3.toUtf8(user[2]), "passwords are equals")
   })
 
-  it("delete an user by id decrease the quantity of users", () => {
-    return UserCRUD.deployed()
-    .then( (instance) => {
-      userCRUDInstance = instance
-      return userCRUDInstance.createUser("jesus@gmail.com", "jesus", 0, {from: accounts[0]})
-    }).then( (idTx) => {
-      return userCRUDInstance.getUsers()
-    }).then( (users) => {
-      expected = users.length-1
-      return userCRUDInstance.deleteUser(1)
-    }).then( (idTx) => {
-      return userCRUDInstance.getUsers()
-    }).then( (users) => {
-      assert.equal(expected, users.length , "they have same length")
-      return userCRUDInstance.existsUser(1)
-    }).then( (exists) => {
-      assert.ok(!exists, "the user doesnt exists anymore")
-    })
+  it("update some fields of an existent User should update that User field", async () => {
+    let userCRUDInstance = await UserCRUD.deployed()
+    let tx = await userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, fromObject)
+    let previousUser = await userCRUDInstance.getUser.call(getId(tx), fromObject)
+    await userCRUDInstance.updateUser(getId(tx), "laime@gmail.com", "laime", 0, fromObject)
+    let currentUser = await userCRUDInstance.getUser.call(getId(tx), fromObject)
+    assert.ok(previousUser !== currentUser, "they are different")
+    await userCRUDInstance.deleteUser(getId(tx), fromObject)
+  })
+
+  it("delete an user by id decrease the quantity of users", async () => {
+    let userCRUDInstance = await UserCRUD.deployed()
+    let txcreate = await userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, fromObject)
+    let existsPostCreate = await userCRUDInstance.existsUser.call(getId(txcreate), fromObject)
+    assert.ok(existsPostCreate, "user created correctly")
+    let txdelete = await userCRUDInstance.deleteUser(getId(txcreate), fromObject)
+    assert.equal(getId(txcreate), getId(txdelete), "ids from user created and deleted are equals")
+    let existsPostDelete = await userCRUDInstance.existsUser.call(getId(txdelete), fromObject)
+    assert.ok(!existsPostDelete, "user deleted correctly")
   })
 
 })
