@@ -18,10 +18,10 @@ contract UserElectionCRUD is UserCRUD{
         return existsUser(userMailMapping[email]);
     }
 
-    function deleteUser(bytes32 email) public{
+    function deleteUserByEmail(bytes32 email) public{
         if(!existsUserByEmail(email)) revert();
-        delete userMailMapping[email];
         deleteUser(userMailMapping[email]);
+        delete userMailMapping[email];
     }
 
   function createApoderadoDePartido(bytes32 email, bytes32 password) public{
@@ -46,5 +46,8 @@ contract UserElectionCRUD is UserCRUD{
     return isUser(email, UserCategory.DelegadoDistrito);
   }
 
+  function isAutoridadElectoral(bytes32 email) public constant returns(bool){
+    return isUser(email, UserCategory.AutoridadElectoral);
+  }
 
 }
