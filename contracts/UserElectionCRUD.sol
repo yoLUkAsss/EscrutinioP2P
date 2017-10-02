@@ -5,6 +5,10 @@ import "./UserCRUD.sol";
 contract UserElectionCRUD is UserCRUD{
   /*functions defined to be used for election contract*/
 
+  function UserElectionCRUD () {
+
+  }
+
     // functions defined to be used in election user
     mapping (bytes32 => uint) userMailMapping;
 

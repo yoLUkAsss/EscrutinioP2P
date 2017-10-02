@@ -60,10 +60,6 @@ contract Mesa {
       return participantMap[participant].isValidParticipant;
     }
 
-    function isApoderadoDeMesa(bytes32 participant) public constant returns (bool) {
-      return isCategory(participant, ParticipantCategory.ApoderadoMesa);
-    }
-
     function isFiscal(bytes32 participant) public constant returns (bool) {
       return isCategory(participant, ParticipantCategory.Fiscal);
     }

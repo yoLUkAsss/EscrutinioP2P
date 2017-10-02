@@ -17,10 +17,11 @@ class Election extends Component {
             apoderados : [{correo : ''}],
             delegadoGeneral : '',
             numeroDeMesas : 1,
-            personasPorMesa : 2
+            personasPorMesa : 2,
+            web3 : null
         };
 
-
+        this.createElection = this.createElection.bind(this)
     }
 
     crearEleccion = (event) => {
@@ -62,9 +63,6 @@ class Election extends Component {
         this.setState({ apoderados: this.state.apoderados.filter((s, sidx) => idx !== sidx) })
     }
 
-
-
-
     componentWillMount() {
         getWeb3.then(results => {
             this.setState({
@@ -96,20 +94,34 @@ class Election extends Component {
             election.deployed().then((instance) => {
             // console.log(JSON.stringify(instance, undefined, 2))
             electionInstance = instance
-            return electionInstance.createElection( 
-                this.state.autoridadDeComicio,
-                this.state.numeroDeMesas,
-                nombresDePartidos,
-                this.state.personasPorMesa,
-                correosDeApoderados,
-                this.state.delegadoGeneral,
-                {from: accounts[0]}
+            console.log("antes de estimar")
+            return electionInstance.createElection.estimateGas(
+              // this.state.autoridadDeComicio,
+              // this.state.numeroDeMesas,
+              // nombresDePartidos,
+              // this.state.personasPorMesa,
+              "pepe",
+              1,
+              ["p1"],
+              1,
+              {from: accounts[0]}
             )
-            }).then((setResult) => {
-            return electionInstance.getName.call(accounts[0])
-            }).then((getResult) => {
-            return this.setState({depAddress: electionInstance.address, electionName: getResult})
-            })
+          }).then((gasEstimated) => {
+            console.log("despues de estimar")
+            return electionInstance.createElection.sendTransaction(
+                // this.state.autoridadDeComicio,
+                // this.state.numeroDeMesas,
+                // nombresDePartidos,
+                // this.state.personasPorMesa,
+                "pepe",
+                1,
+                ["p1"],
+                1,
+                {from: accounts[0], gas : gasEstimated}
+            )
+          }).then((idTx) => {
+            console.log(idTx)
+          })
         })
     }
 
@@ -119,8 +131,8 @@ class Election extends Component {
                 <ComponentTitle title='Crear Elección'/>
 
                 <Form>
-                    
-                    
+
+
                     <Header as='h3'>Autoridad de Comicio</Header>
                     <Form.Input
                         required
@@ -150,7 +162,7 @@ class Election extends Component {
                         onDelete={this.handleRemoveCandidato}
                         onUpdate={this.handleUpdateCandidato}
                     />
-{/* 
+{/*
                     <DinamicListForm
                         title='Apoderados de los Partidos'
                         type='mail'
@@ -181,7 +193,7 @@ class Election extends Component {
                         onChange={ (event) => { this.setState({ personasPorMesa : event.target.value }) } }
                     />
 
-                    <Button fluid icon onClick={this.crearEleccion}>
+                    <Button fluid icon onClick={this.createElection}>
                         <Icon name='send'/> Crear Elección
                     </Button>
                 </Form>

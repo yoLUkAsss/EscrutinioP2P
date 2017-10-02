@@ -5,6 +5,11 @@ import "./Mesa.sol";
 
 contract MesaElectionCRUD is MesaCRUD{
 
+
+  function MesaElectionCRUD () {
+
+  }
+
   function setFiscal(uint id, bytes32 fiscal) public {
     if(!existsMesa(id)) revert();
     Mesa m = Mesa(mesasMapping[id].mesaAddress);

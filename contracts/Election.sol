@@ -8,85 +8,59 @@ contract Election {
     address owner;
     address userCrudAddress;
     address mesaCrudAddress;
-    UserElectionCRUD userCrud;
-    MesaElectionCRUD mesaCrud;
+    /*UserElectionCRUD userCrud;*/
+    /*MesaElectionCRUD mesaCrud;*/
     bool created;
 
     function Election () {
       owner = msg.sender;
-      created = false;
       // Se crea una instancia de CRUD de usuarios.
-      userCrudAddress = new UserElectionCRUD();
+      /*userCrudAddress = new UserElectionCRUD();
+      Logguear(userCrudAddress);
       // Se crea una instancia de CRUD de mesas.
+      mesaCrudAddress = new MesaElectionCRUD();
+      Logguear(mesaCrudAddress);*/
+      userCrudAddress = new UserElectionCRUD();
       mesaCrudAddress = new MesaElectionCRUD();
     }
 
     function createElection(
         bytes32 mailDelCreador,
-        uint8 nMesas,
+        uint nMesas,
         bytes32[] listaDePartidosPoliticos,
-        uint8 nPersonasPorMesa
-        /*bytes32[] apoderados,*/
-        /*bytes32 delegado*/
+        uint nPersonasPorMesa
     ) public {
-
-        /**
-                A continuación se dictan validaciones previas a la creación de la elección,
-            algunas referentes a la tecnología y otras referentes al dominio de la aplicación.
-
-         */
-        // La eleccion no puede haber sido instanciada.
-        if ( isCreated() ) { revert(); }
-        // Debe existir misma cantidad de apoderados que de partidos politicos.
-        /*if (!apoderadosCompletos(apoderados, listaDePartidosPoliticos)) revert();*/
-        /**
-                Se muestra a continuación la creación de la elección en la red.
-
-         */
-        userCrud = UserElectionCRUD(userCrudAddress);
-        mesaCrud = MesaElectionCRUD(mesaCrudAddress);
-
-        // Se crea una usuario con categoria Autoridad de Comicio con el correo enviado.
-        /*userCrud.createUser(mailDelCreador, "", UserCRUD.AutoridadElectoral);*/
-        /*userCrud.createUser(mailDelCreador, "", 0);*/
+        /*if (isCreated()) revert();*/
         createAutoridadElectoral(mailDelCreador);
-        // Se genera un usuario para el delegado general
-        /*userCrud.createUser(delegado, "", UserCRUD.DelegadoDistrito);*/
-        /*userCrud.createUser(delegado, "", 1);*/
-        /*userCrud.createDelegadoDeDistrito(delegado, "");*/
-        // Se generan usuarios para cada apoderado de partido
-        /*for (index = 0; index < apoderados.length; index++) {
-          //userCrud.createUser(apoderados[index], "", UserCRUD.ApoderadoDePartido);
-          userCrud.createApoderadoDePartido(apoderados[index], "");
-        }*/
-        // Se generan nMesas
-        createNMesas(nMesas, listaDePartidosPoliticos, personaPorMesa);
+        createNMesas(nMesas, listaDePartidosPoliticos, nPersonasPorMesa);
         created = true;
-        CreateElection(msg.sender, mailDelCreador, nMesas, listaDePartidosPoliticos);
+        CreateElection(msg.sender, mailDelCreador, nMesas);
     }
     function createAutoridadElectoral(bytes32 email) internal {
+      UserElectionCRUD userCrud = UserElectionCRUD(userCrudAddress);
       userCrud.createAutoridadElectoral(email, "");
     }
-    function createNMesas(uint8 nMesas, bytes32[] lista, uint8 personaPorMesa) internal {
+    function createNMesas(uint nMesas, bytes32[] lista, uint personaPorMesa) internal {
+      MesaElectionCRUD mesaCrud = MesaElectionCRUD(mesaCrudAddress);
       for(uint index=0; index<nMesas; index++){
-        createMesa(lista, personaPorMesa);
+          /*mesaCrud.createMesa(lista, personaPorMesa);*/
       }
-    }
-    function createMesa(bytes32[] lista, uint8 porMesa) internal {
-      mesaCrud.createMesa(lista, porMesa);
     }
 
     function definirFiscal(bytes32 requester, bytes32 fiscal, uint8 idMesa) public {
+      MesaElectionCRUD mesaCrud = MesaElectionCRUD(mesaCrudAddress);
       if (!isAutoridadElectoral(requester)) revert();
       mesaCrud.setFiscal(idMesa, fiscal);
     }
 
     function definirPresidenteDeMesa(bytes32 requester, bytes32 presidente, uint8 idMesa) public {
+      MesaElectionCRUD mesaCrud = MesaElectionCRUD(mesaCrudAddress);
       if (!isAutoridadElectoral(requester)) revert();
       mesaCrud.setPresidenteDeMesa(idMesa, presidente);
     }
 
     function definirVicepresidenteDeMesa(bytes32 requester, bytes32 vicepresidente, uint8 idMesa) public {
+      MesaElectionCRUD mesaCrud = MesaElectionCRUD(mesaCrudAddress);
       if (!isAutoridadElectoral(requester)) revert();
       mesaCrud.setVicepresidenteDeMesa(idMesa, vicepresidente);
     }
@@ -103,17 +77,22 @@ contract Election {
     }
 
     function isApoderadoDePartido(bytes32 correo) public constant returns (bool) {
+      UserElectionCRUD userCrud = UserElectionCRUD(userCrudAddress);
       return userCrud.isApoderadoPartido(correo);
     }
 
     function isDelegadoGeneral(bytes32 correo) public constant returns (bool) {
+      UserElectionCRUD userCrud = UserElectionCRUD(userCrudAddress);
       return userCrud.isDelegadoGeneral(correo);
     }
 
     function isAutoridadElectoral(bytes32 email) public constant returns(bool){
+      UserElectionCRUD userCrud = UserElectionCRUD(userCrudAddress);
       return userCrud.isAutoridadElectoral(email);
     }
 
-    event CreateElection(address indexed senderAddress, bytes32 creator, uint8 nMesas);
+    event CreateElection(address indexed senderAddress, bytes32 creator, uint nMesas);
+
+    event Logguear(address created);
 
 }
