@@ -131,7 +131,7 @@ class Election extends Component {
                         onChange={ (event) => { this.setState({ autoridadDeComicio : event.target.value }) } }
                     />
 
-                    <Header as='h3'>Delegado General</Header>
+                    {/* <Header as='h3'>Delegado General</Header>
                     <Form.Input
                         required
                         type="mail"
@@ -139,7 +139,7 @@ class Election extends Component {
                         placeholder="Correo Delegado General"
                         value={this.state.delegadoGeneral}
                         onChange={ (event) => { this.setState({ delegadoGeneral : event.target.value }) } }
-                    />
+                    /> */}
 
                     <DinamicListForm
                         title='Partidos Politicos Oficiales'
@@ -150,7 +150,7 @@ class Election extends Component {
                         onDelete={this.handleRemoveCandidato}
                         onUpdate={this.handleUpdateCandidato}
                     />
-
+{/* 
                     <DinamicListForm
                         title='Apoderados de los Partidos'
                         type='mail'
@@ -159,7 +159,7 @@ class Election extends Component {
                         onAdd={this.handleAddApoderado}
                         onDelete={this.handleRemoveApoderado}
                         onUpdate={this.handleUpdateApoderado}
-                    />
+                    /> */}
 
                     <Header as='h3'>Cantidad de Mesas participantes</Header>
                     <Form.Input
