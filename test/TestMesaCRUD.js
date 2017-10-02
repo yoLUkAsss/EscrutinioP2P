@@ -17,8 +17,7 @@ contract('MesaCRUD', function(accounts) {
 
   it("create an Mesa Contract should add a new mesa into MesaCRUD.", async () => {
     let mesaCRUDInstance = await MesaCRUD.deployed()
-    let args = ["jesus@gmail.com", [], [], 9]
-    let tx = await mesaCRUDInstance.createMesa(args[0], args[1], args[2], args[3], fromObject)
+    let tx = await mesaCRUDInstance.createMesa([], 1, fromObject)
     let exists = await mesaCRUDInstance.existsMesa.call(getId(tx))
     assert.ok(exists, "Exists mesa")
     await mesaCRUDInstance.deleteMesa(getId(tx), fromObject)
@@ -26,8 +25,7 @@ contract('MesaCRUD', function(accounts) {
 
   it("get an existent Mesa should returns its id and address.", async () => {
     let mesaCRUDInstance = await MesaCRUD.deployed()
-    let args = ["jesus@gmail.com", [], [], 9]
-    let tx = await mesaCRUDInstance.createMesa(args[0], args[1], args[2], args[3], fromObject)
+    let tx = await mesaCRUDInstance.createMesa([], 1, fromObject)
     let mesa = await mesaCRUDInstance.getMesa.call(getId(tx), fromObject)
     assert.equal(mesa[0].toNumber(), getId(tx), "ids are equals")
     assert.ok(mesa[1] !== undefined, "has address")
@@ -36,8 +34,7 @@ contract('MesaCRUD', function(accounts) {
 
   it("delete an mesa by id decrease the length of mesas", async () => {
     let mesaCRUDInstance = await MesaCRUD.deployed()
-    let args = ["jesus@gmail.com", [], [], 9]
-    let txcreate = await mesaCRUDInstance.createMesa(args[0], args[1], args[2], args[3], fromObject)
+    let txcreate = await mesaCRUDInstance.createMesa([], 1, fromObject)
     let exists = await mesaCRUDInstance.existsMesa.call(getId(txcreate), fromObject)
     assert.ok(exists, "Exists mesa created")
     let txdelete = await mesaCRUDInstance.deleteMesa(getId(txcreate), fromObject)

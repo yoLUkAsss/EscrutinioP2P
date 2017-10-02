@@ -22,9 +22,9 @@ contract MesaCRUD {
     owner = msg.sender;
   }
 
-  function createMesa(bytes32 apoderado, bytes32[] fiscales, bytes32[] inputCandidates, uint8 inputTotalVotes) public{
+  function createMesa(bytes32[] inputCandidates, uint total) public{
     lastId += 1;
-    address mesaAddress = new Mesa(apoderado, fiscales, inputCandidates, inputTotalVotes);
+    address mesaAddress = new Mesa(inputCandidates, total);
     mesasMapping[lastId] = MesaStruct(lastId, mesaAddress, mesasIds.length, true);
     mesasIds.push(lastId);
     LogCreateMesa(msg.sender, lastId, mesaAddress);
