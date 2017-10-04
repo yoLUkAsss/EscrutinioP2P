@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import ElectionContract from '../../build/contracts/Election.json'
 import getWeb3 from '../utils/getWeb3'
-import contract from 'truffle-contract'
-
-import { Container, Form, Header, Button, Icon} from 'semantic-ui-react'
-
+import { Container, Form, Header} from 'semantic-ui-react'
 import ComponentTitle from '../utils/ComponentTitle.js'
 
 class DelegateApoderadoDePartido extends Component {
@@ -34,8 +30,8 @@ class DelegateApoderadoDePartido extends Component {
                 <ComponentTitle title='Crear Elección'/>
 
                 <Form>
-                    
-                    
+
+
                     <Header as='h3'>Autoridad de Comicio</Header>
                     <Form.Input
                         required
@@ -69,7 +65,7 @@ class DelegateApoderadoDePartido extends Component {
                 </Form>
 
             </Container>
-            
+
         )
     }
 }
