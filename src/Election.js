@@ -24,6 +24,16 @@ class Election extends Component {
         this.createElection = this.createElection.bind(this)
     }
 
+    componentWillMount() {
+        getWeb3.then(results => {
+            this.setState({
+            web3: results.web3
+            })
+        }).catch(() => {
+            console.log('Error finding web3.')
+        })
+    }
+
     crearEleccion = (event) => {
         event.preventDefault()
         alert(JSON.stringify(this.state, undefined, 2))
@@ -63,32 +73,22 @@ class Election extends Component {
         this.setState({ apoderados: this.state.apoderados.filter((s, sidx) => idx !== sidx) })
     }
 
-    componentWillMount() {
-        getWeb3.then(results => {
-            this.setState({
-            web3: results.web3
-            })
-        }).catch(() => {
-            console.log('Error finding web3.')
-        })
-    }
-
     //inicializa el factory del contrato election
     createElection(event) {
         event.preventDefault()
 
-        var nombresDePartidos = []
+        let nombresDePartidos = []
         this.state.candidatos.forEach( candidato => {
             nombresDePartidos.push(candidato.name)
         })
 
-        var correosDeApoderados = []
+        let correosDeApoderados = []
         this.state.apoderados.forEach( apoderado => {
             correosDeApoderados.push(apoderado.correo)
         })
 
         const election = contract(ElectionContract)
-        var electionInstance
+        let electionInstance
         election.setProvider(this.state.web3.currentProvider)
         this.state.web3.eth.getAccounts((error, accounts) => {
             election.deployed().then((instance) => {
@@ -96,31 +96,23 @@ class Election extends Component {
             electionInstance = instance
             console.log("antes de estimar")
             return electionInstance.createElection.estimateGas(
-              // this.state.autoridadDeComicio,
+              this.state.autoridadDeComicio,
               // this.state.numeroDeMesas,
-              // nombresDePartidos,
-              // this.state.personasPorMesa,
-              "pepe",
               1,
-              ["p1"],
-              1,
+              nombresDePartidos,
+              this.state.personasPorMesa,
               {from: accounts[0]}
             )
           }).then((gasEstimated) => {
             console.log("despues de estimar")
             return electionInstance.createElection.sendTransaction(
-                // this.state.autoridadDeComicio,
+                this.state.autoridadDeComicio,
                 // this.state.numeroDeMesas,
-                // nombresDePartidos,
-                // this.state.personasPorMesa,
-                "pepe",
                 1,
-                ["p1"],
-                1,
+                nombresDePartidos,
+                this.state.personasPorMesa,
                 {from: accounts[0], gas : gasEstimated}
             )
-          }).then((idTx) => {
-            console.log(idTx)
           })
         })
     }
