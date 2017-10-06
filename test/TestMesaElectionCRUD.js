@@ -5,9 +5,7 @@ let getId = (idTx) => {
   return idTx.logs[0].args.mesaId.toNumber()
 }
 
-
 contract('MesaElectionCRUD', function(accounts) {
-
   let fromObject = {from: accounts[0]}
 
   it("create an MesaElectionCRUD contract should create this with 0 mesas.", async () => {
@@ -18,7 +16,7 @@ contract('MesaElectionCRUD', function(accounts) {
 
   it("set PresidenteDeMesa to a mesa should be logged", async () => {
     let mesaElectionCRUDInstance = await MesaElectionCRUD.deployed()
-    let tx = await mesaElectionCRUDInstance.createMesa([], 1, fromObject)
+    let tx = await mesaElectionCRUDInstance.createMesa([], fromObject)
     let exists = await mesaElectionCRUDInstance.existsMesa.call(getId(tx), fromObject)
     assert.ok(exists, "Exists mesa")
 

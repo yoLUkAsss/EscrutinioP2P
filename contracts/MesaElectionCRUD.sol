@@ -5,29 +5,18 @@ import "./Mesa.sol";
 
 contract MesaElectionCRUD is MesaCRUD{
 
-
-  function MesaElectionCRUD () {
-
-  }
-
-  function setFiscal(uint id, bytes32 fiscal) public {
-    if(!existsMesa(id)) revert();
-    Mesa m = Mesa(mesasMapping[id].mesaAddress);
-    m.setFiscal(fiscal);
+  function setFiscal(uint id, bytes32 fiscal) public{
+    Mesa(getMesa(id)).setFiscal(fiscal);
     SetUserToMesa(msg.sender, id, fiscal);
   }
 
   function setPresidenteDeMesa(uint id, bytes32 pdm) public {
-    if(!existsMesa(id)) revert();
-    Mesa m = Mesa(mesasMapping[id].mesaAddress);
-    m.setPresidenteDeMesa(pdm);
+    Mesa(getMesa(id)).setPresidenteDeMesa(pdm);
     SetUserToMesa(msg.sender, id, pdm);
   }
 
   function setVicepresidenteDeMesa(uint id, bytes32 vpdm) public {
-    if(!existsMesa(id)) revert();
-    Mesa m = Mesa(mesasMapping[id].mesaAddress);
-    m.setVicePresidenteDeMesa(vpdm);
+    Mesa(getMesa(id)).setVicePresidenteDeMesa(vpdm);
     SetUserToMesa(msg.sender, id, vpdm);
   }
 
