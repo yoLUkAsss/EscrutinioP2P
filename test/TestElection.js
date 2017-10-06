@@ -1,52 +1,56 @@
 let Election = artifacts.require("./Election.sol")
 
-/*
-async function assertThrowsAsynchronously(test, error) {
-    try {
-        await test();
-    } catch(e) {
-        if (!error || e instanceof error)
-            return "everything is fine";
-    }
-    throw new AssertionError("Missing rejection" + (error ? " with "+error.name : ""));
-}
-*/
-
 contract('Election', function(accounts) {
   let fromObject = { from : accounts[0]}
 
-  it('a new election should have an usercrudaddress and a mesacrudaddress', async () => {
+  it('new election with ae@gmail as creator should create the election', async () => {
     let electionInstance = await Election.deployed()
-    let userCRUDAddress = await electionInstance.getUserCRUDAddress.call(fromObject)
-    let mesaCRUDAddress = await electionInstance.getMesaCRUDAddress.call(fromObject)
-    let zeroAddress = "0x0000000000000000000000000000000000000000"
-    assert.ok(userCRUDAddress !== zeroAddress , "user crud initialized")
-    assert.ok(mesaCRUDAddress !== zeroAddress , "mesa crud initialized")
-  })
-
-
-  it('new election with j@gmail as creator should create an AutoridadElectoral with j@gmail as email', async () => {
-    let electionInstance = await Election.deployed()
-    let creator = "j@gmail"
-    let mesas = 1
-    let partidos = ["empty"]
-    let personaPorMesa = 10
-    await electionInstance.createElection(creator, mesas, partidos, personaPorMesa, fromObject)
-    let isAutoridad = await electionInstance.isAutoridadElectoral.call(creator, fromObject)
-    assert.ok(isAutoridad, "exist autoridad electoral")
+    let email = "ae@gmail"
+    let tx = await electionInstance.createElection(email, fromObject)
+    // let emailFromTx = tx.logs[0].args.autoridadElectoral
+    // assert.equal(emailFromTx, email, "autoridad electoral email created")
+    let created = await electionInstance.created.call(fromObject)
+    assert.ok(created, "election created correctly")
   })
 
   it('create another election should throw an exception', async () => {
     let electionInstance = await Election.deployed()
-    let creator = "j@gmail"
-    let mesas = 1
-    let partidos = ["empty"]
-    let personaPorMesa = 10
+    let email = "ae@gmail"
     try{
-      await electionInstance.createElection(creator, mesas, partidos, personaPorMesa, fromObject)
+      await electionInstance.createElection(email, fromObject)
     } catch(err){
-      assert.ok(true, "exception catched")
+      assert.ok(true, "create another election catched")
     }
   })
 
+  it('a user crud address in a created election should only be acceded by its AutoridadElectoral', async () => {
+    let electionInstance = await Election.deployed()
+    let userCRUDaddress = await electionInstance.getUserCRUDaddress.call("ae@gmail", fromObject)
+    let zeroAddress = "0x0000000000000000000000000000000000000000"
+    assert.ok(userCRUDaddress !== zeroAddress , "user crud address")
+  })
+  it('a mesa crud address should only be acceded by its AutoridadElectoral', async () => {
+    let electionInstance = await Election.deployed()
+    let mesaCRUDaddress = await electionInstance.getMesaCRUDaddress.call("ae@gmail", fromObject)
+    let zeroAddress = "0x0000000000000000000000000000000000000000"
+    assert.ok(mesaCRUDaddress !== zeroAddress , "mesa crud address")
+  })
+
+  it('try to accede to a usercrudaddress by a user not being AutoridadElectoral should throw an exception', async () => {
+    let electionInstance = await Election.deployed()
+    try{
+      await electionInstance.getUserCRUDaddress.call("notae@gmail", fromObject)
+    } catch(err){
+      assert.ok(true, "try to get a user address by a no AutoridadElectoral was catched")
+    }
+  })
+
+  it('try to accede to a mesacrudaddress by a user not being AutoridadElectoral should throw an exception', async () => {
+    let electionInstance = await Election.deployed()
+    try{
+      await electionInstance.getMesaCRUDaddress.call("notae@gmail", fromObject)
+    } catch(err){
+      assert.ok(true, "try to get a mesa address by a no AutoridadElectoral was catched")
+    }
+  })
 })
