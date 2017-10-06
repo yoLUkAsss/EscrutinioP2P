@@ -4,7 +4,7 @@ import contract from 'truffle-contract'
 import { Button, Form, Header} from 'semantic-ui-react'
 import Center from 'react-center'
 
-import ElectionContract from '../build/contracts/Election.json'
+import ElectionContract from '../../build/contracts/Election.json'
 import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
 import MesaContract from '../../build/contracts/Mesa.json'
 

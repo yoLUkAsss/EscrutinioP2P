@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Form, Header, Button} from 'semantic-ui-react'
 import getWeb3 from '../utils/getWeb3'
+import contract from 'truffle-contract'
 import ComponentTitle from '../utils/ComponentTitle.js'
 
 //contratos
