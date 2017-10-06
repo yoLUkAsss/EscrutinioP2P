@@ -22,34 +22,25 @@ contract MesaCRUD {
     owner = msg.sender;
   }
 
-  function createMesa(bytes32[] inputCandidates, uint total) public{
+  function createMesa(bytes32[] inputCandidates) public{
     lastId += 1;
-    address mesaAddress = new Mesa(inputCandidates, total);
+    address mesaAddress = new Mesa(inputCandidates);
     mesasMapping[lastId] = MesaStruct(lastId, mesaAddress, mesasIds.length, true);
     mesasIds.push(lastId);
     LogCreateMesa(msg.sender, lastId, mesaAddress);
   }
 
-  function isEmpty() internal constant returns(bool){
-      return mesasIds.length == 0;
+  function existsMesa(uint id) public constant returns(bool){
+    return mesasIds.length != 0 && mesasMapping[id].isMesa;
   }
 
-  function existsMesa(uint id) public constant returns(bool){
-    return !isEmpty() && mesasMapping[id].isMesa;
+  function getMesa(uint id) public constant returns(address){
+    if(!existsMesa(id)) revert();
+    return mesasMapping[id].mesaAddress;
   }
 
   function getMesas() public constant returns(uint[]){
     return mesasIds;
-  }
-
-  function getMesa(uint id) public constant returns(uint, address){
-    if(!existsMesa(id)) revert();
-    return (id, mesasMapping[id].mesaAddress);
-  }
-
-  function updateMesa(uint id) public{
-    if(!existsMesa(id)) revert();
-    LogUpdateMesa(msg.sender, id);
   }
 
   function deleteMesa(uint id) public{
@@ -58,9 +49,7 @@ contract MesaCRUD {
     uint toMoveIndex = mesasIds[mesasIds.length - 1];
     mesasIds[toDeleteIndex] = toMoveIndex;
     mesasMapping[toMoveIndex].index = toDeleteIndex;
-
-    var m = Mesa(mesasMapping[id].mesaAddress);
-    m.destroy(owner);
+    Mesa(mesasMapping[id].mesaAddress).destroy(owner);
     delete mesasMapping[id];
     mesasIds.length--;
 
