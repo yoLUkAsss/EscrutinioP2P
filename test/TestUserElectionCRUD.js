@@ -13,6 +13,7 @@ contract('UserElectionCRUD', function(accounts) {
     let email = "jesus@gmail.com"
     let pass = "jesus"
     await userElectionInstance.createAutoridadElectoral(email, pass, fromObject)
+    let existsId = await userElectionInstance.emailMap.call(email, fromObject)
     let existsAutoridad = await userElectionInstance.existsUserByEmail(email, fromObject)
     assert.ok(existsAutoridad, "AutoridadElectoral created correctly.")
     let isAutoridad = await userElectionInstance.isAutoridadElectoral(email, fromObject)

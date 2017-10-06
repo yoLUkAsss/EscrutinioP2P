@@ -2,121 +2,90 @@ pragma solidity ^0.4.11;
 
 contract Mesa {
 
-    enum CategoriaParticipante {Fiscal, ApoderadoMesa}
+    enum ParticipantCategory {Fiscal, PresidenteMesa, VicepresidenteMesa}
 
     struct ParticipantData {
-        CategoriaParticipante categoria;
-        uint8 counts;
-        bool finished;
-        mapping (bytes32 => uint8) votes;
+      bool isValidParticipant;
+      ParticipantCategory category;
+      mapping (bytes32 => uint8) votes;
     }
-
+    struct CandidateData {
+      bool isValidCandidate;
+      uint votes;
+    }
     address owner;
-    uint8 total;
     bytes32[] candidateList;
     bytes32[] participantList;
     mapping (bytes32 => ParticipantData) participantMap;
+    bytes32 public presidenteMesa;
+    bytes32 public vicepresidenteMesa;
+    mapping (bytes32 => CandidateData) candidateMap;
 
-    // Constructor... msg.sender es duenio de mesa
-    function Mesa(bytes32 apoderado, bytes32[] fiscales, bytes32[] inputCandidates, uint8 inputTotalVotes) public{
-        owner = msg.sender;
-        total = inputTotalVotes;
-        participantList = fiscales;
-        candidateList = inputCandidates;
-        candidateList.push("Votos en Blanco");
-        candidateList.push("Votos Inpugnados");
-        candidateList.push("Votos Nulos");
-
-        //para el apoderado
-        participantMap[apoderado] = ParticipantData(CategoriaParticipante.ApoderadoMesa, 0, false);
-        for ( uint k = 0; k<candidateList.length; k++ ) {
-            participantMap[apoderado].votes[candidateList[k]] = 0;
-        }
-        //para cada fiscal
-        for(uint i=0; i<participantList.length; i++){
-          participantMap[participantList[i]] = ParticipantData(CategoriaParticipante.Fiscal, 0, false);
-          //para cada candidato
-          for(uint j = 0; j<candidateList.length; j++){
-            participantMap[participantList[i]].votes[candidateList[j]] = 0;
-          }
-        }
-
-        // al final se agrega al apoderado como un participante mas de la mesa
-        participantList.push(apoderado);
+    function Mesa(bytes32[] inputCandidates) public{
+      owner = msg.sender;
+      candidateList = inputCandidates;
+      for(uint i=0;i<inputCandidates.length;i++){
+        candidateMap[inputCandidates[i]] = CandidateData(true, 0);
+      }
     }
 
-    function getCandidates() public constant returns (bytes32[]){
+    function addParticipant(bytes32 p, ParticipantData pd) internal {
+      participantMap[p] = pd;
+      participantList.push(p);
+      AddParticipant(msg.sender, p);
+    }
+
+    function getCandidatesList() public constant returns (bytes32[]){
         return candidateList;
     }
-    function getParticipantList() public constant returns (bytes32[]){
-        return participantList;
+
+    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) external constant returns (bytes32, uint8) {
+      if(!isValidParticipant(participant) || !isValidCandidate(candidate)) revert();
+      return (candidate, participantMap[participant].votes[candidate]);
     }
 
-    function getParticipantDataCounts(bytes32 participant) public constant returns (uint8){
-        return participantMap[participant].counts;
-    }
-
-    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) public constant returns (bytes32, uint8) {
-        if (isValidParticipant(participant) && isValidCandidate(candidate)) {
-            return (candidate, participantMap[participant].votes[candidate]);
-        } else {
-            return ('', 0);
-        }
-    }
-
-    function isValidCandidate(bytes32 candidate) public constant returns (bool){
-      for(uint i=0; i < candidateList.length; i++){
-        if(candidate == candidateList[i]){
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Es participante valido en el contexto de esta mesa
-     */
-    function isValidParticipant(bytes32 participant) public constant returns (bool){
-      for(uint i=0; i < participantList.length; i++){
-        if(participant == participantList[i]){
-          return true;
-        }
-      }
-      return false;
-    }
-
-    function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos) public {
+    function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos) external {
       if(!isValidParticipant(participant) || !isValidCandidate(candidato)) revert();
       participantMap[participant].votes[candidato] = votos;
     }
 
-    function isApoderadoDeMesa(bytes32 participant) public constant returns (bool) {
-        return isCategory(participant, CategoriaParticipante.ApoderadoMesa);
+    function isValidCandidate(bytes32 candidate) public constant returns (bool){
+        return candidateMap[candidate].isValidCandidate;
+    }
+
+    function isValidParticipant(bytes32 participant) public constant returns (bool){
+      return participantMap[participant].isValidParticipant;
     }
 
     function isFiscal(bytes32 participant) public constant returns (bool) {
-        return isCategory(participant, CategoriaParticipante.Fiscal);
+      return isCategory(participant, ParticipantCategory.Fiscal);
     }
 
-    function isCategory(bytes32 participant, CategoriaParticipante category) internal constant returns (bool) {
-        return isValidParticipant(participant) && participantMap[participant].categoria == category;
+    function isCategory(bytes32 participant, ParticipantCategory category) internal constant returns (bool) {
+      return isValidParticipant(participant) && participantMap[participant].category == category;
     }
 
-    function destroy(address parent) {
-        selfdestruct(parent);
+    function isPresidenteDeMesa(bytes32 participant) public constant returns(bool){
+      return presidenteMesa == participant;
     }
 
-    //latest functions added
-    function setFiscal(bytes32 fiscal) public{
-        SetRole(msg.sender, fiscal);
+    function destroy(address parent) public {
+      selfdestruct(parent);
+    }
+
+    function setFiscal(bytes32 fiscal) public {
+      addParticipant(fiscal, ParticipantData(true, ParticipantCategory.Fiscal));
     }
 
     function setPresidenteDeMesa(bytes32 presidente) public{
-        SetRole(msg.sender, presidente);
+      presidenteMesa = presidente;
+      addParticipant(presidente, ParticipantData(true, ParticipantCategory.PresidenteMesa));
     }
     function setVicePresidenteDeMesa(bytes32 vicepresidente) public{
-        SetRole(msg.sender, vicepresidente);
+      vicepresidenteMesa = vicepresidente;
+      addParticipant(vicepresidente, ParticipantData(true, ParticipantCategory.VicepresidenteMesa));
     }
-    event SetRole(address indexed userAddress, bytes32 fiscal);
+
+    event AddParticipant(address indexed userAddress, bytes32 participant);
 
 }

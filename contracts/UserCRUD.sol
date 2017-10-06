@@ -30,15 +30,9 @@ contract UserCRUD {
     userIds.push(lastId);
     LogCreateUser(msg.sender, lastId, email, password, category);
   }
-
-  function isEmpty() internal constant returns(bool){
-      return userIds.length == uint256(0);
-  }
-
   function existsUser(uint id) public constant returns(bool){
-    return !isEmpty() && userMapping[id].isUser;
+    return userIds.length != uint256(0) && userMapping[id].isUser;
   }
-
   /*Devuelve la lista con los id de todos los usuarios*/
   function getUsers() public constant returns(uint[]){
     return userIds;

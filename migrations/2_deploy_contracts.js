@@ -14,9 +14,14 @@ let Election = artifacts.require("./Election.sol")
  */
 module.exports = (deployer) => {
   deployer.deploy(SimpleStorage)
-  deployer.deploy([UserCRUD, UserElectionCRUD, MesaCRUD, MesaElectionCRUD, Election])
+  deployer.deploy([UserCRUD, MesaCRUD])
+  deployer.deploy(UserElectionCRUD).then( () => {
+    return deployer.deploy(MesaElectionCRUD)
+  }).then( () => {
+    return deployer.deploy(Election, UserElectionCRUD.address, MesaElectionCRUD.address)
+  })
   // deployer.deploy(UserCRUD);
   // deployer.deploy(UserElectionCRUD);
   // deployer.deploy(MesaCRUD);
   // deployer.deploy(Election);
-};
+}

@@ -17,10 +17,21 @@ class Election extends Component {
             apoderados : [{correo : ''}],
             delegadoGeneral : '',
             numeroDeMesas : 1,
-            personasPorMesa : 2
+            personasPorMesa : 2,
+            web3 : null
         };
 
+        this.createElection = this.createElection.bind(this)
+    }
 
+    componentWillMount() {
+        getWeb3.then(results => {
+            this.setState({
+            web3: results.web3
+            })
+        }).catch(() => {
+            console.log('Error finding web3.')
+        })
     }
 
     crearEleccion = (event) => {
@@ -62,54 +73,47 @@ class Election extends Component {
         this.setState({ apoderados: this.state.apoderados.filter((s, sidx) => idx !== sidx) })
     }
 
-
-
-
-    componentWillMount() {
-        getWeb3.then(results => {
-            this.setState({
-            web3: results.web3
-            })
-        }).catch(() => {
-            console.log('Error finding web3.')
-        })
-    }
-
     //inicializa el factory del contrato election
     createElection(event) {
         event.preventDefault()
 
-        var nombresDePartidos = []
+        let nombresDePartidos = []
         this.state.candidatos.forEach( candidato => {
             nombresDePartidos.push(candidato.name)
         })
 
-        var correosDeApoderados = []
+        let correosDeApoderados = []
         this.state.apoderados.forEach( apoderado => {
             correosDeApoderados.push(apoderado.correo)
         })
 
         const election = contract(ElectionContract)
-        var electionInstance
+        let electionInstance
         election.setProvider(this.state.web3.currentProvider)
         this.state.web3.eth.getAccounts((error, accounts) => {
             election.deployed().then((instance) => {
             // console.log(JSON.stringify(instance, undefined, 2))
             electionInstance = instance
-            return electionInstance.createElection( 
+            console.log("antes de estimar")
+            return electionInstance.createElection.estimateGas(
+              this.state.autoridadDeComicio,
+              // this.state.numeroDeMesas,
+              1,
+              nombresDePartidos,
+              this.state.personasPorMesa,
+              {from: accounts[0]}
+            )
+          }).then((gasEstimated) => {
+            console.log("despues de estimar")
+            return electionInstance.createElection.sendTransaction(
                 this.state.autoridadDeComicio,
-                this.state.numeroDeMesas,
+                // this.state.numeroDeMesas,
+                1,
                 nombresDePartidos,
                 this.state.personasPorMesa,
-                correosDeApoderados,
-                this.state.delegadoGeneral,
-                {from: accounts[0]}
+                {from: accounts[0], gas : gasEstimated}
             )
-            }).then((setResult) => {
-            return electionInstance.getName.call(accounts[0])
-            }).then((getResult) => {
-            return this.setState({depAddress: electionInstance.address, electionName: getResult})
-            })
+          })
         })
     }
 
@@ -119,8 +123,8 @@ class Election extends Component {
                 <ComponentTitle title='Crear Elección'/>
 
                 <Form>
-                    
-                    
+
+
                     <Header as='h3'>Autoridad de Comicio</Header>
                     <Form.Input
                         required
@@ -150,7 +154,7 @@ class Election extends Component {
                         onDelete={this.handleRemoveCandidato}
                         onUpdate={this.handleUpdateCandidato}
                     />
-{/* 
+{/*
                     <DinamicListForm
                         title='Apoderados de los Partidos'
                         type='mail'
@@ -181,7 +185,7 @@ class Election extends Component {
                         onChange={ (event) => { this.setState({ personasPorMesa : event.target.value }) } }
                     />
 
-                    <Button fluid icon onClick={this.crearEleccion}>
+                    <Button fluid icon onClick={this.createElection}>
                         <Icon name='send'/> Crear Elección
                     </Button>
                 </Form>
