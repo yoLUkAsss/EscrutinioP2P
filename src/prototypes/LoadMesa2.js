@@ -4,7 +4,7 @@ import contract from 'truffle-contract'
 import { Button, Form, Header} from 'semantic-ui-react'
 import Center from 'react-center'
 
-import ElectionContract from '../../build/contracts/Election.json'
+// import ElectionContract from '../../build/contracts/Election.json'
 import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
 import MesaContract from '../../build/contracts/Mesa.json'
 
@@ -74,12 +74,14 @@ class LoadMesa2 extends Component {
           console.log(err)
           console.log("something happen")
         })
+      }).catch((err) => {
+        console.log(err)
       })
     }
 
     handleInitializeMesa = (event) => {
       event.preventDefault()
-      var mesaInstance
+      // let mesaInstance
       const mesaElectionCRUD = contract(MesaElectionCRUDContract)
       const mesa = contract(MesaContract)
       mesaElectionCRUD.setProvider(this.state.web3.currentProvider)
@@ -99,6 +101,8 @@ class LoadMesa2 extends Component {
         }).catch((error) => {
           console.log("finished")
         })
+      }).catch((err) => {
+        console.log(err)
       })
     }
 

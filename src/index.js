@@ -27,6 +27,7 @@ import Election2 from './prototypes/Election2.js'
 import AddPresidenteDeMesa2 from './prototypes/AddPresidenteDeMesa2.js'
 import AddFiscal2 from './prototypes/AddFiscal2.js'
 import LoadMesa2 from './prototypes/LoadMesa2.js'
+import AddApoderadoDePartido2 from './prototypes/AddApoderadoDePartido2.js'
 
 ReactDOM.render(
   <div>
@@ -43,9 +44,12 @@ ReactDOM.render(
 
         <Route exact path="/createmesa2" component={CreateMesa2}/>
         <Route exact path="/election2" component={Election2}/>
+
         <Route exact path="/addpresi2" component={AddPresidenteDeMesa2}/>
         <Route exact path="/addfiscal2" component={AddFiscal2}/>
         <Route exact path="/loadmesa2" component={LoadMesa2}/>
+        <Route exact path="/addapoderado2" component={AddApoderadoDePartido2}/>
+
 
         <Route exact path="/app" component={App}/>
         <Route exact path="/createMesa" component={MesaForm}/>

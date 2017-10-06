@@ -20,7 +20,7 @@ class Election2 extends Component {
     componentWillMount() {
         getWeb3.then(results => {
             this.setState({
-            web3: results.web3
+              web3: results.web3
             })
         }).catch(() => {
             console.log('Error finding web3.')

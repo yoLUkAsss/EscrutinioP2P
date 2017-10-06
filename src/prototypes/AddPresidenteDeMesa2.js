@@ -14,7 +14,8 @@ class AddPresidenteDeMesa2 extends Component {
         this.state = {
             autoridadElectoral : "",
             correoPresidente : "",
-            idMesa : 0
+            idMesa : 0,
+            web3 : null
         }
         this.handleAddPresidenteDeMesa = this.handleAddPresidenteDeMesa.bind(this)
     }

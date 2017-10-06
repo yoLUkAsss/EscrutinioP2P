@@ -14,7 +14,8 @@ class AddFiscal2 extends Component {
         this.state = {
             autoridadElectoral : "",
             correoFiscal : "",
-            idMesa : 0
+            idMesa : 0,
+            web3 : null
         }
         this.handleAddFiscal = this.handleAddFiscal.bind(this)
     }
