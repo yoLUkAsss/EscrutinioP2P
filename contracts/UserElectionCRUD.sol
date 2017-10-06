@@ -3,55 +3,37 @@ pragma solidity ^0.4.11;
 import "./UserCRUD.sol";
 
 contract UserElectionCRUD is UserCRUD{
+
   /*functions defined to be used for election contract*/
+    mapping (bytes32 => uint) public emailMap;
 
-  function UserElectionCRUD () {
-
-  }
-
-    // functions defined to be used in election user
-    mapping (bytes32 => uint) userMailMapping;
-
-    function createUserByEmail(bytes32 email, bytes32 password, UserCategory category) public{
-        if(existsUserByEmail(email)) revert();
+    function createUserByEmail(bytes32 email, bytes32 password, UserCategory category) internal {
+        if(existsUser(emailMap[email])) revert();
         createUser(email, password, category);
-        userMailMapping[email] = lastId;
+        emailMap[email] = lastId;
     }
-
+    function deleteUserByEmail(bytes32 email) public {
+        if(!existsUser(emailMap[email])) revert();
+        deleteUser(emailMap[email]);
+        delete emailMap[email];
+    }
     function existsUserByEmail(bytes32 email) public constant returns(bool){
-        return existsUser(userMailMapping[email]);
+        return emailMap[email] != 0;
     }
-
-    function deleteUserByEmail(bytes32 email) public{
-        if(!existsUserByEmail(email)) revert();
-        deleteUser(userMailMapping[email]);
-        delete userMailMapping[email];
+    function createApoderadoDePartido(bytes32 email, bytes32 password) public {
+        createUserByEmail(email, password, UserCategory.ApoderadoPartido);
     }
-
-  function createApoderadoDePartido(bytes32 email, bytes32 password) public{
-    createUserByEmail(email, password, UserCategory.ApoderadoPartido);
-  }
-  function createDelegadoDeDistrito(bytes32 email, bytes32 password) public{
-    createUserByEmail(email, password, UserCategory.DelegadoDistrito);
-  }
-  function createAutoridadElectoral(bytes32 email, bytes32 password) public{
-    createUserByEmail(email, password, UserCategory.AutoridadElectoral);
-  }
-
-  function isUser(bytes32 email, UserCategory category) internal constant returns(bool){
-      return existsUserByEmail(email) && userMapping[userMailMapping[email]].category == category;
-  }
-
-  function isApoderadoPartido(bytes32 email) public constant returns(bool){
-    return isUser(email, UserCategory.ApoderadoPartido);
-  }
-
-  function isDelegadoGeneral(bytes32 email) public constant returns(bool){
-    return isUser(email, UserCategory.DelegadoDistrito);
-  }
-
-  function isAutoridadElectoral(bytes32 email) public constant returns(bool){
-    return isUser(email, UserCategory.AutoridadElectoral);
-  }
+    function createAutoridadElectoral(bytes32 email, bytes32 password) public {
+        createUserByEmail(email, password, UserCategory.AutoridadElectoral);
+    }
+    function isUser(bytes32 email, UserCategory category) internal constant returns(bool){
+        return existsUser(emailMap[email]) && userMapping[emailMap[email]].category == category;
+    }
+    function isApoderadoPartido(bytes32 email) public constant returns(bool){
+        return isUser(email, UserCategory.ApoderadoPartido);
+    }
+    function isAutoridadElectoral(bytes32 email) public constant returns(bool){
+        return isUser(email, UserCategory.AutoridadElectoral);
+    }
 
 }
