@@ -9,19 +9,24 @@ contract Mesa {
       ParticipantCategory category;
       mapping (bytes32 => uint8) votes;
     }
-
+    struct CandidateData {
+      bool isValidCandidate;
+      uint votes;
+    }
     address owner;
     bytes32[] candidateList;
     bytes32[] participantList;
     mapping (bytes32 => ParticipantData) participantMap;
-    bytes32 presidenteMesa;
-    bytes32 vicepresidenteMesa;
-    uint total;
+    bytes32 public presidenteMesa;
+    bytes32 public vicepresidenteMesa;
+    mapping (bytes32 => CandidateData) candidateMap;
 
-    function Mesa(bytes32[] inputCandidates, uint totalvotes) public{
+    function Mesa(bytes32[] inputCandidates) public{
       owner = msg.sender;
       candidateList = inputCandidates;
-      total = totalvotes;
+      for(uint i=0;i<inputCandidates.length;i++){
+        candidateMap[inputCandidates[i]] = CandidateData(true, 0);
+      }
     }
 
     function addParticipant(bytes32 p, ParticipantData pd) internal {
@@ -33,27 +38,19 @@ contract Mesa {
     function getCandidatesList() public constant returns (bytes32[]){
         return candidateList;
     }
-    function getParticipantList() public constant returns (bytes32[]){
-        return participantList;
-    }
 
-    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) public constant returns (bytes32, uint8) {
+    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) external constant returns (bytes32, uint8) {
       if(!isValidParticipant(participant) || !isValidCandidate(candidate)) revert();
       return (candidate, participantMap[participant].votes[candidate]);
     }
 
-    function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos) public {
+    function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos) external {
       if(!isValidParticipant(participant) || !isValidCandidate(candidato)) revert();
       participantMap[participant].votes[candidato] = votos;
     }
 
     function isValidCandidate(bytes32 candidate) public constant returns (bool){
-      for(uint i=0; i < candidateList.length; i++){
-        if(candidate == candidateList[i]){
-          return true;
-        }
-      }
-      return false;
+        return candidateMap[candidate].isValidCandidate;
     }
 
     function isValidParticipant(bytes32 participant) public constant returns (bool){
