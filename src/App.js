@@ -19,7 +19,7 @@ class App extends Component {
       web3: null,
     }
   }
-  
+
 
   render() {
     return (

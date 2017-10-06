@@ -7,6 +7,7 @@ import About from './About.js'
 import Home from './Home.js'
 import Tabla from './Tabla.js'
 import MesaForm from './MesaForm.js'
+
 import MesaDataLoadForm from './MesaDataLoadForm.js'
 import Error404 from './ErrorComponents/Error404.js'
 import SearchMesa from './SearchComponents/SearchMesa.js'
@@ -21,6 +22,12 @@ import DelegateDelegadoGeneral from './Delegations/DelegateDelegadoGeneral.js'
 import FixedNavbarComponent from './FixedNavbarComponent.js'
 import './ErrorComponents/Error404.css'
 
+import CreateMesa2 from './prototypes/CreateMesa2.js'
+import Election2 from './prototypes/Election2.js'
+import AddPresidenteDeMesa2 from './prototypes/AddPresidenteDeMesa2.js'
+import AddFiscal2 from './prototypes/AddFiscal2.js'
+import LoadMesa2 from './prototypes/LoadMesa2.js'
+
 ReactDOM.render(
   <div>
     <div>
@@ -28,11 +35,17 @@ ReactDOM.render(
     </div>
     <div>
     <Router>
-  
+
       <Switch>
 
         {/* Paths for Router React */}
         <Route exact path="/" component={Home}/>
+
+        <Route exact path="/createmesa2" component={CreateMesa2}/>
+        <Route exact path="/election2" component={Election2}/>
+        <Route exact path="/addpresi2" component={AddPresidenteDeMesa2}/>
+        <Route exact path="/addfiscal2" component={AddFiscal2}/>
+        <Route exact path="/loadmesa2" component={LoadMesa2}/>
 
         <Route exact path="/app" component={App}/>
         <Route exact path="/createMesa" component={MesaForm}/>

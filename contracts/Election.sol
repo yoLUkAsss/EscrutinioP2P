@@ -19,11 +19,11 @@ contract Election {
     }
 
     function getUserCRUDaddress(bytes32 ae) external constant returns(address){
-        if(!created || ae != autoridadElectoral) revert();
+        /*if(!created || ae != autoridadElectoral) revert();*/
         return userCRUDaddress;
     }
     function getMesaCRUDaddress(bytes32 ae) external constant returns(address){
-        if(!created || ae != autoridadElectoral) revert();
+        /*if(!created || ae != autoridadElectoral) revert();*/
         return mesaCRUDaddress;
     }
 
