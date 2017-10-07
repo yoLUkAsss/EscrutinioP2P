@@ -12,6 +12,7 @@ import MesaDataLoadForm from './MesaDataLoadForm.js'
 import Error404 from './ErrorComponents/Error404.js'
 import SearchMesa from './SearchComponents/SearchMesa.js'
 import AuthHome from './Auth/AuthHome.js'
+import Register from './Auth/Register.js'
 
 import DelegateNavBar from './Delegations/DelegateNavBar.js'
 import DelegateFiscal from './Delegations/DelegateFiscal.js'
@@ -57,6 +58,7 @@ ReactDOM.render(
         <Route exact path="/about" component={About}/>
         <Route exact path="/tabla" component={Tabla}/>
         <Route exact path="/auth" component={AuthHome}/>
+        <Route exact path="/auth/register" component={Register}/>
         <Route exact path="/delegate" component={DelegateNavBar}/>
         <Route exact path="/delegate/apoderadoPartido" component={DelegateApoderadoDePartido} />
         <Route exact path="/delegate/fiscal" component={DelegateFiscal} />
