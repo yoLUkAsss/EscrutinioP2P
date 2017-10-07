@@ -41,8 +41,7 @@ class CreateMesa2 extends Component {
       const election = contract(ElectionContract)
       election.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
-        election.deployed().then((instance) => {
-          electionInstance = instance
+        election.deployed().then((electionInstance) => {
           return electionInstance.createMesa.sendTransaction(this.state.autoridadElectoral, csFiltered,
             {from:accounts[0], gas : 3000000})
         }).then((tx)=> {
