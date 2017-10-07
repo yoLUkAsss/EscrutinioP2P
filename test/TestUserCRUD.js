@@ -30,26 +30,15 @@ contract('UserCRUD' ,function(accounts) {
     await userCRUDInstance.deleteUser(getId(tx), fromObject)
   })
 
-  it("get an existent User should returns its id, mail, role id", async () => {
+  it("get an existent User should returns its address", async () => {
     let userCRUDInstance = await UserCRUD.deployed()
     let tx = await userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, fromObject)
-    let user = await userCRUDInstance.getUser.call(getId(tx), fromObject)
-    let expectedRole = 1
-    let currentRole = user[3].toNumber()
-    assert.equal(expectedRole,currentRole, "categories are equals")
+    let userAddress = await userCRUDInstance.getUser.call(getId(tx), fromObject)
+    let zero = "0x0000000000000000000000000000000000000000"
+    assert.ok(userAddress != zero, "address is not zero")
     await userCRUDInstance.deleteUser(getId(tx), fromObject)
     // assert.equal("jesus@gmail.com", web3.toUtf8(user[1]), "mails are equals")
     // assert.equal("jesus", web3.toUtf8(user[2]), "passwords are equals")
-  })
-
-  it("update some fields of an existent User should update that User field", async () => {
-    let userCRUDInstance = await UserCRUD.deployed()
-    let tx = await userCRUDInstance.createUser("jesus@gmail.com", "jesus", 1, fromObject)
-    let previousUser = await userCRUDInstance.getUser.call(getId(tx), fromObject)
-    await userCRUDInstance.updateUser(getId(tx), "laime@gmail.com", "laime", 0, fromObject)
-    let currentUser = await userCRUDInstance.getUser.call(getId(tx), fromObject)
-    assert.ok(previousUser !== currentUser, "they are different")
-    await userCRUDInstance.deleteUser(getId(tx), fromObject)
   })
 
   it("delete an user by id decrease the quantity of users", async () => {
