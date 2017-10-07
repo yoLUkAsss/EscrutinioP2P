@@ -41,8 +41,7 @@ class CreateMesa2 extends Component {
       const election = contract(ElectionContract)
       election.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
-        election.deployed().then((instance) => {
-          electionInstance = instance
+        election.deployed().then((electionInstance) => {
           return electionInstance.createMesa.sendTransaction(this.state.autoridadElectoral, csFiltered,
             {from:accounts[0], gas : 3000000})
         }).then((tx)=> {
@@ -72,7 +71,7 @@ class CreateMesa2 extends Component {
     render () {
         return (
           <Container>
-            <Form onSubmit={this.handleCreateMesa}>
+            <Form>
               <Header as='h1'>Crear Mesa</Header>
                 <Form.Input focus
                 type='text'
@@ -89,7 +88,7 @@ class CreateMesa2 extends Component {
                 onAdd={this.handleAddCandidato}
                 onDelete={this.handleRemoveCandidato}
                 onUpdate={this.handleUpdateCandidato}/>
-                <Button>Crear Mesa</Button>
+                <Button onClick={this.handleCreateMesa}>Crear Mesa</Button>
             </Form>
           </Container>
         );
