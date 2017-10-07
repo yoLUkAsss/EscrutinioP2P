@@ -6,7 +6,6 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 
 //contratos
 import ElectionContract from '../../build/contracts/Election.json'
-import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
 
 class AddPresidenteDeMesa2 extends Component {
     constructor() {
@@ -14,6 +13,7 @@ class AddPresidenteDeMesa2 extends Component {
         this.state = {
             autoridadElectoral : "",
             correoPresidente : "",
+            passwordPresidente : "",
             idMesa : 0,
             web3 : null
         }
@@ -29,25 +29,20 @@ class AddPresidenteDeMesa2 extends Component {
     handleAddPresidenteDeMesa = (event) => {
       event.preventDefault()
       const election = contract(ElectionContract)
-      const mesaElectionCRUD = contract(MesaElectionCRUDContract)
-      let mesaCRUDInstance
       election.setProvider(this.state.web3.currentProvider)
-      mesaElectionCRUD.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
-        election.deployed().then((electionInstance) => {
-          return electionInstance.getMesaCRUDaddress.call(this.state.autoridadElectoral, {from:accounts[0]})
-        }).then((mesaCRUDaddress) => {
-          return mesaElectionCRUD.at(mesaCRUDaddress)
-        }).then((instance) => {
-          mesaCRUDInstance = instance
-          return mesaCRUDInstance.setPresidenteDeMesa.estimateGas(this.state.idMesa, this.state.correoPresidente, {from:accounts[0]})
-        }).then((gasEstimated) => {
-          return mesaCRUDInstance.setPresidenteDeMesa.sendTransaction(this.state.idMesa, this.state.correoPresidente,
-            {from:accounts[0], gas:gasEstimated})
+        election.deployed().then((instance) => {
+          return instance.addPresidenteDeMesa.sendTransaction(
+            this.state.autoridadElectoral,
+            this.state.correoPresidente,
+            this.state.passwordPresidente,
+            this.state.idMesa,
+            {from:accounts[0], gas: 3000000}
+          )
         }).then((tx) => {
           console.log("transaction sent")
-        }).catch((err) => {
-          console.log("something happen")
+        }).catch((reason) => {
+          console.log("catched some error")
         })
       })
     }
@@ -75,6 +70,15 @@ class AddPresidenteDeMesa2 extends Component {
                 value={this.state.correoPresidente}
                 onChange={ (event) => { this.setState({ correoPresidente : event.target.value }) } }
             />
+            <Form.Input
+                required
+                type="password"
+                title="Password del Presidente de Mesa"
+                placeholder="Password del Presidente de Mesa"
+                value={this.state.passwordPresidente}
+                onChange={ (event) => { this.setState({ passwordPresidente : event.target.value }) } }
+            />
+
             <Header as='h3'>Numero de Mesa</Header>
             <Form.Input
                 required

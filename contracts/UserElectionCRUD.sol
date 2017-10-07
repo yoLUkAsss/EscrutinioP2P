@@ -26,6 +26,12 @@ contract UserElectionCRUD is UserCRUD{
     function createAutoridadElectoral(bytes32 email, bytes32 password) public {
         createUserByEmail(email, password, UserCategory.AutoridadElectoral);
     }
+    function createPresidenteDeMesa(bytes32 email, bytes32 password) public {
+        createUserByEmail(email, password, UserCategory.PresidenteMesa);
+    }
+    function createFiscal(bytes32 email, bytes32 password) public {
+        createUserByEmail(email, password, UserCategory.Fiscal);
+    }
     function isUser(bytes32 email, UserCategory category) internal constant returns(bool){
         return existsUser(emailMap[email]) && userMapping[emailMap[email]].category == category;
     }
@@ -34,6 +40,12 @@ contract UserElectionCRUD is UserCRUD{
     }
     function isAutoridadElectoral(bytes32 email) public constant returns(bool){
         return isUser(email, UserCategory.AutoridadElectoral);
+    }
+    function isFiscal(bytes32 email) public constant returns(bool){
+        return isUser(email, UserCategory.Fiscal);
+    }
+    function isPresidenteDeMesa(bytes32 email) public constant returns(bool){
+        return isUser(email, UserCategory.PresidenteMesa);
     }
 
 }

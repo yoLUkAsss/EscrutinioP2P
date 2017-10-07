@@ -67,7 +67,7 @@ class Election2 extends Component {
                           { this.setState({ autoridadDeComicio : event.target.value }) }
                         }
                     />
-                    <Button fluid icon onClick={this.createElection}>
+                    <Button icon onClick={this.createElection}>
                         <Icon name='send'/> Crear Elección
                     </Button>
                 </Form>

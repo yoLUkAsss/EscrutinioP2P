@@ -28,6 +28,7 @@ import AddPresidenteDeMesa2 from './prototypes/AddPresidenteDeMesa2.js'
 import AddFiscal2 from './prototypes/AddFiscal2.js'
 import LoadMesa2 from './prototypes/LoadMesa2.js'
 import AddApoderadoDePartido2 from './prototypes/AddApoderadoDePartido2.js'
+import GetMesa2 from './prototypes/GetMesa2.js'
 
 ReactDOM.render(
   <div>
@@ -41,20 +42,18 @@ ReactDOM.render(
 
         {/* Paths for Router React */}
         <Route exact path="/" component={Home}/>
-
-        <Route exact path="/createmesa2" component={CreateMesa2}/>
-        <Route exact path="/election2" component={Election2}/>
-
-        <Route exact path="/addpresi2" component={AddPresidenteDeMesa2}/>
-        <Route exact path="/addfiscal2" component={AddFiscal2}/>
-        <Route exact path="/loadmesa2" component={LoadMesa2}/>
-        <Route exact path="/addapoderado2" component={AddApoderadoDePartido2}/>
-
+        <Route exact path="/createelection" component={Election2}/>
+        <Route exact path="/createmesa" component={CreateMesa2}/>
+        <Route exact path="/loadmesa" component={LoadMesa2}/>
+        <Route exact path="/getmesa" component={GetMesa2}/>
+        <Route exact path="/addpresidente" component={AddPresidenteDeMesa2}/>
+        <Route exact path="/addfiscal" component={AddFiscal2}/>
+        <Route exact path="/addapoderado" component={AddApoderadoDePartido2}/>
 
         <Route exact path="/app" component={App}/>
-        <Route exact path="/createMesa" component={MesaForm}/>
-        <Route exact path="/loadMesa" component={MesaDataLoadForm}/>
-        <Route exact path="/searchMesa" component={SearchMesa}/>
+        // <Route exact path="/createMesa" component={MesaForm}/>
+        // <Route exact path="/loadMesa" component={MesaDataLoadForm}/>
+        // <Route exact path="/searchMesa" component={SearchMesa}/>
         <Route exact path="/about" component={About}/>
         <Route exact path="/tabla" component={Tabla}/>
         <Route exact path="/auth" component={AuthHome}/>

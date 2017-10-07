@@ -1,7 +1,7 @@
 pragma solidity ^0.4.11;
 
 contract UserCRUD {
-  enum UserCategory {AutoridadElectoral, DelegadoDistrito, DelegadoEscolar, PresidenteMesa, VicepresidenteMesa, ApoderadoPartido, FiscalMesa}
+  enum UserCategory {AutoridadElectoral, DelegadoDistrito, DelegadoEscolar, PresidenteMesa, VicepresidenteMesa, ApoderadoPartido, Fiscal}
 
   struct User{
       uint id;

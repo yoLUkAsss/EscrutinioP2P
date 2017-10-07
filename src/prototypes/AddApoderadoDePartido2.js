@@ -7,7 +7,7 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 
 
 import ElectionContract from '../../build/contracts/Election.json'
-import UserElectionCRUDContract from '../../build/contracts/UserElectionCRUD.json'
+
 
 class AddApoderadoDePartido2 extends Component {
     constructor() {
@@ -34,20 +34,10 @@ class AddApoderadoDePartido2 extends Component {
     handleAddApoderadoDePartido = (event) => {
       event.preventDefault()
       const election = contract(ElectionContract)
-      const userCRUD = contract(UserElectionCRUDContract)
-      let userCRUDinstance
       election.setProvider(this.state.web3.currentProvider)
-      userCRUD.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
-        election.deployed().then((electionInstance) => {
-          return electionInstance.getUserCRUDaddress.call(this.state.autoridadElectoral, {from:accounts[0]})
-        }).then((userElectionAddress) => {
-          return userCRUD.at(userElectionAddress)
-        }).then((userInstance) => {
-          userCRUDinstance = userInstance
-          return userCRUDinstance.createApoderadoDePartido.estimateGas(this.state.correoApoderadoDePartido, "", {from:accounts[0]})
-        }).then((gasEstimated) => {
-          return userCRUDinstance.createApoderadoDePartido.sendTransaction(this.state.correoApoderadoDePartido, "", {from:accounts[0], gas:gasEstimated})
+        election.deployed().then((instance) => {
+          return instance.addApoderadoDePartido.sendTransaction(this.state.autoridadElectoral, this.state.correoApoderadoDePartido, this.state.passwordApoderadoDePartido, {from:accounts[0], gas:3000000})
         }).then((tx) => {
           console.log(tx)
           console.log("transaction sent")
@@ -55,8 +45,6 @@ class AddApoderadoDePartido2 extends Component {
           console.log(err)
           console.log("something happen")
         })
-      }).catch((err) => {
-        console.log(err)
       })
     }
 

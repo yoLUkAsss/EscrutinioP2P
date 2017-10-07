@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
-import { Button, Form, Header} from 'semantic-ui-react'
+import { Button, Form, Header, Divider} from 'semantic-ui-react'
 import Center from 'react-center'
+
+// import ComponentTitle from '../utils/ComponentTitle.js'
 
 // import ElectionContract from '../../build/contracts/Election.json'
 import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
@@ -74,8 +76,6 @@ class LoadMesa2 extends Component {
           console.log(err)
           console.log("something happen")
         })
-      }).catch((err) => {
-        console.log(err)
       })
     }
 
@@ -101,8 +101,6 @@ class LoadMesa2 extends Component {
         }).catch((error) => {
           console.log("finished")
         })
-      }).catch((err) => {
-        console.log(err)
       })
     }
 
@@ -110,8 +108,9 @@ class LoadMesa2 extends Component {
         return (
           <Center>
           <div>
+            <Header as='h2'>Buscar Mesa</Header>
             <Form onSubmit={this.handleInitializeMesa}>
-              <Header as='h2'>Buscar Mesa</Header>
+              <Header as='h3'>Buscar Mesa</Header>
               <Form.Input
                 type="number"
                 placeholder="id de la mesa"
@@ -121,22 +120,16 @@ class LoadMesa2 extends Component {
               <Button>Buscar Mesa</Button>
             </Form>
 
+            <Divider />
 
             <Form onSubmit={this.handleLoadMesa}>
-              <Header as='h3'>Cargar Mesa</Header>
+              <Header as='h3'>Cargar Mesa {this.state.mesaId}</Header>
                 <Form.Input
                   type="text"
                   label='Nombre del Participante'
                   placeholder="Nombre del participante"
                   value={this.state.participante}
                   onChange={this.handleNombreParticipante}
-                />
-                <Form.Input
-                  type="number"
-                  label='Id de la mesa'
-                  placeholder="Id de la mesa"
-                  value={this.state.mesaId}
-                  onChange={this.handleMesaId}
                 />
                 <Header as='h3'>Candidatos</Header>
                 {this.state.candidatos.map((candidato, idx) => (

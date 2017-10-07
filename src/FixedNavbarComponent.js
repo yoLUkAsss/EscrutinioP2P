@@ -8,10 +8,13 @@ class FixedNavbarComponent extends Component {
     <div>
       <Menu fixed='top' inverted>
         <Menu.Item as='a' href='/' header>Home</Menu.Item>
-        <Menu.Item as='a' href='/app'>Crear eleccion</Menu.Item>
-        <Menu.Item as='a' href='/createMesa'>Creacion de mesas</Menu.Item>
-        <Menu.Item as='a' href='/loadMesa'>Carga de datos</Menu.Item>
-        <Menu.Item as='a' href='/searchMesa'>Busqueda de datos</Menu.Item>
+        <Menu.Item as='a' href='/createelection'>Crear eleccion</Menu.Item>
+        <Menu.Item as='a' href='/createmesa'>Creacion de mesas</Menu.Item>
+        <Menu.Item as='a' href='/loadmesa'>Carga de datos</Menu.Item>
+        <Menu.Item as='a' href='/getmesa'>Busqueda de datos</Menu.Item>
+        <Menu.Item as='a' href='/addpresidente'>Agregar presidente de mesa</Menu.Item>
+        <Menu.Item as='a' href='/addfiscal'>Agregar fiscal de mesa</Menu.Item>
+        <Menu.Item as='a' href='/addapoderado'>Agregar apoderado de partido</Menu.Item>
         <Menu.Item as='a' href='/about'>Sobre nosotros</Menu.Item>
       </Menu>
     </div>

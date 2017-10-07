@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+
 import ElectionContract from '../../build/contracts/Election.json'
-import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
+
 import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
-import {Form, Header, Container} from 'semantic-ui-react'
+import {Form, Header, Container, Button} from 'semantic-ui-react'
 import DinamicListForm from '../DinamicListForm.js'
 
 import * as utils from '../utils/utils.js'
@@ -12,7 +13,7 @@ class CreateMesa2 extends Component {
     constructor() {
         super();
         this.state = {
-          autoridadElectoral : {name : ''},
+          autoridadElectoral : '',
           candidatos : [{name: ''}],
           web3 : null,
         }
@@ -29,38 +30,24 @@ class CreateMesa2 extends Component {
       })
     }
 
-    handleAutoridadElectoralName = (evt) => {
-      this.setState({ autoridadElectoral: {name : evt.target.value} })
+    handleAutoridadElectoral = (evt) => {
+      this.setState({ autoridadElectoral : evt.target.value })
     }
 
     handleCreateMesa(event){
       event.preventDefault()
-      const election = contract(ElectionContract)
-      const mesaElectionCRUD = contract(MesaElectionCRUDContract)
-      let mesaCRUDInstance
+      let electionInstance
       let csFiltered = utils.filterNoBlanks(utils.getNames(this.state.candidatos))
+      const election = contract(ElectionContract)
       election.setProvider(this.state.web3.currentProvider)
-      mesaElectionCRUD.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
-        election.deployed().then((electionInstance) => {
-          console.log("befor get mesa crud address")
-          console.log(electionInstance)
-          return electionInstance.getMesaCRUDaddress.call(this.state.autoridadElectoral.name, {from:accounts[0]})
-        }).then((address) => {
-          console.log("get address of mesa election crud")
-          console.log(address)
-          return mesaElectionCRUD.at(address)
-        }).then((mesaCRUDIns) => {
-          console.log("loaded instance of mesa election crud")
-          mesaCRUDInstance = mesaCRUDIns
-          return mesaCRUDInstance.createMesa.estimateGas(csFiltered, {from:accounts[0]})
-        }).then((gasEstimated) =>{
-          console.log("sent estimate gas")
-          return mesaCRUDInstance.createMesa.sendTransaction(csFiltered, {from:accounts[0], gas: gasEstimated})
-        }).then((tx)=>{
-          console.log("create mesa transaction finished")
+        election.deployed().then((instance) => {
+          electionInstance = instance
+          return electionInstance.createMesa.sendTransaction(this.state.autoridadElectoral, csFiltered,
+            {from:accounts[0], gas : 3000000})
+        }).then((tx)=> {
+          console.log("tx sent")
         }).catch((reason) => {
-          console.log("cached some error")
           console.log(reason)
         })
       })
@@ -85,14 +72,15 @@ class CreateMesa2 extends Component {
     render () {
         return (
           <Container>
-            <Form>
+            <Form onSubmit={this.handleCreateMesa}>
               <Header as='h1'>Crear Mesa</Header>
                 <Form.Input focus
                 type='text'
                 label='Nombre de la Autoridad Electoral'
                 placeholder='Nombre de la Autoridad Electoral'
-                value={this.state.autoridadElectoral.name}
-                onChange={this.handleAutoridadElectoralName}/>
+                value={this.state.autoridadElectoral}
+                onChange={this.handleAutoridadElectoral}/>
+
                 <DinamicListForm
                 title='Candidatos'
                 type='text'
@@ -101,7 +89,7 @@ class CreateMesa2 extends Component {
                 onAdd={this.handleAddCandidato}
                 onDelete={this.handleRemoveCandidato}
                 onUpdate={this.handleUpdateCandidato}/>
-                <Form.Button onClick={this.handleCreateMesa}>Crear Mesa</Form.Button>
+                <Button>Crear Mesa</Button>
             </Form>
           </Container>
         );
