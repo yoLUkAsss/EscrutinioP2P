@@ -56,8 +56,7 @@ class Login extends Component {
         return (
           <Center>
           <div>
-              <ComponentTitle title='Log Iin'/>
-
+              <ComponentTitle title='Log in'/>
               <Form>
                   <Form.Input
                       focus

@@ -1,34 +1,37 @@
 pragma solidity ^0.4.11;
 
+import "./User.sol";
+
 contract UserCRUD {
   enum UserCategory {AutoridadElectoral, DelegadoDistrito, DelegadoEscolar, PresidenteMesa, VicepresidenteMesa, ApoderadoPartido, Fiscal}
-
-  struct User{
-      uint id;
-      bytes32 email;
-      bytes32 password;
-      UserCategory category;
-      uint index;
-      bool isUser;
+  //AutoridadElectoral 0
+  //DelegadoDistrito 1
+  //DelegadoEscolar 2
+  //ApoderadoPartido 3
+  //PresidenteMesa 4
+  //VicepresidenteMesa 5
+  //Fiscal 6
+  struct UserStruct{
+    uint id;
+    address userAddress;
+    uint index;
+    bool isUser;
   }
 
   address owner;
   uint[] userIds;
   uint lastId;
-  mapping (uint => User) userMapping;
+  mapping (uint => UserStruct) userMapping;
 
   function UserCRUD () public{
       owner = msg.sender;
   }
-
-  //falta usar sha3 o keccak256 dentro de solidity o por web3
-  function createUser(bytes32 email, bytes32 password, UserCategory category) public{
-    /*validarCreacion(mail, password, categoria);*/
-    /*if(existsUser(id)) revert();*/
+  function createUser(bytes32 email, bytes32 password, uint category) public{
     lastId += 1;
-    userMapping[lastId] = User(lastId, email, password, category, userIds.length, true);
+    address userCreatedAddress = new User(email, password, category);
+    userMapping[lastId] = UserStruct(lastId, userCreatedAddress, userIds.length, true);
     userIds.push(lastId);
-    LogCreateUser(msg.sender, lastId, email, password, category);
+    LogCreateUser(msg.sender, lastId, userCreatedAddress);
   }
   function existsUser(uint id) public constant returns(bool){
     return userIds.length != uint256(0) && userMapping[id].isUser;
@@ -38,18 +41,9 @@ contract UserCRUD {
     return userIds;
   }
 
-  function getUser(uint id) public constant returns(uint, bytes32, bytes32, UserCategory){
+  function getUser(uint id) public constant returns(address){
     if(!existsUser(id)) revert();
-    return (id, userMapping[id].email, userMapping[id].password, userMapping[id].category);
-  }
-
-  //falta usar sha3 o keccak256 dentro de solidity o por web3
-  function updateUser(uint id, bytes32 email, bytes32 password, UserCategory category) public{
-    if(!existsUser(id)) revert();
-    userMapping[id].email = email;
-    userMapping[id].password = password;
-    userMapping[id].category = category;
-    LogUpdateUser(msg.sender, id, email, password, category);
+    return userMapping[id].userAddress;
   }
 
   function deleteUser(uint id) public{
@@ -59,6 +53,7 @@ contract UserCRUD {
     userIds[toDelete] = idToMove;
     userMapping[idToMove].index = toDelete;
     userIds.length--;
+    User(userMapping[id].userAddress).destroy(owner);
     delete userMapping[id];
     LogDeleteUser(msg.sender, id);
   }
@@ -67,8 +62,7 @@ contract UserCRUD {
   * ex: createUser
   */
 
-  event LogCreateUser(address indexed userAddress, uint userId, bytes32 userEmail, bytes32 userPassword, UserCategory userCategory);
-  event LogUpdateUser(address indexed userAddress, uint userId, bytes32 userEmail, bytes32 userPassword, UserCategory userCategory);
-  event LogDeleteUser(address indexed userAddress, uint userId);
+  event LogCreateUser(address indexed senderAddress, uint userId, address userAddress);
+  event LogDeleteUser(address indexed senderAddress, uint userId);
 
 }
