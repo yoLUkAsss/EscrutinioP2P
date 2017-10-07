@@ -36,7 +36,6 @@ class CreateMesa2 extends Component {
 
     handleCreateMesa(event){
       event.preventDefault()
-      let electionInstance
       let csFiltered = utils.filterNoBlanks(utils.getNames(this.state.candidatos))
       const election = contract(ElectionContract)
       election.setProvider(this.state.web3.currentProvider)

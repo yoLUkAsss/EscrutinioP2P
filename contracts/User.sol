@@ -20,9 +20,10 @@ contract User{
         password = pass;
         category = cat;
     }
-    function login(bytes32 pass) public {
+    function login(bytes32 pass) public returns(address){
         if(password != pass) revert();
         isLogged = true;
+        return this;
     }
     function logout() public {
         isLogged = false;
@@ -39,5 +40,4 @@ contract User{
     function destroy(address parent) public {
         selfdestruct(parent);
     }
-
 }

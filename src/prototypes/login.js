@@ -46,6 +46,7 @@ class Login extends Component {
         userElection.deployed().then((instance) => {
           return instance.login.sendTransaction(this.state.email, this.state.password,{from:accounts[0], gas : 3000000})
         }).then((tx)=> {
+          console.log(tx)
           console.log("tx sent")
         }).catch((reason) => {
           console.log(reason)
