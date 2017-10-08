@@ -4,18 +4,16 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 
-import Center from 'react-center'
-import { Container, Form, Header, Button} from 'semantic-ui-react'
+import { Container, Button} from 'semantic-ui-react'
 
-import ComponentTitle from './utils/ComponentTitle.js'
 
 import cookie from 'react-cookies'
 
 class Home extends Component {
-    
+
     constructor () {
         super()
-    
+
         this.login = this.login.bind(this)
         this.logout = this.logout.bind(this)
         this.seeinfo = this.seeinfo.bind(this)
@@ -39,7 +37,7 @@ class Home extends Component {
             "user" : cookie.load('username'),
             "adds" : cookie.load('address')
         }
-    
+
         console.log(JSON.stringify(info, undefined, 2))
     }
 
@@ -58,7 +56,14 @@ class Home extends Component {
     //     let info = CustomSession.get_current_user()
     //     console.log(JSON.stringify(info, undefined, 2))
     // }
-    
+    logoutCurrent = (event) => {
+      event.preventDefault()
+      console.log("before delete")
+      console.log(cookie.load("current_user_address"))
+      cookie.save("current_user_address", "", {path:"/"})
+      cookie.save("email", "", {path:"/"})
+    }
+
     render() {
 
         return (
@@ -73,7 +78,10 @@ class Home extends Component {
                 <Button onClick={this.seeinfo}>
                     See info
                 </Button>
-
+                <Button onClick={this.seeinfo}>
+                    See info
+                </Button>
+                <Button onClick={this.logoutCurrent}>Remove current user</Button>
             </div>
             </Container>
         );

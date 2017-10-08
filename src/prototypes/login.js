@@ -18,6 +18,8 @@ import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
 import cookie from 'react-cookies'
+import AlertContainer from 'react-alert'
+import * as utils from '../utils/utils.js'
 
 class Login extends Component {
     constructor() {
@@ -43,15 +45,24 @@ class Login extends Component {
     handleLogin = (event) => {
       event.preventDefault()
       const userElection = contract(UserElectionCRUD)
+      let crud
       userElection.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
         userElection.deployed().then((instance) => {
-          return instance.login.sendTransaction(this.state.email, this.state.password,{from:accounts[0], gas : 3000000})
+          crud = instance
+          return crud.login.sendTransaction(this.state.email, this.state.password,{from:accounts[0], gas : 3000000})
         }).then((tx)=> {
           console.log(tx)
           console.log("tx sent")
-          cookie.save("current_user_address", tx, {path : "/"})
+          crud.LogLogin().watch((err, result)=>{
+            if(!err){
+              cookie.save("email", result.args.email)
+              cookie.save("current_user_address", result.args.userAddress, {path : "/"})
+              utils.showWithRedirect(this.msg, "Logged correctly", "/", this.context)
+            }
+          })
         }).catch((reason) => {
+          console.log("catched reason")
           console.log(reason)
         })
       })
@@ -60,6 +71,7 @@ class Login extends Component {
         return (
           <Center>
           <div>
+              <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
               <ComponentTitle title='Log in'/>
               <Form>
                   <Form.Input

@@ -13,7 +13,6 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
-import AuthHomeController from './AuthHomeController.js'
 import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
 import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
@@ -47,7 +46,7 @@ class AuthHome extends Component {
     //       type: 'success'
     //     })
     //   }
-    
+
 
     handleRegister = (event) => {
       event.preventDefault()
@@ -72,7 +71,7 @@ class AuthHome extends Component {
         return (
             <Center>
             <div>
-                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} /> 
+                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
                 <Container>
                 <ComponentTitle title='Autenticación'/>
 

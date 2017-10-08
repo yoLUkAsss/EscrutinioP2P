@@ -3,6 +3,8 @@ import {Menu} from 'semantic-ui-react'
 
 import cookie from 'react-cookies'
 
+import Logout from './prototypes/logout.js'
+
 class FixedNavbarComponent extends Component {
 
   componentWillMount() {
@@ -19,7 +21,7 @@ class FixedNavbarComponent extends Component {
       navbar = <div>
             <Menu fixed='top' inverted>
                 <Menu.Item as='a' href='/' header>Home</Menu.Item>
-                <Menu.Item as='a' href='/logout' header>Logout</Menu.Item>
+                <Logout/>
             </Menu>
         </div>
     } else {
@@ -27,6 +29,7 @@ class FixedNavbarComponent extends Component {
             <Menu fixed='top' inverted>
                 <Menu.Item as='a' href='/' header>Home</Menu.Item>
                 <Menu.Item as='a' href='/login' header>Login</Menu.Item>
+                <Menu.Item as='a' href='/signup' header>Sign up</Menu.Item>
             </Menu>
         </div>
     }

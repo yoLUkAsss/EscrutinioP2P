@@ -55,6 +55,7 @@ ReactDOM.render(
         <Route exact path="/addapoderado" component={AddApoderadoDePartido2}/>
 
         <Route exact path="/login" component={Login}/>
+        <Route exact path="/signup" component={Register}/>
         <Route exact path="/getusers" component={GetUser}/>
 
         <Route exact path="/app" component={App}/>

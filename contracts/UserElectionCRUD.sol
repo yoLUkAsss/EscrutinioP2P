@@ -35,13 +35,14 @@ contract UserElectionCRUD is UserCRUD{
     function signup(bytes32 email, bytes32 pass) public {
         createFiscal(email, pass);
     }
-    function login(bytes32 email, bytes32 pass) public returns(address){
+    function login(bytes32 email, bytes32 pass) public{
         if(!existsUser(emailMap[email])) revert();
         User(getUser(emailMap[email])).login(pass);
-        return getUser(emailMap[email]);
+        LogLogin(msg.sender, email, getUser(emailMap[email]));
     }
     function logout(bytes32 email) public {
         if(!existsUser(emailMap[email])) revert();
         User(getUser(emailMap[email])).logout();
     }
+    event LogLogin(address indexed senderAddress, bytes32 email, address userAddress);
 }

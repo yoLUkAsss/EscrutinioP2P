@@ -20,10 +20,9 @@ contract User{
         password = pass;
         category = cat;
     }
-    function login(bytes32 pass) public returns(address){
+    function login(bytes32 pass) public{
         if(password != pass) revert();
         isLogged = true;
-        return this;
     }
     function logout() public {
         isLogged = false;
