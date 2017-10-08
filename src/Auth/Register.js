@@ -18,6 +18,9 @@ import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
 import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
+import AlertContainer from 'react-alert'
+import * as utils from '../utils/utils.js'
+
 class AuthHome extends Component {
     constructor() {
         super()
@@ -38,6 +41,14 @@ class AuthHome extends Component {
       })
     }
 
+    // showAlert = () => {
+    //     this.msg.show('Some text or component', {
+    //       time: 3000,
+    //       type: 'success'
+    //     })
+    //   }
+    
+
     handleRegister = (event) => {
       event.preventDefault()
       const userElection = contract(UserElectionCRUD)
@@ -50,6 +61,7 @@ class AuthHome extends Component {
         {from:accounts[0], gas : 3000000})
         }).then( (result) => {
           console.log("Transaction Sent")
+          utils.showWithRedirect(this.msg, "Hola", "/", this.context)
         }).catch( (error) => {
           console.log("Error while executing transaction")
         })
@@ -60,6 +72,7 @@ class AuthHome extends Component {
         return (
             <Center>
             <div>
+                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} /> 
                 <Container>
                 <ComponentTitle title='Autenticación'/>
 

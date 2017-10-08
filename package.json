@@ -57,6 +57,7 @@
   "dependencies": {
     "dotenv": "^2.0.0",
     "react": "^15.6.1",
+    "react-alert": "^2.3.0",
     "react-bootstrap-table": "^4.0.3",
     "react-center": "^1.1.1",
     "react-cookies": "^0.1.0",
