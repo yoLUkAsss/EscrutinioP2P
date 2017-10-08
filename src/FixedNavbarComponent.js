@@ -1,23 +1,41 @@
 import React, { Component } from 'react';
 import {Menu} from 'semantic-ui-react'
 
+import cookie from 'react-cookies'
+
 class FixedNavbarComponent extends Component {
 
+  componentWillMount() {
+      console.log("USER: " + cookie.load("current_user_address"))
+  }
+
   render() {
+
+    const isLoggedIn = cookie.load('current_user_address') !== ""
+
+    let navbar = null
+
+    if (isLoggedIn) {
+      navbar = <div>
+            <Menu fixed='top' inverted>
+                <Menu.Item as='a' href='/' header>Home</Menu.Item>
+                <Menu.Item as='a' href='/logout' header>Logout</Menu.Item>
+            </Menu>
+        </div>
+    } else {
+        navbar = <div>
+            <Menu fixed='top' inverted>
+                <Menu.Item as='a' href='/' header>Home</Menu.Item>
+                <Menu.Item as='a' href='/login' header>Login</Menu.Item>
+            </Menu>
+        </div>
+    }
+
+
     return (
-    <div>
-      <Menu fixed='top' inverted>
-        <Menu.Item as='a' href='/' header>Home</Menu.Item>
-        <Menu.Item as='a' href='/createelection'>Crear eleccion</Menu.Item>
-        <Menu.Item as='a' href='/createmesa'>Creacion de mesas</Menu.Item>
-        <Menu.Item as='a' href='/loadmesa'>Carga de datos</Menu.Item>
-        <Menu.Item as='a' href='/getmesa'>Busqueda de datos</Menu.Item>
-        <Menu.Item as='a' href='/addpresidente'>Agregar presidente de mesa</Menu.Item>
-        <Menu.Item as='a' href='/addfiscal'>Agregar fiscal de mesa</Menu.Item>
-        <Menu.Item as='a' href='/addapoderado'>Agregar apoderado de partido</Menu.Item>
-        <Menu.Item as='a' href='/about'>Sobre nosotros</Menu.Item>
-      </Menu>
-    </div>
+      <div>
+        { navbar }
+      </div>
     );
   }
 }

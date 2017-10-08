@@ -7,6 +7,8 @@ import { Container, Form, Button, Icon, Header} from 'semantic-ui-react'
 
 import ComponentTitle from '../utils/ComponentTitle.js'
 
+import cookie from 'react-cookies'
+
 class Election2 extends Component {
     constructor() {
         super();
@@ -18,6 +20,7 @@ class Election2 extends Component {
     }
 
     componentWillMount() {
+        console.log("USER: " + cookie.load("current_user_address"))
         getWeb3.then(results => {
             this.setState({
               web3: results.web3

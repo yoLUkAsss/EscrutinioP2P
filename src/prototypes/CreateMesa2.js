@@ -9,6 +9,8 @@ import DinamicListForm from '../DinamicListForm.js'
 
 import * as utils from '../utils/utils.js'
 
+import cookie from 'react-cookies'
+
 class CreateMesa2 extends Component {
     constructor() {
         super();

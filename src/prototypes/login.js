@@ -17,6 +17,8 @@ import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
 import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
+import cookie from 'react-cookies'
+
 class Login extends Component {
     constructor() {
         super();
@@ -48,6 +50,7 @@ class Login extends Component {
         }).then((tx)=> {
           console.log(tx)
           console.log("tx sent")
+          cookie.save("current_user_address", tx, {path : "/"})
         }).catch((reason) => {
           console.log(reason)
         })
