@@ -10,7 +10,7 @@ import { Menu } from 'semantic-ui-react'
 /**
  * Controller for Component
  */
-import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
+import UserContract from '../../build/contracts/User.json'
 import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
@@ -37,11 +37,11 @@ class Logout extends Component {
 
     handleLogout = (event) => {
       event.preventDefault()
-      const userElection = contract(UserElectionCRUD)
-      userElection.setProvider(this.state.web3.currentProvider)
+      const user = contract(UserContract)
+      user.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
-        userElection.deployed().then((instance) => {
-          return instance.logout.sendTransaction(cookie.load("email"), {from:accounts[0], gas : 3000000})
+        user.at(cookie.load("current_user_address")).then((instance) => {
+          return instance.logout.sendTransaction({from:accounts[0], gas : 3000000})
         }).then((tx)=> {
           cookie.save("email", "", {path:"/"})
           cookie.save("current_user_address", "", {path : "/"})

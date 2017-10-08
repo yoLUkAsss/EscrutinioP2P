@@ -18,7 +18,6 @@ contract UserElectionCRUD is UserCRUD{
         deleteUser(emailMap[email]);
         delete emailMap[email];
     }
-
     function existsUserByEmail(bytes32 email) public constant returns(bool){
         return emailMap[email] != 0;
     }
@@ -31,18 +30,11 @@ contract UserElectionCRUD is UserCRUD{
     function createFiscal(bytes32 email, bytes32 password) public {
         createUserByEmail(email, password, 6);
     }
-
     function signup(bytes32 email, bytes32 pass) public {
         createFiscal(email, pass);
     }
-    function login(bytes32 email, bytes32 pass) public{
-        if(!existsUser(emailMap[email])) revert();
-        User(getUser(emailMap[email])).login(pass);
-        LogLogin(msg.sender, email, getUser(emailMap[email]));
+    function getUserByEmail(bytes32 email) public constant returns(address){
+      if(!existsUserByEmail(email)) revert();
+      return getUser(emailMap[email]);
     }
-    function logout(bytes32 email) public {
-        if(!existsUser(emailMap[email])) revert();
-        User(getUser(emailMap[email])).logout();
-    }
-    event LogLogin(address indexed senderAddress, bytes32 email, address userAddress);
 }

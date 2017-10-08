@@ -13,7 +13,8 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
-import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
+import UserElectionCRUDcontract from '../../build/contracts/UserElectionCRUD.json'
+import UserContract from '../../build/contracts/User.json'
 import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
@@ -44,29 +45,31 @@ class Login extends Component {
 
     handleLogin = (event) => {
       event.preventDefault()
-      const userElection = contract(UserElectionCRUD)
-      let crud
+      const userElection = contract(UserElectionCRUDcontract)
+      const user = contract(UserContract)
+      let newAddress
       userElection.setProvider(this.state.web3.currentProvider)
+      user.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
         userElection.deployed().then((instance) => {
-          crud = instance
-          return crud.login.sendTransaction(this.state.email, this.state.password,{from:accounts[0], gas : 3000000})
-        }).then((tx)=> {
+          return instance.getUserByEmail.call(this.state.email, {from:accounts[0]})
+        }).then((userAddr)=> {
+          newAddress = userAddr
+          return user.at(userAddr)
+        }).then((userInstance) => {
+          return userInstance.login.sendTransaction(this.state.password, {from:accounts[0], gas:3000000})
+        }).then((tx) => {
           console.log(tx)
-          console.log("tx sent")
-          crud.LogLogin().watch((err, result)=>{
-            if(!err){
-              cookie.save("email", result.args.email)
-              cookie.save("current_user_address", result.args.userAddress, {path : "/"})
-              utils.showWithRedirect(this.msg, "Logged correctly", "/", this.context)
-            }
-          })
+          cookie.save("email", this.state.email)
+          cookie.save("current_user_address", newAddress, {path : "/"})
+          utils.showWithRedirect(this.msg, "Logged correctly", "/", this.context)
         }).catch((reason) => {
           console.log("catched reason")
           console.log(reason)
         })
       })
     }
+
     render () {
         return (
           <Center>
