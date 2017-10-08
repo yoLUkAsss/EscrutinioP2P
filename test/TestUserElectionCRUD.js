@@ -16,8 +16,6 @@ contract('UserElectionCRUD', function(accounts) {
     let existsId = await userElectionInstance.emailMap.call(email, fromObject)
     let existsAutoridad = await userElectionInstance.existsUserByEmail(email, fromObject)
     assert.ok(existsAutoridad, "AutoridadElectoral created correctly.")
-    let isAutoridad = await userElectionInstance.isAutoridadElectoral(email, fromObject)
-    assert.ok(isAutoridad, "AutoridadElectoral assigned correctly.")
     await userElectionInstance.deleteUserByEmail(email, fromObject)
     let notExists = await userElectionInstance.existsUserByEmail(email, fromObject)
     assert.ok(!notExists, "deleted correctly")
