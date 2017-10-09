@@ -22,7 +22,8 @@ class FixedNavbarComponent extends Component {
         navbar = <div>
                 <Menu fixed='top' inverted>
                   <Menu.Item header><Link to="/">Home</Link></Menu.Item>
-                  <Menu.Item header><Link to="/create_mesa">Create Mesa</Link></Menu.Item>)
+                  <Menu.Item header><Link to="/create_mesa">Create Mesa</Link></Menu.Item>
+                  <Menu.Item header><Link to="/get_mesa">Get Mesa</Link></Menu.Item>
                   <Logout/>
                 </Menu>
               </div>
@@ -30,7 +31,7 @@ class FixedNavbarComponent extends Component {
       navbar = <div>
                 <Menu fixed='top' inverted>
                   <Menu.Item header><Link to="/">Home</Link></Menu.Item>
-                  <Menu.Item header><Link to="/get_mesa">Home</Link></Menu.Item>
+                  <Menu.Item header><Link to="/get_mesa">Get Mesa</Link></Menu.Item>
                   <Logout/>
                 </Menu>
               </div>

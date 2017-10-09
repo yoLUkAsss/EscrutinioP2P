@@ -8,6 +8,9 @@ import {Form, Divider, Header, Table } from 'semantic-ui-react'
 
 import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
 
+import * as utils from '../utils/utils.js'
+import AlertContainer from 'react-alert'
+
 class GetMesa extends Component {
 
     constructor() {
@@ -65,9 +68,10 @@ class GetMesa extends Component {
                     for(var i = 0; i < data.length; i++){
                         res.set(realThis.state.web3.toAscii(data[i][0]), data[i][1].toNumber())
                     }
-                    realThis.setState({conteos : res, candidatos : mapped})
+                  realThis.setState({conteos : res, candidatos : mapped})
+                  utils.showSuccess(this.msg, "Creacion de mesa exitoso")
                 }).catch(reason => {
-                    console.log(reason)
+                  utils.showError(this.msg, "Fallo en la creacion de mesa")
                 })
             })
         })

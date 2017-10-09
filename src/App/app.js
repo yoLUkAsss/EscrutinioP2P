@@ -5,9 +5,9 @@ import Login from '../Auth/login.js'
 import Signup from '../Auth/signup.js'
 import FixedNavbarComponent from './FixedNavbarComponent.js'
 
-import CreateAutoridadElectoral from '../userActionComponents/CreateAutoridadElectoral.js'
-import CreateMesa from '../userActionComponents/CreateMesa.js'
-import GetMesa from '../userActionComponents/GetMesa.js'
+import CreateAutoridadElectoral from '../UserActionComponents/CreateAutoridadElectoral.js'
+import CreateMesa from '../UserActionComponents/CreateMesa.js'
+import GetMesa from '../UserActionComponents/GetMesa.js'
 
 const App = React.createClass({
   render: function() {
