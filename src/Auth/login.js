@@ -2,7 +2,7 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Button, Form } from 'semantic-ui-react'
+import { Button, Container, Form } from 'semantic-ui-react'
 
 /**
  * Components
@@ -59,12 +59,13 @@ class Login extends Component {
           return userInstance.login.sendTransaction(this.state.password, {from:accounts[0], gas:3000000})
         }).then((tx) => {
           console.log(tx)
-          cookie.save("email", this.state.email)
+          cookie.save("current_user_email", this.state.email)
           cookie.save("current_user_address", newAddress, {path : "/"})
-          utils.showWithRedirect(this.msg, "Logged correctly", "/", this.context)
+          utils.showSuccess(this.msg, "Inicio de sesion exitoso")
         }).catch((reason) => {
           console.log("catched reason")
           console.log(reason)
+          utils.showError(this.msg, "Fallo en el inicio de sesion")
         })
       })
     }
@@ -72,8 +73,9 @@ class Login extends Component {
     render () {
         return (
           <div>
+              <Container>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <ComponentTitle title='Log in'/>
+              <ComponentTitle title='Iniciar Sesion'/>
               <Form>
                   <Form.Input
                       focus
@@ -93,8 +95,9 @@ class Login extends Component {
                       value={this.state.password}
                       onChange={ (event) => { this.setState({ password : event.target.value }) } }/>
 
-                  <Button onClick={this.handleLogin}>Log in</Button>
+                  <Button onClick={this.handleLogin}>Iniciar Sesion</Button>
               </Form>
+              </Container>
           </div>
         );
     }

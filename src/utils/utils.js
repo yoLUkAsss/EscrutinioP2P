@@ -9,7 +9,7 @@ export function filterNoBlanks(list) {
 export function alertConfig() {
   return {
     offset: 14,
-    position: 'top left',
+    position: 'top right',
     theme: 'dark',
     time: 5000,
     transition: 'fade'
@@ -37,7 +37,7 @@ export function showInfo( ref , text) {
   })
 }
 
-export function showWithRedirect( ref, text, path, context) {
+export function showWithRedirect( ref, text) {
   ref.show(text, {
     time: 3000,
     type: 'info'

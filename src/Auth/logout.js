@@ -15,6 +15,8 @@ import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
 import cookie from 'react-cookies'
+import AlertContainer from 'react-alert'
+import * as utils from '../utils/utils.js'
 
 class Logout extends Component {
     constructor() {
@@ -43,16 +45,21 @@ class Logout extends Component {
         user.at(cookie.load("current_user_address")).then((instance) => {
           return instance.logout.sendTransaction({from:accounts[0], gas : 3000000})
         }).then((tx)=> {
-          cookie.save("email", "", {path:"/"})
-          cookie.save("current_user_address", "", {path : "/"})
+          cookie.remove("current_user_email")
+          cookie.remove("current_user_address")
+          utils.showSuccess(this.msg, "Cierre de sesion exitoso")
         }).catch((reason) => {
           console.log(reason)
+          utils.showError(this.msg, "Fallo en el cierre de session")
         })
       })
     }
     render () {
         return (
-          <Menu.Item name='log out' onClick={this.handleLogout}/>
+          <div>
+            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+            <Menu.Item name='log out' onClick={this.handleLogout}/>
+          </div>
         );
     }
 }

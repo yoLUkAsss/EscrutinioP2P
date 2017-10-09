@@ -20,7 +20,7 @@ import contract from 'truffle-contract'
 import AlertContainer from 'react-alert'
 import * as utils from '../utils/utils.js'
 
-class AuthHome extends Component {
+class Signup extends Component {
     constructor() {
         super()
         this.state = {
@@ -60,9 +60,10 @@ class AuthHome extends Component {
         {from:accounts[0], gas : 3000000})
         }).then( (result) => {
           console.log("Transaction Sent")
-          utils.showWithRedirect(this.msg, "Hola", "/", this.context)
+          utils.showSuccess(this.msg, "Registro exitoso")
         }).catch( (error) => {
           console.log("Error while executing transaction")
+          utils.showError(this.msg, "Fallo en el registro see:" + error)
         })
       })
     }
@@ -73,7 +74,7 @@ class AuthHome extends Component {
             <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
                 <Container>
-                <ComponentTitle title='Autenticación'/>
+                <ComponentTitle title='Registro'/>
 
                 <Form>
                     <Form.Input
@@ -103,4 +104,4 @@ class AuthHome extends Component {
     }
 }
 
-export default AuthHome
+export default Signup

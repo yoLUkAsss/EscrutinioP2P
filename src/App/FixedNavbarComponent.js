@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {Menu} from 'semantic-ui-react'
 
 import cookie from 'react-cookies'
 
-import Logout from './prototypes/logout.js'
+import Logout from '../Auth/logout.js'
 import { Link } from 'react-router-dom'
 
 class FixedNavbarComponent extends Component {
@@ -14,7 +14,7 @@ class FixedNavbarComponent extends Component {
 
   render() {
 
-    const isLoggedIn = cookie.load('current_user_address') !== ""
+    const isLoggedIn = cookie.load('current_user_address') !== undefined
 
     let navbar = null
 
