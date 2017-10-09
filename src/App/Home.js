@@ -17,8 +17,9 @@ class Home extends Component {
     seeinfo(event) {
         event.preventDefault()
         let info = {
-            "user" : cookie.load('current_user_email'),
-            "adds" : cookie.load('current_user_address')
+            "email" : cookie.load('current_user_email'),
+            "address" : cookie.load('current_user_address'),
+            "category" : cookie.load('current_user_category')
         }
 
         console.log(JSON.stringify(info, undefined, 2))
@@ -31,7 +32,7 @@ class Home extends Component {
             <div>
 
                 <ComponentTitle title="Bienvenidos a Ep2p"/>
-                
+
                 <Button onClick={this.seeinfo}>
                     See info
                 </Button>

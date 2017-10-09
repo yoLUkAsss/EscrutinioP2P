@@ -31,6 +31,7 @@ class FixedNavbarComponent extends Component {
                 <Menu.Item header><Link to="/">Home</Link></Menu.Item>
                 <Menu.Item header><Link to="/login">Login</Link></Menu.Item>
                 <Menu.Item header><Link to="/signup">Sign up</Link></Menu.Item>
+                <Menu.Item header><Link to="/createae">Create Autoridad Electoral</Link></Menu.Item>
             </Menu>
         </div>
     }

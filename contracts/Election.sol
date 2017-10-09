@@ -27,10 +27,10 @@ contract Election {
         return mesaCRUDaddress;
     }
 
-    function createElection(bytes32 email) external {
+    function createElection(bytes32 email, bytes32 password) external {
         /*if (created) revert();*/
         require(!created);
-        UserElectionCRUD(userCRUDaddress).createAutoridadElectoral(email, "");
+        UserElectionCRUD(userCRUDaddress).createAutoridadElectoral(email, password);
         autoridadElectoral = email;
         created = true;
         CreateElection(msg.sender);

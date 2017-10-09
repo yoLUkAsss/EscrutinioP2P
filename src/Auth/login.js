@@ -46,25 +46,25 @@ class Login extends Component {
       event.preventDefault()
       const userElection = contract(UserElectionCRUDcontract)
       const user = contract(UserContract)
-      let newAddress
+      let userInstance
       userElection.setProvider(this.state.web3.currentProvider)
       user.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
         userElection.deployed().then((instance) => {
           return instance.getUserByEmail.call(this.state.email, {from:accounts[0]})
-        }).then((userAddr)=> {
-          newAddress = userAddr
+        }).then((userAddr) => {
           return user.at(userAddr)
-        }).then((userInstance) => {
+        }).then((uinstance) => {
+          userInstance = uinstance
           return userInstance.login.sendTransaction(this.state.password, {from:accounts[0], gas:3000000})
         }).then((tx) => {
-          console.log(tx)
-          cookie.save("current_user_email", this.state.email)
-          cookie.save("current_user_address", newAddress, {path : "/"})
+          return userInstance.getUser.call({from:accounts[0]})
+        }).then((result) => {
+          cookie.save("current_user_address", result[0], {path : "/"})
+          cookie.save("current_user_email", this.state.web3.toAscii(result[1]), {path : "/"})
+          cookie.save("current_user_category", result[2].toNumber(), {path : "/"})
           utils.showSuccess(this.msg, "Inicio de sesion exitoso")
         }).catch((reason) => {
-          console.log("catched reason")
-          console.log(reason)
           utils.showError(this.msg, "Fallo en el inicio de sesion")
         })
       })

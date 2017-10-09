@@ -5,6 +5,8 @@ import Login from '../Auth/login.js'
 import Signup from '../Auth/signup.js'
 import FixedNavbarComponent from './FixedNavbarComponent.js'
 
+import CreateAutoridadElectoral from '../prototypes/CreateAutoridadElectoral.js'
+
 const App = React.createClass({
   render: function() {
     return (
@@ -14,6 +16,7 @@ const App = React.createClass({
           <Route exact path='/' component={Home}/>
           <Route path='/login' component={Login}/>
           <Route path='/signup' component={Signup}/>
+          <Route path='/createae' component={CreateAutoridadElectoral}/>
         </Switch>
     </div>
   )}

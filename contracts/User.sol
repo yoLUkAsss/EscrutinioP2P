@@ -20,6 +20,11 @@ contract User{
         password = pass;
         category = cat;
     }
+
+    function getUser() public constant returns(address, bytes32, uint){
+      return (this, email, category);
+    }
+
     function login(bytes32 pass) public{
         if(password != pass) revert();
         isLogged = true;
