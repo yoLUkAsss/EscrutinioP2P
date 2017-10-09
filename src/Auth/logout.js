@@ -47,6 +47,7 @@ class Logout extends Component {
         }).then((tx)=> {
           cookie.remove("current_user_email")
           cookie.remove("current_user_address")
+          cookie.remove("current_user_category")
           utils.showSuccess(this.msg, "Cierre de sesion exitoso")
         }).catch((reason) => {
           console.log(reason)
