@@ -3,7 +3,6 @@
  */
 import React, { Component } from 'react'
 import { Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
 
 /**
  * Components
@@ -72,7 +71,6 @@ class Login extends Component {
 
     render () {
         return (
-          <Center>
           <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
               <ComponentTitle title='Log in'/>
@@ -98,7 +96,6 @@ class Login extends Component {
                   <Button onClick={this.handleLogin}>Log in</Button>
               </Form>
           </div>
-          </Center>
         );
     }
 }

@@ -4,6 +4,7 @@ import {Menu} from 'semantic-ui-react'
 import cookie from 'react-cookies'
 
 import Logout from './prototypes/logout.js'
+import { Link } from 'react-router-dom'
 
 class FixedNavbarComponent extends Component {
 
@@ -20,16 +21,16 @@ class FixedNavbarComponent extends Component {
     if (isLoggedIn) {
       navbar = <div>
             <Menu fixed='top' inverted>
-                <Menu.Item as='a' href='/' header>Home</Menu.Item>
+                <Menu.Item header><Link to="/">Home</Link></Menu.Item>
                 <Logout/>
             </Menu>
         </div>
     } else {
         navbar = <div>
             <Menu fixed='top' inverted>
-                <Menu.Item as='a' href='/' header>Home</Menu.Item>
-                <Menu.Item as='a' href='/login' header>Login</Menu.Item>
-                <Menu.Item as='a' href='/signup' header>Sign up</Menu.Item>
+                <Menu.Item header><Link to="/">Home</Link></Menu.Item>
+                <Menu.Item header><Link to="/login">Login</Link></Menu.Item>
+                <Menu.Item header><Link to="/signup">Sign up</Link></Menu.Item>
             </Menu>
         </div>
     }
