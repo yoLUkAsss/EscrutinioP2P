@@ -5,8 +5,9 @@ import Login from '../Auth/login.js'
 import Signup from '../Auth/signup.js'
 import FixedNavbarComponent from './FixedNavbarComponent.js'
 
-import CreateAutoridadElectoral from '../prototypes/CreateAutoridadElectoral.js'
-import CreateMesa from '../prototypes/CreateMesa.js'
+import CreateAutoridadElectoral from '../userActionComponents/CreateAutoridadElectoral.js'
+import CreateMesa from '../userActionComponents/CreateMesa.js'
+import GetMesa from '../userActionComponents/GetMesa.js'
 
 const App = React.createClass({
   render: function() {
@@ -19,6 +20,7 @@ const App = React.createClass({
           <Route path='/signup' component={Signup}/>
           <Route path='/create_autoridad_electoral' component={CreateAutoridadElectoral}/>
           <Route path='/create_mesa' component={CreateMesa}/>
+          <Route path='/get_mesa' component={GetMesa}/>
         </Switch>
     </div>
   )}
