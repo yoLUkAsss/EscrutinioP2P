@@ -9,7 +9,7 @@ import {Form, Divider, Header, Table } from 'semantic-ui-react'
 import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
 
 import * as utils from '../utils/utils.js'
-import AlertContainer from 'react-alert'
+// import AlertContainer from 'react-alert'
 
 class GetMesa extends Component {
 
@@ -17,12 +17,12 @@ class GetMesa extends Component {
         super();
         this.state = {
           web3 : null,
-          nombreParticipante : '',
-          nombreCandidato : '',
           mesaId : '',
-
-          conteos : new Map(),
-          candidatos : []
+          mesaInfo : {
+            fiscales : [],
+            presidente : "",
+            vicepresidente : ""
+          }
         }
     }
 
@@ -34,6 +34,37 @@ class GetMesa extends Component {
         }).catch(() => {
             console.log('Error finding web3.')
         })
+    }
+
+    handleGetMesa = async (event) => {
+      event.preventDefault()
+
+      let candidates = []
+      let presidente = ""
+      let vicepresidente = ""
+      const mesaElectionCRUD = contract(MesaElectionCRUDContract)
+      const mesa = contract(MesaContract)
+      mesaElectionCRUD.setProvider(this.state.web3.currentProvider)
+      mesa.setProvider(this.state.web3.currentProvider)
+      let fromObject
+      await this.state.web3.eth.getAccounts((err, accs) => {
+        fromObject = {from: accs[0]}
+      })
+      let CRUDinstance = await mesaElectionCRUD.deployed()
+      let mesaInstance = await CRUDinstance.getMesa.call(this.state.mesaId, fromObject).then((mesaAddress) => {
+        return mesa.at(mesaAddress)
+      })
+      candidates = await mesaInstance.getCandidatesList.call(fromObject)
+      candidates = candidates.map(x => {return this.state.web3.toAscii(x)})
+      presidente = await mesaInstance.presidenteMesa.call(fromObject)
+      presidente = this.state.web3.toAscii(presidente)
+      vicepresidente = await mesaInstance.presidenteMesa.call(fromObject)
+      vicepresidente = this.state.web3.toAscii(vicepresidente)
+
+      console.log(candidates)
+      console.log(presidente)
+      console.log(vicepresidente)
+
     }
 
     //this.state.web3.toAscii(x)
@@ -80,10 +111,9 @@ class GetMesa extends Component {
     render() {
         return (
           <div>
-            <Header as='h2'> Buscar conteo de un participante</Header>
-            <Form onSubmit={this.buscarConteoDeUnParticipante.bind(this)}>
-                <Header as='h3'> Buscar conteo de un participante</Header>
-                <Form.Group>
+            <Header as='h2'> Ver informacion de una mesa</Header>
+            <Form onSubmit={this.handleGetMesa.bind(this)}>
+                <Header as='h3'> Ver Informacion de una mesa</Header>
                   <Form.Input
                       type="number"
                       label='id de la Mesa'
@@ -91,14 +121,6 @@ class GetMesa extends Component {
                       value={this.state.mesaId}
                       onChange={(evt) => {this.setState({ mesaId : evt.target.value })}}
                   />
-                  <Form.Input
-                      type="text"
-                      label='Nombre del participante'
-                      placeholder="Nombre del participante"
-                      value={this.state.nombreParticipante}
-                      onChange={(evt) => {this.setState({ nombreParticipante : evt.target.value })}}
-                  />
-                </Form.Group>
                 <Form.Button content='Buscar'/>
             </Form>
           <Divider section />

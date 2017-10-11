@@ -20,7 +20,7 @@ import contract from 'truffle-contract'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'
 import * as utils from '../utils/utils.js'
-
+import * as currentUser from '../utils/user_session.js'
 class Login extends Component {
     constructor() {
         super();
@@ -60,9 +60,9 @@ class Login extends Component {
         }).then((tx) => {
           return userInstance.getUser.call({from:accounts[0]})
         }).then((result) => {
-          cookie.save("current_user_address", result[0], {path : "/"})
-          cookie.save("current_user_email", this.state.web3.toAscii(result[1]), {path : "/"})
-          cookie.save("current_user_category", result[2].toNumber(), {path : "/"})
+          currentUser.setAddress(cookie, result[0])
+          currentUser.setEmail(cookie, this.state.web3.toAscii(result[1]))
+          currentUser.setCategory(cookie, result[2].toNumber())
           utils.showSuccess(this.msg, "Inicio de sesion exitoso")
         }).catch((reason) => {
           utils.showError(this.msg, "Fallo en el inicio de sesion")

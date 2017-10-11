@@ -1,12 +1,3 @@
-
-
-export let email = ""
-
-export let category = ""
-
-export let contract_address = ""
-
-
 export function get_current_user() {
     return {
         "email" : this.email,
@@ -14,12 +5,32 @@ export function get_current_user() {
     }
 }
 
-export function get_address_current_user() {
-    return this.contract_address
+export function clean(cookie){
+  cookie.remove("current_user_email")
+  cookie.remove("current_user_address")
+  cookie.remove("current_user_category")
 }
 
-export function set_current_user(new_address, new_email, new_category) {
-    this.contract_address = new_address
-    this.email = new_email
-    this.category = new_category
+export function getAddress(cookie) {
+    return cookie.load("current_user_address")
+}
+
+export function setCategory(cookie, category){
+  cookie.save("current_user_category", category, {path : "/"})
+}
+
+export function setEmail(cookie, email){
+  cookie.save("current_user_email", email, {path : "/"})
+}
+
+export function setAddress(cookie, new_address) {
+  cookie.save("current_user_address", new_address, {path : "/"})
+}
+
+export function isLogged(cookie){
+  return cookie.load("current_user_address") !== undefined
+}
+
+export function isAutoridadElectoral(cookie){
+  return cookie.load("current_user_category") === '0'
 }

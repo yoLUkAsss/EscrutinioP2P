@@ -19,7 +19,7 @@ const App = React.createClass({
           <Route path='/login' component={Login}/>
           <Route path='/signup' component={Signup}/>
           <Route path='/create_autoridad_electoral' component={CreateAutoridadElectoral}/>
-          <Route path='/create_mesa' component={CreateMesa}/>
+          <Route path='/mesas' component={CreateMesa}/>
           <Route path='/get_mesa' component={GetMesa}/>
         </Switch>
     </div>
