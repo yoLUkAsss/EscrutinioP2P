@@ -15,6 +15,11 @@ export function getAddress(cookie) {
     return cookie.load("current_user_address")
 }
 
+export function getEmail(cookie){
+  return cookie.load("current_user_email")
+}
+
+
 export function setCategory(cookie, category){
   cookie.save("current_user_category", category, {path : "/"})
 }

@@ -26,7 +26,7 @@ class DinamicListForm extends Component {
         <Header as='h3'>{this.props.title}</Header>
         <List>
         {this.props.items.map((item, idItem) => (
-          <List.Item>
+          <List.Item key={idItem}>
             <Form.Field inline>
               <Input focus type={this.props.type}
               placeholder={this.props.placeholder}
