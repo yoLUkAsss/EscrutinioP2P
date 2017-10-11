@@ -15,6 +15,10 @@ import LogOutItem from '../NavBarComponents/LogOutItem.js'
 import MesasItem from '../NavBarComponents/MesasItem.js'
 import CreateAutoridadElectoralItem from '../NavBarComponents/CreateAutoridadElectoralItem.js'
 
+import SetPresidenteItem from '../NavBarComponents/SetPresidenteItem.js'
+import SetFiscalItem from '../NavBarComponents/SetFiscalItem.js'
+
+
 class FixedNavbarComponent extends Component {
 
   componentWillMount() {
@@ -30,6 +34,8 @@ class FixedNavbarComponent extends Component {
           <SignUpItem/>
           <LogOutItem/>
           <MesasItem/>
+          <SetPresidenteItem/>
+          <SetFiscalItem/>
           <CreateAutoridadElectoralItem/>
         </Menu>
       </div>

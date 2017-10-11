@@ -39,7 +39,6 @@ class LogOutItem extends Component {
     handleLogout = (event) => {
       event.preventDefault()
       const user = contract(UserContract)
-
       user.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((error, accounts) => {
         user.at(currentUser.getAddress(cookie)).then((instance) => {
