@@ -39,6 +39,10 @@ contract Mesa {
         return candidateList;
     }
 
+    function getParticipantList() public constant returns (bytes32[]){
+        return participantList;
+    }
+
     function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) external constant returns (bytes32, uint8) {
       if(!isValidParticipant(participant) || !isValidCandidate(candidate)) revert();
       return (candidate, participantMap[participant].votes[candidate]);
