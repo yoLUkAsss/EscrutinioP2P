@@ -37,4 +37,20 @@ contract UserElectionCRUD is UserCRUD{
       if(!existsUserByEmail(email)) revert();
       return getUser(emailMap[email]);
     }
+
+    /*
+    FUNCIONALIDAD: setear roles,
+    quizas para mantener la transaccionabilidad y seguridad sobre los unicos usuarios q puedan realizar
+    esta operacion, sea mejor dejar el conjunto de funciones q esta conlleva en election
+    */
+    //setear roles
+    function setUserCategory(bytes32 email, uint cat) internal {
+      User(getUserByEmail(email)).setCategory(cat);
+    }
+    function setPresidenteDeMesa(bytes32 email) public {
+      User(getUserByEmail(email)).setCategory(4);
+    }
+    function setFiscal(bytes32 email) public {
+      User(getUserByEmail(email)).setCategory(6);
+    }
 }

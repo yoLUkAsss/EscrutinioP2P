@@ -19,43 +19,39 @@ contract Election {
     }
 
     function getUserCRUDaddress(bytes32 ae) external constant returns(address){
-        // if(!created || ae != autoridadElectoral) revert();
-        return userCRUDaddress;
+      /*if(ae != autoridadElectoral) revert();*/
+      return userCRUDaddress;
     }
     function getMesaCRUDaddress(bytes32 ae) external constant returns(address){
-        // if(!created || ae != autoridadElectoral) revert();
-        return mesaCRUDaddress;
+      /*if(ae != autoridadElectoral) revert();*/
+      return mesaCRUDaddress;
     }
 
     function createElection(bytes32 email, bytes32 password) external {
-        /*if (created) revert();*/
-        require(!created);
-        UserElectionCRUD(userCRUDaddress).createAutoridadElectoral(email, password);
-        autoridadElectoral = email;
-        created = true;
-        CreateElection(msg.sender);
+      require(!created);
+      UserElectionCRUD(userCRUDaddress).createAutoridadElectoral(email, password);
+      autoridadElectoral = email;
+      created = true;
+      CreateElection(msg.sender);
+    }
+    modifier onlyAutoridadElectoral(bytes32 ae) {
+      require(ae == autoridadElectoral && created);
+      _;
     }
 
-    function addPresidenteDeMesa(bytes32 ae, bytes32 presidente, bytes32 password, uint mesaId) public {
-        /*if(ae != autoridadElectoral) revert();*/
+    function setPresidenteDeMesa(bytes32 ae, bytes32 presidente, uint mesaId) public onlyAutoridadElectoral(ae) {
         /*require(sha3(ae) == sha3(autoridadElectoral));*/
-        UserElectionCRUD(userCRUDaddress).createPresidenteDeMesa(presidente, password);
+        UserElectionCRUD(userCRUDaddress).setPresidenteDeMesa(presidente);
         MesaElectionCRUD(mesaCRUDaddress).setPresidenteDeMesa(mesaId, presidente);
     }
 
-    function addFiscal(bytes32 ae, bytes32 fiscal, bytes32 password, uint mesaId) public {
-        /*if(ae != autoridadElectoral) revert();*/
+    function setFiscal(bytes32 ae, bytes32 fiscal, uint mesaId) public onlyAutoridadElectoral(ae){
         /*require(sha3(ae) == sha3(autoridadElectoral));*/
-        UserElectionCRUD(userCRUDaddress).createFiscal(fiscal, password);
+        UserElectionCRUD(userCRUDaddress).setFiscal(fiscal);
         MesaElectionCRUD(mesaCRUDaddress).setFiscal(mesaId, fiscal);
     }
 
-    function addApoderadoDePartido(bytes32 ae, bytes32 fiscal, bytes32 password) public {
-      /*require(sha3(ae) == sha3(autoridadElectoral));*/
-      UserElectionCRUD(userCRUDaddress).createFiscal(fiscal, password);
-    }
-
-    function createMesa(bytes32 autoridad, bytes32[] candidates) public {
+    function createMesa(bytes32 ae, bytes32[] candidates) public onlyAutoridadElectoral(ae){
         /*require(sha3(autoridad) == sha3(autoridadElectoral));*/
       MesaElectionCRUD(mesaCRUDaddress).createMesa(candidates);
     }

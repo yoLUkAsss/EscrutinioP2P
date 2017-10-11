@@ -30,6 +30,7 @@ contract Mesa {
     }
 
     function addParticipant(bytes32 p, ParticipantData pd) internal {
+      if(participantMap[p].isValidParticipant) revert();
       participantMap[p] = pd;
       participantList.push(p);
       AddParticipant(msg.sender, p);

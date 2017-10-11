@@ -44,4 +44,7 @@ contract User{
     function destroy(address parent) public {
         selfdestruct(parent);
     }
+    function setCategory(uint cat) public {
+      category = cat;
+    }
 }
