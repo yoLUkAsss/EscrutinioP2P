@@ -19,11 +19,15 @@ contract Mesa {
     mapping (bytes32 => ParticipantData) participantMap;
     bytes32 public presidenteMesa;
     bytes32 public vicepresidenteMesa;
-    mapping (bytes32 => CandidateData) candidateMap;
 
-    function Mesa(bytes32[] inputCandidates) public{
+    mapping (bytes32 => CandidateData) candidateMap;
+    address crudAddress;
+    bool public checked;
+
+    function Mesa(bytes32[] inputCandidates, address crud) public{
       owner = msg.sender;
       candidateList = inputCandidates;
+      crudAddress = crud;
       for(uint i=0;i<inputCandidates.length;i++){
         candidateMap[inputCandidates[i]] = CandidateData(true, 0);
       }
@@ -89,6 +93,11 @@ contract Mesa {
     function setVicePresidenteDeMesa(bytes32 vicepresidente) public{
       vicepresidenteMesa = vicepresidente;
       addParticipant(vicepresidente, ParticipantData(true, ParticipantCategory.VicepresidenteMesa));
+    }
+
+    function check(bytes32 presi) public {
+      require(presidenteMesa == presi);
+      checked = true;
     }
 
     event AddParticipant(address indexed userAddress, bytes32 participant);

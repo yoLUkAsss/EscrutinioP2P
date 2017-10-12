@@ -27,9 +27,10 @@ contract Election {
       return mesaCRUDaddress;
     }
 
-    function createElection(bytes32 email, bytes32 password) external {
+    function createElection(bytes32 email, bytes32 password, bytes32[] candidates) external {
       require(!created);
       UserElectionCRUD(userCRUDaddress).createAutoridadElectoral(email, password);
+      MesaElectionCRUD(mesaCRUDaddress).setCandidates(candidates);
       autoridadElectoral = email;
       created = true;
       CreateElection(msg.sender);
@@ -51,9 +52,9 @@ contract Election {
         MesaElectionCRUD(mesaCRUDaddress).setFiscal(mesaId, fiscal);
     }
 
-    function createMesa(bytes32 ae, bytes32[] candidates) public onlyAutoridadElectoral(ae){
+    function createMesa(bytes32 ae) public onlyAutoridadElectoral(ae){
         /*require(sha3(autoridad) == sha3(autoridadElectoral));*/
-      MesaElectionCRUD(mesaCRUDaddress).createMesa(candidates);
+      MesaElectionCRUD(mesaCRUDaddress).createMesaElection();
     }
 
     event CreateElection(address indexed senderAddress);
