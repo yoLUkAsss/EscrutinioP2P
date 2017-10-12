@@ -57,7 +57,7 @@ class LogOutItem extends Component {
         return (
           <div>
             <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-            <Menu.Item name='log out' onClick={this.handleLogout.bind(this)}>Log out</Menu.Item>
+            <Menu.Item onClick={this.handleLogout.bind(this)}>Cierre de sesion</Menu.Item>
           </div>
         );
       } else {

@@ -18,7 +18,7 @@ class LogInItem extends Component {
     render () {
       if(!currentUser.isLogged(cookie)){
         return (
-            <Menu.Item header><Link to="/login">Login</Link></Menu.Item>
+            <Menu.Item header><Link to="/login">Inicio de sesion</Link></Menu.Item>
         );
       } else{
         return null;

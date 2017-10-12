@@ -18,7 +18,7 @@ class MesasItem extends Component {
     render () {
       if(currentUser.isLogged(cookie) && currentUser.isAutoridadElectoral(cookie)){
         return (
-            <Menu.Item header><Link to="/mesas">Create Mesa</Link></Menu.Item>
+            <Menu.Item header><Link to="/mesas">Ver Mesas</Link></Menu.Item>
         );
       } else{
         return null;

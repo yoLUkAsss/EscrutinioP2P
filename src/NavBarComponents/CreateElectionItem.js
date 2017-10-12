@@ -14,11 +14,11 @@ import {Link} from 'react-router-dom'
 import cookie from 'react-cookies'
 import * as currentUser from '../utils/user_session.js'
 
-class SignUpItem extends Component {
+class CreateElectionItem extends Component {
     render () {
       if(!currentUser.isLogged(cookie)){
         return (
-            <Menu.Item header><Link to="/signup">Registro</Link></Menu.Item>
+            <Menu.Item header><Link to="/election">Crear eleccion</Link></Menu.Item>
         );
       } else{
         return null;
@@ -26,4 +26,4 @@ class SignUpItem extends Component {
     }
 }
 
-export default SignUpItem
+export default CreateElectionItem
