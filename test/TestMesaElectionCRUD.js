@@ -16,7 +16,7 @@ contract('MesaElectionCRUD', function(accounts) {
 
   it("set PresidenteDeMesa to a mesa should be logged", async () => {
     let mesaElectionCRUDInstance = await MesaElectionCRUD.deployed()
-    let tx = await mesaElectionCRUDInstance.createMesa([], fromObject)
+    let tx = await mesaElectionCRUDInstance.createMesa([], "", fromObject)
     let exists = await mesaElectionCRUDInstance.existsMesa.call(getId(tx), fromObject)
     assert.ok(exists, "Exists mesa")
 
