@@ -13,7 +13,7 @@ import LogInItem from '../NavBarComponents/LogInItem.js'
 import SignUpItem from '../NavBarComponents/SignUpItem.js'
 import LogOutItem from '../NavBarComponents/LogOutItem.js'
 import MesasItem from '../NavBarComponents/MesasItem.js'
-import CreateAutoridadElectoralItem from '../NavBarComponents/CreateAutoridadElectoralItem.js'
+import CreateElectionItem from '../NavBarComponents/CreateElectionItem.js'
 
 import SetPresidenteItem from '../NavBarComponents/SetPresidenteItem.js'
 import SetFiscalItem from '../NavBarComponents/SetFiscalItem.js'
@@ -36,7 +36,7 @@ class FixedNavbarComponent extends Component {
           <MesasItem/>
           <SetPresidenteItem/>
           <SetFiscalItem/>
-          <CreateAutoridadElectoralItem/>
+          <CreateElectionItem/>
         </Menu>
       </div>
     return (

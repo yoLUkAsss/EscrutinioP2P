@@ -6,11 +6,13 @@ import Signup from '../Auth/signup.js'
 import FixedNavbarComponent from './FixedNavbarComponent.js'
 
 import CreateElection from '../UserActionComponents/CreateElection.js'
-import CreateMesa from '../UserActionComponents/CreateMesa.js'
+// import CreateMesa from '../UserActionComponents/CreateMesa.js'
 import SearchMesa from '../UserActionComponents/SearchMesa.js'
 
 import SetPresidenteDeMesa from '../UserActionComponents/SetPresidenteDeMesa.js'
 import SetFiscal from '../UserActionComponents/SetFiscal.js'
+
+import Mesas from './Mesas.js'
 
 class App extends Component{
   render() {
@@ -22,7 +24,7 @@ class App extends Component{
           <Route path='/login' component={Login}/>
           <Route path='/signup' component={Signup}/>
           <Route path='/election' component={CreateElection}/>
-          <Route path='/mesas' component={CreateMesa}/>
+          <Route path='/mesas' component={Mesas}/>
           <Route path='/setpresidente' component={SetPresidenteDeMesa}/>
           <Route path='/setfiscal' component={SetFiscal}/>
           <Route path='/loadmesa' component={SearchMesa}/>
