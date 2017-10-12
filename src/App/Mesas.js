@@ -16,7 +16,7 @@ class Mesas extends Component {
         super();
         this.state = {
           web3 : null,
-          mesaId : '',
+          mesaId : 0,
           conteos : new Map(),
           candidatos : []
         }
@@ -107,5 +107,4 @@ class Mesas extends Component {
         )
     }
 }
-
 export default Mesas
