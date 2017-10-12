@@ -9,7 +9,7 @@ import Center from 'react-center'
  * Components
  */
 import ComponentTitle from '../utils/ComponentTitle.js'
-
+import RefactoredDLF from '../utils/RDLF.js'
 /**
  * Controller for Component
  */
@@ -50,13 +50,16 @@ class CreateElection extends Component {
       })
       let electionInstance = await election.deployed()
       try{
-        await electionInstance.createElection.sendTransaction(this.state.email, this.state.password, fromObject)
+        await electionInstance.createElection.sendTransaction(this.state.email, this.state.password, this.state.candidates, fromObject)
         utils.showSuccess(this.msg, "Autoridad Electoral creada para la eleccion")
       } catch(error){
-        console.log(error)
         utils.showError(this.msg, "Fallo en el registro:" + error)
       }
 
+    }
+
+    handleNewCandidates = (newCandidates) => {
+      this.setState({candidates : newCandidates})
     }
 
     render () {
@@ -81,9 +84,16 @@ class CreateElection extends Component {
                         placeholder='Contraseña'
                         value={this.state.password}
                         onChange={ (event) => { this.setState({ password : event.target.value }) } }/>
-                    <Button onClick={this.handleCreateElection.bind(this)}>
-                        Registrar
-                    </Button>
+                      <RefactoredDLF
+                        title='Candidatos'
+                        type='text'
+                        placeholder='Nombre de Candidato'
+                        onChange={this.handleNewCandidates}
+                        items={this.state.candidatos}
+                      />
+                      <Button onClick={this.handleCreateElection.bind(this)}>
+                          Registrar
+                      </Button>
                 </Form>
                 </Container>
             </div>

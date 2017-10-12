@@ -81,12 +81,13 @@ class SearchMesa extends Component {
       mesaElectionCRUD.setProvider(this.state.web3.currentProvider)
       mesa.setProvider(this.state.web3.currentProvider)
       let fromObject
+      let mesaInstance
       await this.state.web3.eth.getAccounts((err, accs) => {
         fromObject = {from: accs[0]}
       })
       try{
         let CRUDinstance = await mesaElectionCRUD.deployed()
-        let mesaInstance = await CRUDinstance.getMesa.call(this.state.mesaId, fromObject).then((mesaAddress) => {
+        mesaInstance = await CRUDinstance.getMesa.call(this.state.mesaId, fromObject).then((mesaAddress) => {
           return mesa.at(mesaAddress)
         })
       } catch(err){
