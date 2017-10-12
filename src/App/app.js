@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import { Switch, Route } from 'react-router-dom'
 import Home from './Home.js'
 import Login from '../Auth/login.js'
@@ -7,12 +7,13 @@ import FixedNavbarComponent from './FixedNavbarComponent.js'
 
 import CreateElection from '../UserActionComponents/CreateElection.js'
 import CreateMesa from '../UserActionComponents/CreateMesa.js'
-import GetMesa from '../UserActionComponents/GetMesa.js'
+import SearchMesa from '../UserActionComponents/SearchMesa.js'
 
 import SetPresidenteDeMesa from '../UserActionComponents/SetPresidenteDeMesa.js'
 import SetFiscal from '../UserActionComponents/SetFiscal.js'
-const App = React.createClass({
-  render: function() {
+
+class App extends Component{
+  render() {
     return (
     <div>
       <FixedNavbarComponent/>
@@ -24,10 +25,11 @@ const App = React.createClass({
           <Route path='/mesas' component={CreateMesa}/>
           <Route path='/setpresidente' component={SetPresidenteDeMesa}/>
           <Route path='/setfiscal' component={SetFiscal}/>
-          <Route path='/get_mesa' component={GetMesa}/>
+          <Route path='/loadmesa' component={SearchMesa}/>
         </Switch>
     </div>
-  )}
-})
+    )
+  }
+}
 
 export default App
