@@ -5,6 +5,7 @@ import { Container, Button} from 'semantic-ui-react'
 
 import cookie from 'react-cookies'
 import ComponentTitle from '../utils/ComponentTitle.js'
+import * as utils from '../utils/user_session.js'
 
 class Home extends Component {
 
@@ -12,17 +13,17 @@ class Home extends Component {
         super()
 
         this.seeinfo = this.seeinfo.bind(this)
+        this.cleaninfo = this.cleaninfo.bind(this)
       }
 
     seeinfo(event) {
         event.preventDefault()
-        let info = {
-            "email" : cookie.load('current_user_email'),
-            "address" : cookie.load('current_user_address'),
-            "category" : cookie.load('current_user_category')
-        }
+        console.log(JSON.stringify(utils.getCookies(cookie), undefined, 2))
+    }
 
-        console.log(JSON.stringify(info, undefined, 2))
+    cleaninfo(event) {
+        event.preventDefault()
+        utils.clean(cookie)
     }
 
     render() {
@@ -35,6 +36,9 @@ class Home extends Component {
 
                 <Button onClick={this.seeinfo}>
                     See info
+                </Button>
+                <Button onClick={ this.cleaninfo}>
+                    Clean Cookies
                 </Button>
             </div>
             </Container>

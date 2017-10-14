@@ -11,6 +11,14 @@ export function clean(cookie){
   cookie.remove("current_user_category")
 }
 
+export function getCookies(cookie) {
+  return {
+    "email" : cookie.load("current_user_email"),
+    "address" : cookie.load("current_user_address"),
+    "category" : cookie.load("current_user_category")
+  }
+}
+
 export function getAddress(cookie) {
     return cookie.load("current_user_address")
 }

@@ -63,6 +63,7 @@ class Login extends Component {
           currentUser.setAddress(cookie, result[0])
           currentUser.setEmail(cookie, this.state.web3.toAscii(result[1]))
           currentUser.setCategory(cookie, result[2].toNumber())
+          console.log(JSON.stringify(currentUser.getCookies(cookie), undefined, 2))
           utils.showSuccess(this.msg, "Inicio de sesion exitoso")
         }).catch((reason) => {
           utils.showError(this.msg, "Fallo en el inicio de sesion")

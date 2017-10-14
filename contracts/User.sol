@@ -9,6 +9,7 @@ contract User{
   //PresidenteMesa 4
   //VicepresidenteMesa 5
   //Fiscal 6
+  // Usuario General 7
 
     bytes32 public email;
     bytes32 public password;

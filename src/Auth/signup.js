@@ -63,6 +63,7 @@ class Signup extends Component {
           utils.showSuccess(this.msg, "Registro exitoso")
         }).catch( (error) => {
           console.log("Error while executing transaction")
+          console.log("ERROR: " + JSON.stringify(error, undefined, 2))
           utils.showError(this.msg, "Fallo en el registro see:" + error)
         })
       })
