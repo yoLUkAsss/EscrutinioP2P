@@ -1,15 +1,17 @@
+// react utilities
 import React, { Component } from 'react';
-import getWeb3 from '../utils/getWeb3'
-import contract from 'truffle-contract'
 import { Button, Form, Header, Container} from 'semantic-ui-react'
-
-// import ComponentTitle from '../utils/ComponentTitle.js'
+import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'
+
+// Utils
+import contract from 'truffle-contract'
+import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 
-// import ElectionContract from '../../build/contracts/Election.json'
+// Contracts
 import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
 import MesaContract from '../../build/contracts/Mesa.json'
 
@@ -27,6 +29,7 @@ class Mesa extends Component {
           candidatos : [],
           mesaId : props.match.params.mesaId,
           currentMesaAddress : "",
+          isUserAllowed : false,
           web3 : null
         }
     }
@@ -92,39 +95,64 @@ class Mesa extends Component {
         let mesaCRUDInstance = await mesaElectionCRUD.deployed()
         let currentMesaAddress = await mesaCRUDInstance.getMesa.call(mesaId, fromObject)
         let mesaInstance = await mesa.at(currentMesaAddress)
-        let candidates = await mesaInstance.getCandidatesList.call(fromObject)
-        candidates = candidates.map(c => {return {name : cweb3.toAscii(c), counts : 0}})
-        this.setState({candidatos : candidates, mesaAddress : currentMesaAddress})
+        console.log("antes de buscar los candidatos")
+        console.log(currentUser.getEmail(cookie))
+        let userAllowed = await mesaInstance.isValidParticipant.call(currentUser.getEmail(cookie), fromObject)
+        if(userAllowed){
+          let candidates = await mesaInstance.getCandidatesList.call(fromObject)
+          candidates = candidates.map(c => {return {name : cweb3.toAscii(c), counts : 0}})
+          this.setState({candidatos : candidates, mesaAddress : currentMesaAddress, isUserAllowed : true})
+        }
       } catch(err){
         console.log(err)
       }
     }
 
+    renderAllowedUser(){
+      return (
+        <Container>
+        <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          <Header as='h3'>Cargar Mesa: {this.state.mesaId}</Header>
+            <Form onSubmit={this.handleLoadMesa.bind(this)}>
+                <Header as='h3'>Candidatos</Header>
+                {this.state.candidatos.map((candidato, idx) => (
+                  <Form.Input
+                    type='number'
+                    key={idx}
+                    label={`Candidato: ${candidato.name}`}
+                    placeholder={`Candidato: ${idx + 1}`}
+                    value={candidato.counts}
+                    onChange={this.handleCandidatoCountsChange(idx)}
+                  />
+                ))}
+                <Button>Cargar Mesa</Button>
+            </Form>
+        </Container>
+      );
+    }
+
+    renderNotAllowedUser(){
+      return (
+        <Container>
+          <Header as='h3'> Mesa no valida</Header>
+          <Button onClick={event => {
+            this.props.history.push("/mesas")
+          }}> Volver a las mesas
+          </Button>
+        </Container>
+      );
+    }
+
     render () {
-        return (
-          <Container>
-          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-            <Header as='h3'>Cargar Mesa: {this.state.mesaId}</Header>
-              <Form onSubmit={this.handleLoadMesa.bind(this)}>
-                  <Header as='h3'>Candidatos</Header>
-                  {this.state.candidatos.map((candidato, idx) => (
-                    <Form.Input
-                      type='number'
-                      key={idx}
-                      label={`Candidato: ${candidato.name}`}
-                      placeholder={`Candidato: ${idx + 1}`}
-                      value={candidato.counts}
-                      onChange={this.handleCandidatoCountsChange(idx)}
-                    />
-                  ))}
-                  <Button>Cargar Mesa</Button>
-              </Form>
-          </Container>
-        );
+      if(this.state.isUserAllowed){
+        return this.renderAllowedUser()
+      } else{
+        return this.renderNotAllowedUser()
+      }
     }
 }
 
-export default Mesa
+export default withRouter(Mesa)
 // <RefactoredDLF
 //   title='Candidatos'
 //   type='number'
