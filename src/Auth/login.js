@@ -52,7 +52,6 @@ class Login extends Component {
     handleLogin = async (event) => {
       const userElection = contract(UserElectionCRUDcontract)
       const user = contract(UserContract)
-      let userInstance
       userElection.setProvider(this.state.web3.currentProvider)
       user.setProvider(this.state.web3.currentProvider)
 
