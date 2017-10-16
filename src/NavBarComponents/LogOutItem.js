@@ -3,21 +3,31 @@
  */
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
+import {withRouter} from 'react-router-dom'
+import cookie from 'react-cookies'
+import AlertContainer from 'react-alert'
 /**
  * Components
  */
+
 /**
  * Controller for Component
  */
+ import getWeb3 from '../utils/getWeb3'
+ import * as utils from '../utils/utils.js'
+ import * as currentUser from '../utils/user_session.js'
+
+/**
+* Contracts
+*/
 import UserContract from '../../build/contracts/User.json'
-import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
-import cookie from 'react-cookies'
-import AlertContainer from 'react-alert'
-import * as utils from '../utils/utils.js'
-import * as currentUser from '../utils/user_session.js'
+/**
+usa los siguientes props:
+* history viene con withRouter
 
+*/
 class LogOutItem extends Component {
     constructor() {
         super();
@@ -36,21 +46,24 @@ class LogOutItem extends Component {
       })
     }
 
-    handleLogout = (event) => {
+    handleLogout = async (event) => {
       event.preventDefault()
       const user = contract(UserContract)
       user.setProvider(this.state.web3.currentProvider)
-      this.state.web3.eth.getAccounts((error, accounts) => {
-        user.at(currentUser.getAddress(cookie)).then((instance) => {
-          return instance.logout.sendTransaction({from:accounts[0], gas : 3000000})
-        }).then((tx)=> {
-          currentUser.clean(cookie)
-          utils.showSuccess(this.msg, "Cierre de sesion exitoso")
-        }).catch((reason) => {
-          console.log(reason)
-          utils.showError(this.msg, "Fallo en el cierre de session")
-        })
+      let fromObject
+      this.state.web3.eth.getAccounts((err, accounts) => {
+        fromObject = {from:accounts[0], gas:3000000}
       })
+      try{
+        let userInstance = await user.at(currentUser.getAddress(cookie))
+        await userInstance.logout.sendTransaction(fromObject)
+        currentUser.clean(cookie)
+        utils.showSuccess(this.msg, "Cierre de sesion exitoso")
+        //cambia la url
+        this.props.history.push("/")
+      } catch(err){
+        utils.showError(this.msg, "Fallo en el cierre de session")
+      }
     }
     render () {
       if(currentUser.isLogged(cookie)){
@@ -66,4 +79,4 @@ class LogOutItem extends Component {
     }
 }
 
-export default LogOutItem
+export default withRouter(LogOutItem)

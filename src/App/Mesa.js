@@ -15,6 +15,11 @@ import MesaContract from '../../build/contracts/Mesa.json'
 
 
 //ver si se puede usar RefactoredDLF
+/**
+Usa los siguientes props
+* match viene por ser un "child" component de route
+*/
+
 class Mesa extends Component {
     constructor(props) {
         super(props);
