@@ -51,25 +51,28 @@ class Mesa extends Component {
     //carga los datos de un participante
     handleLoadMesa = async (event) => {
       event.preventDefault()
+
+      // Variables
+      let fromObject
       const mesa = contract(MesaContract)
       mesa.setProvider(this.state.web3.currentProvider)
-      let fromObject
       this.state.web3.eth.getAccounts((error, accounts) => {
         fromObject = {from : accounts[0], gas : 3000000}
       })
       try{
         let mesaInstance = await mesa.at(this.state.mesaAddress)
         let promises = this.state.candidatos.map(c => {
+          console.log("A punto de enviar esta informacion: " + c.name + " " + c.counts)
           return mesaInstance.loadVotesForParticipant.sendTransaction(currentUser.getEmail(cookie), c.name, c.counts, fromObject)
         })
         Promise.all(promises).then(() => {
           utils.showSuccess(this.msg, "Carga de datos correcta")
         }).catch(error => {
-          utils.showError(this.msg, "Fallo en la carga de datos:" + error)
+          utils.showError(this.msg, "Fallo en la carga de datos1:" + error)
         })
       } catch(error){
         console.log(error)
-        utils.showError(this.msg, "Fallo en la carga de datos:" + error)
+        utils.showError(this.msg, "Fallo en la carga de datos2:" + error)
       }
     }
 
@@ -80,6 +83,7 @@ class Mesa extends Component {
       mesaElectionCRUD.setProvider(cweb3.currentProvider)
       mesa.setProvider(cweb3.currentProvider)
       let fromObject
+      let currentUserEmail = currentUser.getEmail(cookie)
       cweb3.eth.getAccounts((error, accounts) => {
         fromObject = {from : accounts[0]}
       })
@@ -87,9 +91,32 @@ class Mesa extends Component {
         let mesaCRUDInstance = await mesaElectionCRUD.deployed()
         let currentMesaAddress = await mesaCRUDInstance.getMesa.call(mesaId, fromObject)
         let mesaInstance = await mesa.at(currentMesaAddress)
-        let candidates = await mesaInstance.getCandidatesList.call(fromObject)
-        candidates = candidates.map(c => {return {name : cweb3.toAscii(c), counts : 0}})
-        this.setState({candidatos : candidates, mesaAddress : currentMesaAddress})
+        let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
+        let candidates = []
+        let count
+        let isParticipant = await mesaInstance.isValidParticipant.call(currentUserEmail, fromObject)
+        let promises = candidatesList.map(async c => {
+          let currentCandidate = cweb3.toAscii(c)
+          if (isParticipant) {
+            console.log("Participante valido")
+            let result = await mesaInstance.getParticipantVotesForACandidate.call(currentUserEmail, currentCandidate, fromObject)
+            count = result[1]
+          } else {
+            console.log("Participante no valido")
+            count = await mesaInstance.getTotal.call(currentCandidate, fromObject)
+          }
+          candidates.push({"name" : currentCandidate,"counts" : count})
+          return {"name" : cweb3.toAscii(c),"counts" : count}
+        })
+        Promise.all(promises).then(() => {
+          utils.showSuccess(this.msg, "Conteo total de mesa cargado correctamente")
+          this.setState({
+            candidatos : candidates,
+            mesaAddress : currentMesaAddress
+          })
+        }).catch(error => {
+          utils.showError(this.msg, "Fallo en la carga de datos:" + error)
+        })
       } catch(err){
         console.log(err)
       }
@@ -100,7 +127,7 @@ class Mesa extends Component {
           <Container>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
             <Header as='h3'>Cargar Mesa: {this.state.mesaId}</Header>
-              <Form onSubmit={this.handleLoadMesa.bind(this)}>
+              <Form>
                   <Header as='h3'>Candidatos</Header>
                   {this.state.candidatos.map((candidato, idx) => (
                     <Form.Input
@@ -112,7 +139,9 @@ class Mesa extends Component {
                       onChange={this.handleCandidatoCountsChange(idx)}
                     />
                   ))}
-                  <Button>Cargar Mesa</Button>
+                  <Button onClick={this.handleLoadMesa.bind(this)}>
+                    Cargar Mesa
+                  </Button>
               </Form>
           </Container>
         );

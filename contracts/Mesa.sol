@@ -4,24 +4,47 @@ contract Mesa {
 
     enum ParticipantCategory {Fiscal, PresidenteMesa, VicepresidenteMesa}
 
+    /**
+    
+    Conteo de un partipante (fiscal/presidente/vice) para todos los candidatos
+
+     */
     struct ParticipantData {
       bool isValidParticipant;
       ParticipantCategory category;
       mapping (bytes32 => uint8) votes;
     }
+
+    /**
+    
+    
+
+     */
     struct CandidateData {
       bool isValidCandidate;
       uint votes;
     }
+
+    ////////////////////////////////////////
+    // Total por candidato
+    mapping (bytes32 => uint8) total;
+    ////////////////////////////////////////
+
     address owner;
     bytes32[] candidateList;
     bytes32[] participantList;
     mapping (bytes32 => ParticipantData) participantMap;
     bytes32 public presidenteMesa;
+    bool private existPresidenteMesa;
     bytes32 public vicepresidenteMesa;
+    bool private existVicepresidenteMesa;
 
     mapping (bytes32 => CandidateData) candidateMap;
     address crudAddress;
+
+    /**
+    Datos cargados y validados al sistema
+     */
     bool public checked;
 
     function Mesa(bytes32[] inputCandidates, address crud) public{
@@ -53,9 +76,10 @@ contract Mesa {
       return (candidate, participantMap[participant].votes[candidate]);
     }
 
-    function loadVotesForParticipant(bytes32 participant, bytes32 candidato, uint8 votos) external {
-      if(!isValidParticipant(participant) || !isValidCandidate(candidato)) revert();
-      participantMap[participant].votes[candidato] = votos;
+    function loadVotesForParticipant(bytes32 participant, bytes32 candidate, uint8 votos) external {
+      require(isValidCandidate(candidate) && isValidParticipant(participant));
+
+      participantMap[participant].votes[candidate] = votos;
     }
 
     function isValidCandidate(bytes32 candidate) public constant returns (bool){
@@ -86,18 +110,43 @@ contract Mesa {
       addParticipant(fiscal, ParticipantData(true, ParticipantCategory.Fiscal));
     }
 
+    /**
+    Requiere que no se haya seteado un presidente de mesa
+     */
     function setPresidenteDeMesa(bytes32 presidente) public{
+      require(! existPresidenteMesa);
       presidenteMesa = presidente;
+      existPresidenteMesa = true;
       addParticipant(presidente, ParticipantData(true, ParticipantCategory.PresidenteMesa));
     }
+
+    /**
+    Requiere que no se haya seteado un vicepresidente de mesa
+     */
     function setVicePresidenteDeMesa(bytes32 vicepresidente) public{
+      require(! existVicepresidenteMesa);
       vicepresidenteMesa = vicepresidente;
+      existVicepresidenteMesa = true;
       addParticipant(vicepresidente, ParticipantData(true, ParticipantCategory.VicepresidenteMesa));
     }
 
+    /**
+    Primera version de validar una mesa.. 
+
+    Solo el presidente de mesa puede validar.
+     */
     function check(bytes32 presi) public {
       require(presidenteMesa == presi);
       checked = true;
+      for (uint8 index = 0 ; index < candidateList.length ; index++) {
+        total[candidateList[index]] = participantMap[presidenteMesa].votes[candidateList[index]];
+      }
+    }
+
+
+    function getTotal(bytes32 candidate) constant returns (uint8) {
+        require(isValidCandidate(candidate));
+        return total[candidate];
     }
 
     event AddParticipant(address indexed userAddress, bytes32 participant);

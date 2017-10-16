@@ -29,7 +29,7 @@ class FullMesa extends Component {
         <div>
         <Container>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Form onSubmit={this.handleSearchMesa.bind(this)}>
+          <Form >
               <Header as='h2'> Buscar mesa</Header>
                 <Form.Input
                     type="number"
@@ -38,7 +38,7 @@ class FullMesa extends Component {
                     value={this.state.mesaId}
                     onChange={(evt) => {this.setState({ mesaId : evt.target.value })}}
                 />
-              <Form.Button content='Buscar'/>
+              <Form.Button content='Buscar' onClick={this.handleSearchMesa.bind(this)}/>
           </Form>
           <Divider/>
           <Switch>

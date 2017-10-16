@@ -42,15 +42,23 @@ class CreateElection extends Component {
 
     async handleCreateElection(event) {
       event.preventDefault()
+
+      //Variables
+      let fromObject
+      let candidateList
       const election = contract(ElectionContract)
       election.setProvider(this.state.web3.currentProvider)
-      let fromObject
       this.state.web3.eth.getAccounts((err, accs) => {
         fromObject = {from:accs[0], gas : 3000000}
       })
       let electionInstance = await election.deployed()
       try{
-        await electionInstance.createElection.sendTransaction(this.state.email, this.state.password, this.state.candidates, fromObject)
+
+        //Get only the candidates names
+        candidateList = this.state.candidates.map( candidate => {
+          return candidate.name
+        })
+        await electionInstance.createElection.sendTransaction(this.state.email, this.state.password, candidateList, fromObject)
         utils.showSuccess(this.msg, "Autoridad Electoral creada para la eleccion")
       } catch(error){
         utils.showError(this.msg, "Fallo en el registro:" + error)

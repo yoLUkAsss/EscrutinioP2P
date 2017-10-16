@@ -61,7 +61,7 @@ class Login extends Component {
           return userInstance.getUser.call({from:accounts[0]})
         }).then((result) => {
           currentUser.setAddress(cookie, result[0])
-          currentUser.setEmail(cookie, this.state.web3.toAscii(result[1]))
+          currentUser.setEmail(cookie, this.state.email)
           currentUser.setCategory(cookie, result[2].toNumber())
           console.log(JSON.stringify(currentUser.getCookies(cookie), undefined, 2))
           utils.showSuccess(this.msg, "Inicio de sesion exitoso")
