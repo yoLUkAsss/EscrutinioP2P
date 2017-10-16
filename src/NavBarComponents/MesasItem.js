@@ -16,7 +16,7 @@ import * as currentUser from '../utils/user_session.js'
 
 class MesasItem extends Component {
     render () {
-      if(currentUser.isLogged(cookie) && currentUser.isAutoridadElectoral(cookie)){
+      if(currentUser.isLogged(cookie)){
         return (
             <Menu.Item header><Link to="/mesas">Ver Mesas</Link></Menu.Item>
         );

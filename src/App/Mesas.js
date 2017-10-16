@@ -99,9 +99,6 @@ class Mesas extends Component {
                 </Table.Row>
                 </Table.Body>
             </Table>
-            <Divider/>
-            <Header as='h3'>Agregar Mesa</Header>
-            <Button onClick={this.handleCreateMesa}>Crear Mesa</Button>
           </Container>
           </div>
         )
