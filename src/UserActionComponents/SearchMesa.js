@@ -96,6 +96,7 @@ class SearchMesa extends Component {
       fromObject.gas = 3000000
       try{
         await this.state.candidatos.forEach((candidato, idC) => {
+          console.log("A punto de enviar esta informacion: " + candidato.name + " " + candidato.counts)
           mesaInstance.loadVotesForParticipant.sendTransaction(currentUser.getEmail(cookie), candidato.name, candidato.counts, fromObject)
         })
         utils.showSuccess(this.msg, "Carga de la mesa exitoso")

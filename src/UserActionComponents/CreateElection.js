@@ -49,18 +49,24 @@ class CreateElection extends Component {
 
     async handleCreateElection(event) {
       event.preventDefault()
+
+      //Variables
+      let fromObject
+      let candidateList
       const election = contract(ElectionContract)
       const mesaCRUD = contract(MesaElectionCRUDContract)
       election.setProvider(this.state.web3.currentProvider)
       mesaCRUD.setProvider(this.state.web3.currentProvider)
-      let fromObject
       this.state.web3.eth.getAccounts((err, accs) => {
         fromObject = {from:accs[0], gas : 3000000}
       })
       let electionInstance = await election.deployed()
       try{
-        await electionInstance.createElection.sendTransaction(this.state.email, this.state.password, this.state.candidates, fromObject)
+        candidateList = this.state.candidates.map( candidate => {
+          return candidate.name
+        })
         let mesaCRUDInstance = await mesaCRUD.deployed()
+        await electionInstance.createElection.sendTransaction(this.state.email, this.state.password, candidateList, fromObject)
         let promises = []
         for(let i = 0; i<this.state.cantidad;i++){
           promises.push(mesaCRUDInstance.createMesaElection.sendTransaction(fromObject))
@@ -74,7 +80,6 @@ class CreateElection extends Component {
       } catch(error){
         utils.showError(this.msg, "Fallo en el registro:" + error)
       }
-
     }
 
     handleNewCandidates = (newCandidates) => {

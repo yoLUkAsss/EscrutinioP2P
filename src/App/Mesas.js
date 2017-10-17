@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import getWeb3 from '../utils/getWeb3'
 import contract from 'truffle-contract'
 
-import {Table, Container, Divider, Header, Button} from 'semantic-ui-react'
+import {Table, Container} from 'semantic-ui-react'
 import AlertContainer from 'react-alert'
 import ComponentTitle from '../utils/ComponentTitle.js'
 import * as utils from '../utils/utils.js'
