@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { Container, Button, Form } from 'semantic-ui-react'
 import Center from 'react-center'
 import AlertContainer from 'react-alert'
-
+import {withRouter} from 'react-router-dom'
 /**
  * Components
  */
@@ -73,6 +73,8 @@ class CreateElection extends Component {
         }
         Promise.all(promises).then(() => {
           utils.showSuccess(this.msg, "Autoridad Electoral creada para la eleccion")
+
+          this.props.history.push("/")
         }).catch(error => {
           console.log(error)
           utils.showError(this.msg, "Fallo la creacion de mesas:")
@@ -101,7 +103,10 @@ class CreateElection extends Component {
                         label='Email'
                         placeholder='Email'
                         value={this.state.email}
-                        onChange={ (event) => { this.setState({ email : event.target.value }) } }
+                        onChange={ (event) => {
+                          this.setState({ email : event.target.value })
+                          }
+                        }
                     />
                     <Form.Input
                         required
@@ -110,7 +115,10 @@ class CreateElection extends Component {
                         label='Contraseña'
                         placeholder='Contraseña'
                         value={this.state.password}
-                        onChange={ (event) => { this.setState({ password : event.target.value }) } }
+                        onChange={ (event) => {
+                          this.setState({ password : event.target.value })
+                        }
+                      }
                     />
                     <Form.Input
                       required
@@ -120,7 +128,10 @@ class CreateElection extends Component {
                       label='Cantidad de mesas'
                       placeholder='cantidad'
                       value={this.state.cantidad}
-                      onChange={(event) => {this.setState({cantidad : event.target.value})}}
+                      onChange={(event) => {
+                        this.setState({cantidad : event.target.value})
+                      }
+                    }
                     />
                     <RefactoredDLF
                       title='Candidatos'
@@ -128,9 +139,11 @@ class CreateElection extends Component {
                       placeholder='Nombre de Candidato'
                       onChange={this.handleNewCandidates}
                       items={this.state.candidatos}
+                      add={"Agregar Candidato"}
+                      del={"Eliminar Candidato"}
                     />
                     <Button onClick={this.handleCreateElection.bind(this)}>
-                        Registrar
+                        Crear Eleccion
                     </Button>
                   </Form>
                 </Container>
@@ -140,4 +153,4 @@ class CreateElection extends Component {
     }
 }
 
-export default CreateElection
+export default withRouter(CreateElection)

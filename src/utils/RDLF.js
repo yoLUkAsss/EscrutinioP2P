@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Header, List, Button, Icon, Form, Input} from 'semantic-ui-react'
+import {Header, List, Button, Form, Input} from 'semantic-ui-react'
 // RefactoredDLF
 class RDLF extends Component {
 
@@ -7,9 +7,11 @@ class RDLF extends Component {
     super(props)
     this.state = {
       items : props.candidates || [],
-      type : props.type,
-      placeholder : props.placeholder,
-      title : props.title
+      type : props.type || "text",
+      placeholder : props.placeholder || "placeholder",
+      title : props.title || "title",
+      add : props.add || "add",
+      del : props.del || "delete"
     }
   }
 
@@ -47,15 +49,15 @@ class RDLF extends Component {
                 value={item.name}
                 onChange={this.handleChangeItem(idItem)}
               />
-              <Button icon onClick={this.handleDeleteItem(idItem)}>
-                <Icon name='remove'/>
+              <Button onClick={this.handleDeleteItem(idItem)}>
+                {this.state.del}
               </Button>
             </Form.Field>
           </List.Item>
         ))}
         </List>
-        <Button fluid icon onClick={this.handleAddItem}>
-          <Icon name='plus'/>
+        <Button onClick={this.handleAddItem}>
+          {this.state.add}
         </Button>
       </div>
     );
@@ -63,3 +65,11 @@ class RDLF extends Component {
 }
 
 export default RDLF
+
+//con iconos
+// <Button fluid icon onClick={this.handleDeleteItem(idItem)}>
+//   <Icon name='remove'/>
+// </Button>
+// <Button fluid icon onClick={this.handleAddItem}>
+//   <Icon name='plus'/>
+// </Button>
