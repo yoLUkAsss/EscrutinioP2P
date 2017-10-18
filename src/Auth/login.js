@@ -91,16 +91,17 @@ class Login extends Component {
                       label='Email'
                       placeholder='fiscal@email ex..'
                       value={this.state.email}
-                      onChange={(evt) => {this.setState({ email : evt.target.value })}}/>
-
+                      onChange={(evt) => {this.setState({ email : evt.target.value })}}
+                  />
                   <Form.Input
                       required
                       inline
+                      type='password'
                       label='Contraseña'
                       placeholder='Contraseña'
                       value={this.state.password}
-                      onChange={ (event) => { this.setState({ password : event.target.value }) } }/>
-
+                      onChange={ (event) => { this.setState({ password : event.target.value }) } }
+                  />
                   <Button onClick={this.handleLogin.bind(this)}>Iniciar Sesion</Button>
               </Form>
               </Container>
@@ -110,33 +111,3 @@ class Login extends Component {
 }
 
 export default withRouter(Login)
-
-// handleLogin = (event) => {
-//   event.preventDefault()
-//   const userElection = contract(UserElectionCRUDcontract)
-//   const user = contract(UserContract)
-//   let userInstance
-//   userElection.setProvider(this.state.web3.currentProvider)
-//   user.setProvider(this.state.web3.currentProvider)
-//   this.state.web3.eth.getAccounts((error, accounts) => {
-//     userElection.deployed().then((instance) => {
-//       return instance.getUserByEmail.call(this.state.email, {from:accounts[0]})
-//     }).then((userAddr) => {
-//       return user.at(userAddr)
-//     }).then((uinstance) => {
-//       userInstance = uinstance
-//       return userInstance.login.sendTransaction(this.state.password, {from:accounts[0], gas:3000000})
-//     }).then((tx) => {
-//       return userInstance.getUser.call({from:accounts[0]})
-//     }).then((result) => {
-//       currentUser.setAddress(cookie, result[0])
-//       currentUser.setEmail(cookie, this.state.web3.toAscii(result[1]))
-//       currentUser.setCategory(cookie, result[2].toNumber())
-//       console.log(JSON.stringify(currentUser.getCookies(cookie), undefined, 2))
-//       utils.showSuccess(this.msg, "Inicio de sesion exitoso")
-//       this.props.history.push("/")
-//     }).catch((reason) => {
-//       utils.showError(this.msg, "Fallo en el inicio de sesion")
-//     })
-//   })
-// }
