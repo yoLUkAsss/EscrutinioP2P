@@ -5,7 +5,7 @@ contract Mesa {
     enum ParticipantCategory {Fiscal, PresidenteMesa, VicepresidenteMesa}
 
     /**
-    
+
     Conteo de un partipante (fiscal/presidente/vice) para todos los candidatos
 
      */
@@ -16,8 +16,8 @@ contract Mesa {
     }
 
     /**
-    
-    
+
+
 
      */
     struct CandidateData {
@@ -78,7 +78,6 @@ contract Mesa {
 
     function loadVotesForParticipant(bytes32 participant, bytes32 candidate, uint8 votos) external {
       require(isValidCandidate(candidate) && isValidParticipant(participant));
-
       participantMap[participant].votes[candidate] = votos;
     }
 
@@ -131,7 +130,7 @@ contract Mesa {
     }
 
     /**
-    Primera version de validar una mesa.. 
+    Primera version de validar una mesa..
 
     Solo el presidente de mesa puede validar.
      */
