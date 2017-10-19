@@ -23,7 +23,6 @@ import * as utils from '../utils/utils.js'
  * Contracts
 */
 import ElectionContract from '../../build/contracts/Election.json'
-import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
 
 class CreateElection extends Component {
     constructor() {
@@ -32,7 +31,6 @@ class CreateElection extends Component {
             email : "",
             password : "",
             candidates : [],
-            cantidad : 1,
             web3 : null
         }
     }
@@ -49,14 +47,11 @@ class CreateElection extends Component {
 
     async handleCreateElection(event) {
       event.preventDefault()
-
       //Variables
       let fromObject
       let candidateList
       const election = contract(ElectionContract)
-      const mesaCRUD = contract(MesaElectionCRUDContract)
       election.setProvider(this.state.web3.currentProvider)
-      mesaCRUD.setProvider(this.state.web3.currentProvider)
       this.state.web3.eth.getAccounts((err, accs) => {
         fromObject = {from:accs[0], gas : 3000000}
       })
@@ -65,20 +60,10 @@ class CreateElection extends Component {
         candidateList = this.state.candidates.map( candidate => {
           return candidate.name
         })
-        let mesaCRUDInstance = await mesaCRUD.deployed()
-        await electionInstance.createElection.sendTransaction(this.state.email, this.state.password, candidateList, fromObject)
-        let promises = []
-        for(let i = 0; i<this.state.cantidad;i++){
-          promises.push(mesaCRUDInstance.createMesaElection.sendTransaction(fromObject))
-        }
-        Promise.all(promises).then(() => {
-          utils.showSuccess(this.msg, "Autoridad Electoral creada para la eleccion")
-
-          this.props.history.push("/")
-        }).catch(error => {
-          console.log(error)
-          utils.showError(this.msg, "Fallo la creacion de mesas:")
-        })
+        await electionInstance.createAutoridadElectoral.sendTransaction(this.state.email, this.state.password, fromObject)
+        await electionInstance.createElection.sendTransaction(this.state.email, candidateList, fromObject)
+        utils.showSuccess(this.msg, "Autoridad Electoral creada para la eleccion")
+        this.props.history.push("/")
       } catch(error){
         utils.showError(this.msg, "Fallo en el registro:" + error)
       }
@@ -119,19 +104,6 @@ class CreateElection extends Component {
                           this.setState({ password : event.target.value })
                         }
                       }
-                    />
-                    <Form.Input
-                      required
-                      inline
-                      type='number'
-                      min={1}
-                      label='Cantidad de mesas'
-                      placeholder='cantidad'
-                      value={this.state.cantidad}
-                      onChange={(event) => {
-                        this.setState({cantidad : event.target.value})
-                      }
-                    }
                     />
                     <RefactoredDLF
                       title='Candidatos'
