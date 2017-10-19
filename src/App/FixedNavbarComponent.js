@@ -18,6 +18,8 @@ import CreateElectionItem from '../NavBarComponents/CreateElectionItem.js'
 import SetPresidenteItem from '../NavBarComponents/SetPresidenteItem.js'
 import SetFiscalItem from '../NavBarComponents/SetFiscalItem.js'
 
+import CreateDistritoItem from '../NavBarComponents/CreateDistritoItem.js'
+import CreateEscuelaItem from '../NavBarComponents/CreateEscuelaItem.js'
 
 class FixedNavbarComponent extends Component {
 
@@ -37,6 +39,8 @@ class FixedNavbarComponent extends Component {
           <SetPresidenteItem/>
           <SetFiscalItem/>
           <CreateElectionItem/>
+          <CreateDistritoItem/>
+          <CreateEscuelaItem/>
         </Menu>
       </div>
     return (
