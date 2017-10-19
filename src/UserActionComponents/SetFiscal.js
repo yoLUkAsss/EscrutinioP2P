@@ -26,9 +26,11 @@ class SetFiscal extends Component {
     constructor() {
         super()
         this.state = {
-            email : "",
-            mesaId : 0
-        }
+          distritoId : 1,
+          escuelaId : 1,
+          mesaId : 1,
+          email : ""
+      }
     }
 
     componentWillMount() {
@@ -51,8 +53,8 @@ class SetFiscal extends Component {
       })
       let electionInstance = await election.deployed()
       try{
-        await electionInstance.setFiscal.sendTransaction(currentUser.getEmail(cookie), this.state.email, this.state.mesaId, fromObject)
-        utils.showSuccess(this.msg, "Seteado fiscal")
+        await electionInstance.setFiscal.sendTransaction(currentUser.getEmail(cookie), this.state.distritoId, this.state.escuelaId, this.state.mesaId, this.state.email, fromObject)
+        utils.showSuccess(this.msg, "Fiscal seteado")
       } catch(error){
         console.log(error)
         utils.showError(this.msg, "Fallo en el seteo del fiscal:" + error)
@@ -61,35 +63,61 @@ class SetFiscal extends Component {
 
     render () {
         return (
-            <Center>
+          <Center>
             <div>
-                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
+              <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+              <Container>
                 <ComponentTitle title='Set Fiscal'/>
                 <Form>
-                    <Form.Input
-                        required
-                        inline
-                        type="email"
-                        label='Email'
-                        placeholder='Email'
-                        value={this.state.email}
-                        onChange={ (event) => { this.setState({ email : event.target.value }) } }
-                    />
-                    <Form.Input
-                        type="number"
-                        label='id de la Mesa'
-                        placeholder="id de la Mesa"
-                        value={this.state.mesaId}
-                        onChange={(evt) => {this.setState({ mesaId : evt.target.value })}}
-                    />
-                    <Button onClick={this.handleSetFiscal.bind(this)}>
-                        Setear fiscal
-                    </Button>
+                  <Form.Input
+                    required
+                    type='number'
+                    label='distrito id'
+                    placeholder='distrito id'
+                    value={this.state.distritoId}
+                    onChange={ (event) => {
+                      this.setState({ distritoId : event.target.value })
+                      }
+                    }
+                  />
+                  <Form.Input
+                    required
+                    type='number'
+                    label='escuela id'
+                    placeholder='escuela id'
+                    value={this.state.escuelaId}
+                    onChange={ (event) => {
+                      this.setState({ escuelaId : event.target.value })
+                      }
+                    }
+                  />
+                  <Form.Input
+                    required
+                    type='number'
+                    label='mesa id'
+                    placeholder='mesa id'
+                    value={this.state.mesaId}
+                    onChange={ (event) => {
+                      this.setState({ mesaId : event.target.value })
+                      }
+                    }
+                  />
+                  <Form.Input
+                      required
+                      inline
+                      type="email"
+                      label='Email'
+                      placeholder='Email'
+                      value={this.state.email}
+                      onChange={ (event) => { this.setState({ email : event.target.value }) } }
+                  />
+                  <Button onClick={this.handleSetFiscal.bind(this)}>
+                      Setear fiscal
+                  </Button>
                 </Form>
-                </Container>
+              </Container>
             </div>
-            </Center>
+          </Center>
         );
     }
 }

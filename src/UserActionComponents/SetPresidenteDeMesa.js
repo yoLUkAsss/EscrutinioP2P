@@ -26,8 +26,10 @@ class SetPresidenteDeMesa extends Component {
     constructor() {
         super()
         this.state = {
-            email : "",
-            mesaId : 0
+          distritoId : 1,
+          escuelaId : 1,
+          mesaId : 1,
+          email : ""
         }
     }
 
@@ -51,7 +53,7 @@ class SetPresidenteDeMesa extends Component {
       })
       let electionInstance = await election.deployed()
       try{
-        await electionInstance.setPresidenteDeMesa.sendTransaction(currentUser.getEmail(cookie), this.state.email, this.state.mesaId, fromObject)
+        await electionInstance.setPresidenteDeMesa.sendTransaction(currentUser.getEmail(cookie), this.state.distritoId, this.state.escuelaId, this.state.mesaId, this.state.email, fromObject)
         utils.showSuccess(this.msg, "Seteado presidente de mesa")
       } catch(error){
         console.log(error)
@@ -67,22 +69,48 @@ class SetPresidenteDeMesa extends Component {
                 <Container>
                 <ComponentTitle title='Set Presidente de mesa'/>
                 <Form>
-                    <Form.Input
-                        required
-                        inline
-                        type="email"
-                        label='Email'
-                        placeholder='Email'
-                        value={this.state.email}
-                        onChange={ (event) => { this.setState({ email : event.target.value }) } }
-                    />
-                    <Form.Input
-                        type="number"
-                        label='id de la Mesa'
-                        placeholder="id de la Mesa"
-                        value={this.state.mesaId}
-                        onChange={(evt) => {this.setState({ mesaId : evt.target.value })}}
-                    />
+                <Form.Input
+                  required
+                  type='number'
+                  label='distrito id'
+                  placeholder='distrito id'
+                  value={this.state.distritoId}
+                  onChange={ (event) => {
+                    this.setState({ distritoId : event.target.value })
+                    }
+                  }
+                />
+                <Form.Input
+                  required
+                  type='number'
+                  label='escuela id'
+                  placeholder='escuela id'
+                  value={this.state.escuelaId}
+                  onChange={ (event) => {
+                    this.setState({ escuelaId : event.target.value })
+                    }
+                  }
+                />
+                <Form.Input
+                  required
+                  type='number'
+                  label='mesa id'
+                  placeholder='mesa id'
+                  value={this.state.mesaId}
+                  onChange={ (event) => {
+                    this.setState({ mesaId : event.target.value })
+                    }
+                  }
+                />
+                <Form.Input
+                    required
+                    inline
+                    type="email"
+                    label='Email'
+                    placeholder='Email'
+                    value={this.state.email}
+                    onChange={ (event) => { this.setState({ email : event.target.value }) } }
+                />
                     <Button onClick={this.handleSetPresidenteDeMesa.bind(this)}>
                         Setear Presidente
                     </Button>
