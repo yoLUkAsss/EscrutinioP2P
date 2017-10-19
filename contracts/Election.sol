@@ -1,61 +1,52 @@
 pragma solidity ^0.4.11;
 
-import "./Mesa.sol";
 import "./UserElectionCRUD.sol";
-import "./MesaElectionCRUD.sol";
+import "./DistritoCRUD.sol";
 
 contract Election {
     address owner;
+    address distritoCRUDaddress;
     address userCRUDaddress;
-    address mesaCRUDaddress;
-
     bool public created;
     bytes32 autoridadElectoral;
-
-    function Election (address uecrud, address mcrud) public {
+    bytes32[] candidates;
+    function Election (address newUserCRUDaddress, address newDistritoCRUDaddress) public {
       owner = msg.sender;
-      userCRUDaddress = uecrud;
-      mesaCRUDaddress = mcrud;
+      userCRUDaddress = newUserCRUDaddress;
+      distritoCRUDaddress = newDistritoCRUDaddress;
     }
-
-    function getUserCRUDaddress(bytes32 ae) external constant returns(address){
-      /*if(ae != autoridadElectoral) revert();*/
-      return userCRUDaddress;
-    }
-    function getMesaCRUDaddress(bytes32 ae) external constant returns(address){
-      /*if(ae != autoridadElectoral) revert();*/
-      return mesaCRUDaddress;
-    }
-
-    function createElection(bytes32 email, bytes32 password, bytes32[] candidates) external {
-      require(!created);
+    function createAutoridadElectoral(bytes32 email, bytes32 password) external {
+      require(!created && autoridadElectoral == "");
       UserElectionCRUD(userCRUDaddress).createAutoridadElectoral(email, password);
-      MesaElectionCRUD(mesaCRUDaddress).setCandidates(candidates);
       autoridadElectoral = email;
+    }
+    function createElection(bytes32 email, bytes32[] newCandidates) external {
+      require(!created && autoridadElectoral == email);
+      candidates = newCandidates;
       created = true;
-      CreateElection(msg.sender);
     }
-    modifier onlyAutoridadElectoral(bytes32 ae) {
-      require(ae == autoridadElectoral && created);
-      _;
+    function createDistrito(bytes32 ae) public {
+      require(created && autoridadElectoral == ae);
+      DistritoCRUD(distritoCRUDaddress).createDistrito();
     }
-
-    function setPresidenteDeMesa(bytes32 ae, bytes32 presidente, uint mesaId) public onlyAutoridadElectoral(ae) {
-        /*require(sha3(ae) == sha3(autoridadElectoral));*/
-        UserElectionCRUD(userCRUDaddress).setPresidenteDeMesa(presidente);
-        MesaElectionCRUD(mesaCRUDaddress).setPresidenteDeMesa(mesaId, presidente);
+    function createEscuela(bytes32 ae, uint distritoId) public {
+        require(created && autoridadElectoral == ae);
+        DistritoCRUD(distritoCRUDaddress).createEscuela(distritoId);
     }
-
-    function setFiscal(bytes32 ae, bytes32 fiscal, uint mesaId) public onlyAutoridadElectoral(ae){
-        /*require(sha3(ae) == sha3(autoridadElectoral));*/
-        UserElectionCRUD(userCRUDaddress).setFiscal(fiscal);
-        MesaElectionCRUD(mesaCRUDaddress).setFiscal(mesaId, fiscal);
+    function createMesa(bytes32 ae, uint distritoId, uint escuelaId) public {
+        require(created && autoridadElectoral == ae);
+        DistritoCRUD(distritoCRUDaddress).createMesa(distritoId, escuelaId, candidates);
     }
 
-    function createMesa(bytes32 ae) public onlyAutoridadElectoral(ae){
-        /*require(sha3(autoridad) == sha3(autoridadElectoral));*/
-      MesaElectionCRUD(mesaCRUDaddress).createMesaElection();
+    ////////////////////////////////////////////////////////////////////
+    function setFiscal(bytes32 ae, uint distritoId, uint escuelaId, uint mesaId, bytes32 fiscalEmail) public {
+      require(created && autoridadElectoral == ae);
+      DistritoCRUD(distritoCRUDaddress).setFiscal(distritoId, escuelaId, mesaId, fiscalEmail);
     }
 
-    event CreateElection(address indexed senderAddress);
+    function setPresidenteDeMesa(bytes32 ae, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+      require(created && autoridadElectoral == ae);
+      DistritoCRUD(distritoCRUDaddress).setPresidenteDeMesa(distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
+    }
+
 }

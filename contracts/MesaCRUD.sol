@@ -3,65 +3,56 @@ pragma solidity ^0.4.11;
 import "./Mesa.sol";
 
 contract MesaCRUD {
-
   address owner;
-  uint[] mesasIds;
+  uint[] mesaIds;
   uint lastId;
-
   struct MesaStruct {
     uint id;
     address mesaAddress;
-
     uint index;
     bool isMesa;
   }
-
-  mapping (uint => MesaStruct) mesasMapping;
-
+  mapping (uint => MesaStruct) mesaMapping;
   function MesaCRUD() public{
     owner = msg.sender;
   }
-
-  function createMesa(bytes32[] inputCandidates, address crud) public{
+  function createMesa(bytes32[] inputCandidates) public{
     lastId += 1;
-    address mesaAddress = new Mesa(inputCandidates, crud);
-    mesasMapping[lastId] = MesaStruct(lastId, mesaAddress, mesasIds.length, true);
-    mesasIds.push(lastId);
-    LogCreateMesa(msg.sender, lastId, mesaAddress);
+    mesaMapping[lastId] = MesaStruct(lastId, new Mesa(inputCandidates), mesaIds.length, true);
+    mesaIds.push(lastId);
   }
-
   function existsMesa(uint id) public constant returns(bool){
-    return mesasIds.length != 0 && mesasMapping[id].isMesa;
+    return mesaIds.length != 0 && mesaMapping[id].isMesa;
   }
-
   function getMesa(uint id) public constant returns(address){
     if(!existsMesa(id)) revert();
-    return mesasMapping[id].mesaAddress;
+    return mesaMapping[id].mesaAddress;
   }
-
   function getMesas() public constant returns(uint[]){
-    return mesasIds;
+    return mesaIds;
   }
-
   function deleteMesa(uint id) public{
     if(!existsMesa(id)) revert();
-    uint toDeleteIndex = mesasMapping[id].index;
-    uint toMoveIndex = mesasIds[mesasIds.length - 1];
-    mesasIds[toDeleteIndex] = toMoveIndex;
-    mesasMapping[toMoveIndex].index = toDeleteIndex;
-    Mesa(mesasMapping[id].mesaAddress).destroy(owner);
-    delete mesasMapping[id];
-    mesasIds.length--;
-
-    LogDeleteMesa(msg.sender, id);
+    uint toDeleteIndex = mesaMapping[id].index;
+    uint toMoveIndex = mesaIds[mesaIds.length - 1];
+    mesaIds[toDeleteIndex] = toMoveIndex;
+    mesaMapping[toMoveIndex].index = toDeleteIndex;
+    Mesa(mesaMapping[id].mesaAddress).destroy(owner);
+    delete mesaMapping[id];
+    mesaIds.length--;
   }
-
-  /*Generate an event function for each function that modify the blockchain
-  * ex: createMesa
-  */
-
-  event LogCreateMesa(address indexed senderAddress, uint mesaId, address mesaAddress);
-  event LogUpdateMesa(address indexed senderAddress, uint mesaId);
-  event LogDeleteMesa(address indexed senderAddress, uint mesaId);
+  function destroy(address parent) public {
+    require(owner == parent);
+    selfdestruct(parent);
+  }
+  /////////////////////////////////////////////////////
+  function setFiscal(uint mesaId, bytes32 fiscalEmail) public {
+    require(existsMesa(mesaId));
+    Mesa(mesaMapping[mesaId].mesaAddress).setFiscal(fiscalEmail);
+  }
+  function setPresidenteDeMesa(uint mesaId, bytes32 presidenteDeMesaEmail) public {
+    require(existsMesa(mesaId));
+    Mesa(mesaMapping[mesaId].mesaAddress).setPresidenteDeMesa(presidenteDeMesaEmail);
+  }
 
 }

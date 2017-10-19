@@ -3,13 +3,14 @@ pragma solidity ^0.4.11;
 import "./MesaCRUD.sol";
 import "./Mesa.sol";
 
+
+//representa una escuela en una eleccion
 contract MesaElectionCRUD is MesaCRUD{
 
   bool initialized;
 
   mapping (bytes32 => uint) partialCount;
   bytes32[] candidates;
-
 
   /*funciones para manejar el estado de la eleccion sobre las mesas*/
   function getCandidates() public constant returns(bytes32[]){
@@ -27,7 +28,7 @@ contract MesaElectionCRUD is MesaCRUD{
   }
   function createMesaElection() public {
     require(initialized);
-    MesaCRUD.createMesa(candidates, this);
+    MesaCRUD.createMesa(candidates);
   }
 
   /*funciones para manejar a los participantes de las mesas*/

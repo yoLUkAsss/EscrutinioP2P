@@ -17,8 +17,6 @@ contract Mesa {
 
     /**
 
-
-
      */
     struct CandidateData {
       bool isValidCandidate;
@@ -40,17 +38,15 @@ contract Mesa {
     bool private existVicepresidenteMesa;
 
     mapping (bytes32 => CandidateData) candidateMap;
-    address crudAddress;
 
     /**
     Datos cargados y validados al sistema
      */
     bool public checked;
 
-    function Mesa(bytes32[] inputCandidates, address crud) public{
+    function Mesa(bytes32[] inputCandidates) public{
       owner = msg.sender;
       candidateList = inputCandidates;
-      crudAddress = crud;
       for(uint i=0;i<inputCandidates.length;i++){
         candidateMap[inputCandidates[i]] = CandidateData(true, 0);
       }
@@ -60,7 +56,6 @@ contract Mesa {
       if(participantMap[p].isValidParticipant) revert();
       participantMap[p] = pd;
       participantList.push(p);
-      AddParticipant(msg.sender, p);
     }
 
     function getCandidatesList() public constant returns (bytes32[]){
@@ -141,13 +136,9 @@ contract Mesa {
         total[candidateList[index]] = participantMap[presidenteMesa].votes[candidateList[index]];
       }
     }
-
-
     function getTotal(bytes32 candidate) constant returns (uint8) {
         require(isValidCandidate(candidate));
         return total[candidate];
     }
-
-    event AddParticipant(address indexed userAddress, bytes32 participant);
 
 }
