@@ -15,9 +15,9 @@ contract Election {
       userCRUDaddress = newUserCRUDaddress;
       distritoCRUDaddress = newDistritoCRUDaddress;
     }
-    function createAutoridadElectoral(bytes32 email, bytes32 password) external {
+    function setAutoridadElectoral(bytes32 email) external {
       require(!created && autoridadElectoral == "");
-      UserElectionCRUD(userCRUDaddress).createAutoridadElectoral(email, password);
+      UserElectionCRUD(userCRUDaddress).setAutoridadElectoral(email);
       autoridadElectoral = email;
     }
     function createElection(bytes32 email, bytes32[] newCandidates) external {
