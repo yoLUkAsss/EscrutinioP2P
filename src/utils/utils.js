@@ -16,10 +16,11 @@ export function alertConfig() {
   }
 }
 
-export function showSuccess( ref , text) {
+export function showSuccess( ref , text, fun) {
   ref.show(text, {
     time: 3000,
-    type: 'success'
+    type: 'success',
+    onClose: fun
   })
 }
 

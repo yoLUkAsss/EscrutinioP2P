@@ -58,4 +58,7 @@ contract UserElectionCRUD is UserCRUD{
     function setAutoridadElectoral(bytes32 email) public {
       User(getUserByEmail(email)).setCategory(0);
     }
+    function setApoderado(bytes32 email) public {
+      User(getUserByEmail(email)).setCategory(3);
+    }
 }

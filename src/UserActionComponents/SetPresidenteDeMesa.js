@@ -67,7 +67,7 @@ class SetPresidenteDeMesa extends Component {
             <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
                 <Container>
-                <ComponentTitle title='Set Presidente de mesa'/>
+                <ComponentTitle title='Asignar Presidente de Mesa'/>
                 <Form>
                 <Form.Input
                   required
@@ -112,7 +112,7 @@ class SetPresidenteDeMesa extends Component {
                     onChange={ (event) => { this.setState({ email : event.target.value }) } }
                 />
                     <Button onClick={this.handleSetPresidenteDeMesa.bind(this)}>
-                        Setear Presidente
+                        Asignar
                     </Button>
                 </Form>
                 </Container>

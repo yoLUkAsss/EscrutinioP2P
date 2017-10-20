@@ -26,12 +26,9 @@ class SetFiscal extends Component {
     constructor() {
         super()
         this.state = {
-          distritoId : "",
-          escuelaId : "",
-          mesaId : "",
-          email : "",
-          candidato : ""
-      }
+            email : "",
+            candidato : ""
+        }
     }
 
     componentWillMount() {
@@ -44,7 +41,7 @@ class SetFiscal extends Component {
       })
     }
 
-    async handleSetFiscal(event) {
+    async handleSetApoderado(event) {
       event.preventDefault()
       const election = contract(ElectionContract)
       election.setProvider(this.state.web3.currentProvider)
@@ -54,80 +51,47 @@ class SetFiscal extends Component {
       })
       let electionInstance = await election.deployed()
       try{
-        await electionInstance.setFiscal.sendTransaction(currentUser.getEmail(cookie), this.state.candidato, this.state.email, this.state.distritoId, this.state.escuelaId, this.state.mesaId, fromObject)
-        utils.showSuccess(this.msg, "Fiscal Asignado")
+        await electionInstance.setApoderado.sendTransaction(currentUser.getEmail(cookie), this.state.email, this.state.candidato, fromObject)
+        utils.showSuccess(this.msg, "Apoderado del partido " + this.state.candidato + " configurado correctamente")
       } catch(error){
         console.log(error)
-        utils.showError(this.msg, "Fallo en la asignación del fiscal:" + error)
+        utils.showError(this.msg, "Fallo en la carga del apoderado:" + error)
       }
     }
 
     render () {
         return (
-          <Center>
+            <Center>
             <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
                 <Container>
-                <ComponentTitle title='Asignar Fiscal a una Mesa'/>
+                <ComponentTitle title='Asignar Apoderado de Partido'/>
                 <Form>
                     <Form.Input
                         required
                         inline
                         type="email"
-                        label='Fiscal'
-                        placeholder='Correo del Fiscal'
+                        label='Apoderado'
+                        placeholder='Correo del Apoderado'
                         value={this.state.email}
                         onChange={ (event) => { this.setState({ email : event.target.value }) } }
                     />
                     <Form.Input
                         required
                         inline
-                        type="email"
+                        type="text"
                         label='Candidato'
                         placeholder='Partido Policito asociado'
                         value={this.state.candidato}
                         onChange={ (event) => { this.setState({ candidato : event.target.value }) } }
                     />
-                    <Form.Input
-                      required
-                      type='number'
-                      label='distrito id'
-                      placeholder='distrito id'
-                      value={this.state.distritoId}
-                      onChange={ (event) => {
-                        this.setState({ distritoId : event.target.value })
-                        }
-                      }
-                    />
-                    <Form.Input
-                      required
-                      type='number'
-                      label='escuela id'
-                      placeholder='escuela id'
-                      value={this.state.escuelaId}
-                      onChange={ (event) => {
-                        this.setState({ escuelaId : event.target.value })
-                        }
-                      }
-                    />
-                    <Form.Input
-                      required
-                      type='number'
-                      label='mesa id'
-                      placeholder='mesa id'
-                      value={this.state.mesaId}
-                      onChange={ (event) => {
-                        this.setState({ mesaId : event.target.value })
-                        }
-                      }
-                    />
-                    <Button onClick={this.handleSetFiscal.bind(this)}>
-                        Setear fiscal
+                    <Button onClick={this.handleSetApoderado.bind(this)}>
+                        Asignar
                     </Button>
                 </Form>
-              </Container>
+                </Container>
             </div>
-          </Center>
+            </Center>
         );
     }
 }

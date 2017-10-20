@@ -47,3 +47,7 @@ export function isLogged(cookie){
 export function isAutoridadElectoral(cookie){
   return cookie.load("current_user_category") === '0'
 }
+
+export function isApoderadoDePartido(cookie){
+  return cookie.load("current_user_category") === '3'
+}

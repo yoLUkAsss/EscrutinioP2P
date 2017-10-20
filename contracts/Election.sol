@@ -7,6 +7,10 @@ contract Election {
     address owner;
     address distritoCRUDaddress;
     address userCRUDaddress;
+    address mesaCRUDaddress;
+
+    mapping (bytes32 => bytes32) apoderados;
+
     bool public created;
     bytes32 autoridadElectoral;
     bytes32[] candidates;
@@ -23,6 +27,9 @@ contract Election {
     function createElection(bytes32 email, bytes32[] newCandidates) external {
       require(!created && autoridadElectoral == email);
       candidates = newCandidates;
+      for (uint8 index = 0; index<candidates.length; index++ ) {
+          apoderados[candidates[index]] = "";
+      }
       created = true;
     }
     function createDistrito(bytes32 ae) public {
@@ -39,8 +46,9 @@ contract Election {
     }
 
     ////////////////////////////////////////////////////////////////////
-    function setFiscal(bytes32 ae, uint distritoId, uint escuelaId, uint mesaId, bytes32 fiscalEmail) public {
-      require(created && autoridadElectoral == ae);
+    function setFiscal(bytes32 apoderadoDePartido, bytes32 candidato, bytes32 fiscalEmail, uint distritoId, uint escuelaId, uint mesaId) public {
+      require(apoderados[candidato] == apoderadoDePartido);
+      UserElectionCRUD(userCRUDaddress).setFiscal(fiscalEmail);
       DistritoCRUD(distritoCRUDaddress).setFiscal(distritoId, escuelaId, mesaId, fiscalEmail);
     }
 
@@ -53,4 +61,9 @@ contract Election {
       return candidates;
     }
 
+    function setApoderado(bytes32 ae, bytes32 apoderado, bytes32 candidato) public {
+        require(autoridadElectoral == ae && apoderados[candidato] == "");
+        apoderados[candidato] = apoderado;
+        UserElectionCRUD(userCRUDaddress).setApoderado(apoderado);
+    }
 }
