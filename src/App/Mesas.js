@@ -66,7 +66,6 @@ class Mesas extends Component {
           return mesaCRUDInstance.getCounts.call(candidate, fromObject)
         })
         Promise.all(promises).then(function(data){
-          console.log(data)
           data.forEach(d => {
             res.set(someWeb3.toAscii(d[0]), d[1].toNumber())
           })

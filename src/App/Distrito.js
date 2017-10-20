@@ -48,7 +48,6 @@ class Distrito extends Component {
           this.setState({isDistritoInvalid : true})
         }
       } catch(err){
-        console.log(err)
         this.setState({isDistritoInvalid : true})
       }
     }

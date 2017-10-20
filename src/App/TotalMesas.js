@@ -2,15 +2,13 @@ import React, { Component } from 'react'
 import {Container} from 'semantic-ui-react'
 import ComponentTitle from '../utils/ComponentTitle.js'
 
-class Distritos extends Component {
+class TotalMesas extends Component {
     render() {
         return (
-          <div>
           <Container>
-            <ComponentTitle title="Resultados parciales de estos distritos"/>
+            <ComponentTitle title="Resultados parciales de todas las mesas"/>
           </Container>
-          </div>
         )
     }
 }
-export default Distritos
+export default TotalMesas

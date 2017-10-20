@@ -20,7 +20,7 @@ import SetFiscalItem from '../NavBarComponents/SetFiscalItem.js'
 import CreateDistritoItem from '../NavBarComponents/CreateDistritoItem.js'
 import CreateEscuelaItem from '../NavBarComponents/CreateEscuelaItem.js'
 
-import DistritosItem from '../NavBarComponents/DistritosItem.js'
+import SearchMesaItem from '../NavBarComponents/SearchMesaItem.js'
 
 class FixedNavbarComponent extends Component {
 
@@ -36,7 +36,7 @@ class FixedNavbarComponent extends Component {
           <LogInItem/>
           <SignUpItem/>
           <LogOutItem/>
-          <DistritosItem/>
+          <SearchMesaItem/>
           <SetPresidenteItem/>
           <SetFiscalItem/>
           <CreateElectionItem/>

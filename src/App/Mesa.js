@@ -36,7 +36,7 @@ class Mesa extends Component {
 
     componentWillMount() {
       getWeb3.then(results => {
-        this.handleGetMesa(results.web3, this.props.distritoId, this.props.escuelaId, this.props.match.params.mesaId)
+        this.handleGetMesa(results.web3, this.props.match.params.distritoId, this.props.match.params.escuelaId, this.props.match.params.mesaId)
         this.setState({
           web3: results.web3
         })
@@ -55,6 +55,10 @@ class Mesa extends Component {
       this.setState({ candidatos: newCandidatos})
     }
     ////////////////////////////////////////////////////////////////////////////////
+    getMesaId = () => {
+      return this.props.match.params.distritoId +""+ this.props.match.params.escuelaId +""+ this.props.match.params.mesaId
+    }
+
 
     //carga los datos de un participante
     handleLoadMesa = async (event) => {
@@ -123,6 +127,7 @@ class Mesa extends Component {
           utils.showSuccess(this.msg, "Conteo total de mesa cargado correctamente")
         }).catch(error => {
           utils.showError(this.msg, "Fallo en la carga de datos:" + error)
+          this.setState({isMesaInvalid : true})
         })
       } catch(err){
         this.setState({isMesaInvalid : true})
@@ -133,7 +138,7 @@ class Mesa extends Component {
       return (
         <Container>
         <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Header as='h3'>Cargar Mesa: {this.state.mesaId}</Header>
+          <Header as='h3'>Cargar Mesa: {this.getMesaId()}</Header>
             <Form>
                 <Header as='h3'>Candidatos</Header>
                 {this.state.candidatos.map((candidato, idx) => (
@@ -158,7 +163,7 @@ class Mesa extends Component {
       return (
         <Container>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Header as='h3'> Mesa no valida</Header>
+          <Header as='h3'> Mesa: {this.getMesaId()} no valida</Header>
           <Button onClick={event => {
             this.props.history.push("/mesas")
           }}> Volver a las mesas

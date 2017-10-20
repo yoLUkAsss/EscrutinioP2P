@@ -10,7 +10,7 @@ import SetPresidenteDeMesa from '../UserActionComponents/SetPresidenteDeMesa.js'
 import SetFiscal from '../UserActionComponents/SetFiscal.js'
 import CreateDistrito from '../UserActionComponents/CreateDistrito.js'
 import CreateEscuela from '../UserActionComponents/CreateEscuela.js'
-import FullDistrito from './FullDistrito.js'
+import SearchMesa from '../UserActionComponents/SearchMesa.js'
 
 
 class App extends Component{
@@ -23,7 +23,7 @@ class App extends Component{
           <Route path='/login' component={Login}/>
           <Route path='/signup' component={Signup}/>
           <Route path='/election' component={CreateElection}/>
-          <Route path='/distritos' component={FullDistrito}/>
+          <Route path='/mesas' component={SearchMesa}/>
           <Route path='/distrito' component={CreateDistrito}/>
           <Route path='/escuela' component={CreateEscuela}/>
           <Route path='/setpresidente' component={SetPresidenteDeMesa}/>
