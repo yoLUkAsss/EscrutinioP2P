@@ -12,7 +12,6 @@ import { Link } from 'react-router-dom'
 import LogInItem from '../NavBarComponents/LogInItem.js'
 import SignUpItem from '../NavBarComponents/SignUpItem.js'
 import LogOutItem from '../NavBarComponents/LogOutItem.js'
-import MesasItem from '../NavBarComponents/MesasItem.js'
 import CreateElectionItem from '../NavBarComponents/CreateElectionItem.js'
 
 import SetPresidenteItem from '../NavBarComponents/SetPresidenteItem.js'
@@ -20,6 +19,8 @@ import SetFiscalItem from '../NavBarComponents/SetFiscalItem.js'
 
 import CreateDistritoItem from '../NavBarComponents/CreateDistritoItem.js'
 import CreateEscuelaItem from '../NavBarComponents/CreateEscuelaItem.js'
+
+import DistritosItem from '../NavBarComponents/DistritosItem.js'
 
 class FixedNavbarComponent extends Component {
 
@@ -35,7 +36,7 @@ class FixedNavbarComponent extends Component {
           <LogInItem/>
           <SignUpItem/>
           <LogOutItem/>
-          <MesasItem/>
+          <DistritosItem/>
           <SetPresidenteItem/>
           <SetFiscalItem/>
           <CreateElectionItem/>
