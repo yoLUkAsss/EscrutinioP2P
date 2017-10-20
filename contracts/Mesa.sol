@@ -136,9 +136,9 @@ contract Mesa {
         total[candidateList[index]] = participantMap[presidenteMesa].votes[candidateList[index]];
       }
     }
-    function getTotal(bytes32 candidate) constant returns (uint8) {
+    function getTotal(bytes32 candidate) constant returns (bytes32, uint8) {
         require(isValidCandidate(candidate));
-        return total[candidate];
+        return (candidate, total[candidate]);
     }
 
 }

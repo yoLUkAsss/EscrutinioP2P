@@ -54,5 +54,9 @@ contract MesaCRUD {
     require(existsMesa(mesaId));
     Mesa(mesaMapping[mesaId].mesaAddress).setPresidenteDeMesa(presidenteDeMesaEmail);
   }
+  /////////////////////////////////////////////////////
+  function getCounts(bytes32 candidate) public constant returns(bytes32, uint){
+    return (candidate, 0);
+  }
 
 }

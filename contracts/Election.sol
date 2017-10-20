@@ -49,4 +49,8 @@ contract Election {
       DistritoCRUD(distritoCRUDaddress).setPresidenteDeMesa(distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
     }
 
+    function getCandidates() public constant returns(bytes32[]){
+      return candidates;
+    }
+
 }
