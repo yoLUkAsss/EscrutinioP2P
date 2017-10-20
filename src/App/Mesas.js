@@ -8,7 +8,11 @@ import AlertContainer from 'react-alert'
 import ComponentTitle from '../utils/ComponentTitle.js'
 import * as utils from '../utils/utils.js'
 
-import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
+import ElectionContract from '../../build/contracts/Election.json'
+import DistritoCRUDContract from '../../build/contracts/DistritoCRUD.json'
+import DistritoContract from '../../build/contracts/Distrito.json'
+import MesaCRUDContract from '../../build/contracts/MesaCRUD.json'
+import MesaContract from '../../build/contracts/Mesa.json'
 
 class Mesas extends Component {
 
@@ -24,16 +28,24 @@ class Mesas extends Component {
 
     componentWillMount() {
       getWeb3.then(results => {
-        this.handleGetPartialResults(results.web3)
+        this.handleGetPartialResults(results.web3, this.props.distritoId, this.props.escuelaId)
         this.setState({web3 : results.web3})
       }).catch(() => {
           console.log('Error finding web3.')
       })
     }
 
-    handleGetPartialResults = async (someWeb3) => {
-      const mesaCRUD = contract(MesaElectionCRUDContract)
+    handleGetPartialResults = async (someWeb3, distritoId, escuelaId) => {
+      const election = contract(ElectionContract)
+      const distritoCRUD = contract(DistritoCRUDContract)
+      const distrito = contract(DistritoContract)
+      const mesaCRUD = contract(MesaCRUDContract)
+      const mesa = contract(MesaContract)
+      election.setProvider(someWeb3.currentProvider)
+      distritoCRUD.setProvider(someWeb3.currentProvider)
+      distrito.setProvider(someWeb3.currentProvider)
       mesaCRUD.setProvider(someWeb3.currentProvider)
+      mesa.setProvider(someWeb3.currentProvider)
       let res = new Map()
       let realThis = this
       let fromObject
@@ -41,37 +53,29 @@ class Mesas extends Component {
       someWeb3.eth.getAccounts((err, accounts) => {
         fromObject = {from : accounts[0]}
       })
-      let mesaCRUDInstance = await mesaCRUD.deployed()
-      candidates = await mesaCRUDInstance.getCandidates.call(fromObject)
-      candidates = candidates.map(c => { return someWeb3.toAscii(c)})
-      let promises = candidates.map(candidate => {
-        return mesaCRUDInstance.getCounts.call(candidate, fromObject)
-      })
-      Promise.all(promises).then(function(data){
-        data.forEach(d => {
-          res.set(someWeb3.toAscii(d[0]), d[1].toNumber())
-        })
-          realThis.setState({conteos : res, candidatos : candidates})
-      }).catch(reason => {
-          console.log(reason)
-      })
-    }
-
-    handleCreateMesa = async (event) => {
-      event.preventDefault()
-      const mesaCRUD = contract(MesaElectionCRUDContract)
-      mesaCRUD.setProvider(this.state.web3.currentProvider)
-      let fromObject
-      this.state.web3.eth.getAccounts((err, accounts) => {
-        fromObject = {from : accounts[0], gas : 3000000}
-      })
       try{
-        let mesaCRUDInstance = await mesaCRUD.deployed()
-        await mesaCRUDInstance.createMesaElection.sendTransaction(fromObject)
-        utils.showSuccess(this.msg, "Creacion de mesa exitoso")
+        let electionInstance = await election.deployed()
+        let distritoCRUDInstance = await distritoCRUD.deployed()
+        let distritoAddress = await distritoCRUDInstance.getDistrito.call(distritoId, fromObject)
+        let distritoInstance = await distrito.at(distritoAddress)
+        let mesaCRUDAddress = await distritoInstance.getMesaCRUD.call(escuelaId, fromObject)
+        let mesaCRUDInstance = await mesaCRUD.at(mesaCRUDAddress)
+        candidates = await electionInstance.getCandidates.call(fromObject)
+        candidates = candidates.map(c => { return someWeb3.toAscii(c)})
+        let promises = candidates.map(candidate => {
+          return mesaCRUDInstance.getCounts.call(candidate, fromObject)
+        })
+        Promise.all(promises).then(function(data){
+          console.log(data)
+          data.forEach(d => {
+            res.set(someWeb3.toAscii(d[0]), d[1].toNumber())
+          })
+          realThis.setState({conteos : res, candidatos : candidates})
+        }).catch(reason => {
+          console.log(reason)
+        })
       } catch(err){
         console.log(err)
-        utils.showError(this.msg, "Fallo en la creacion de mesa")
       }
     }
 
@@ -105,3 +109,21 @@ class Mesas extends Component {
     }
 }
 export default Mesas
+
+// handleCreateMesa = async (event) => {
+//   event.preventDefault()
+//   const mesaCRUD = contract(MesaElectionCRUDContract)
+//   mesaCRUD.setProvider(this.state.web3.currentProvider)
+//   let fromObject
+//   this.state.web3.eth.getAccounts((err, accounts) => {
+//     fromObject = {from : accounts[0], gas : 3000000}
+//   })
+//   try{
+//     let mesaCRUDInstance = await mesaCRUD.deployed()
+//     await mesaCRUDInstance.createMesaElection.sendTransaction(fromObject)
+//     utils.showSuccess(this.msg, "Creacion de mesa exitoso")
+//   } catch(err){
+//     console.log(err)
+//     utils.showError(this.msg, "Fallo en la creacion de mesa")
+//   }
+// }

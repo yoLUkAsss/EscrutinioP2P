@@ -12,9 +12,10 @@ import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 
 // Contracts
-import MesaElectionCRUDContract from '../../build/contracts/MesaElectionCRUD.json'
+import DistritoCRUDContract from '../../build/contracts/DistritoCRUD.json'
+import DistritoContract from '../../build/contracts/Distrito.json'
+import MesaCRUDContract from '../../build/contracts/MesaCRUD.json'
 import MesaContract from '../../build/contracts/Mesa.json'
-
 
 //ver si se puede usar RefactoredDLF
 /**
@@ -27,9 +28,7 @@ class Mesa extends Component {
         super(props);
         this.state = {
           candidatos : [],
-          mesaId : props.match.params.mesaId,
-          currentMesaAddress : "",
-          isUserAllowed : false,
+          mesaAddress : "",
           isMesaInvalid : false,
           web3 : null
         }
@@ -37,7 +36,7 @@ class Mesa extends Component {
 
     componentWillMount() {
       getWeb3.then(results => {
-        this.handleGetMesa(results.web3, this.props.match.params.mesaId)
+        this.handleGetMesa(results.web3, this.props.distritoId, this.props.escuelaId, this.props.match.params.mesaId)
         this.setState({
           web3: results.web3
         })
@@ -60,8 +59,6 @@ class Mesa extends Component {
     //carga los datos de un participante
     handleLoadMesa = async (event) => {
       event.preventDefault()
-
-      // Variables
       let fromObject
       const mesa = contract(MesaContract)
       mesa.setProvider(this.state.web3.currentProvider)
@@ -71,7 +68,6 @@ class Mesa extends Component {
       try{
         let mesaInstance = await mesa.at(this.state.mesaAddress)
         let promises = this.state.candidatos.map(c => {
-          console.log("A punto de enviar esta informacion: " + c.name + " " + c.counts)
           return mesaInstance.loadVotesForParticipant.sendTransaction(currentUser.getEmail(cookie), c.name, c.counts, fromObject)
         })
         Promise.all(promises).then(() => {
@@ -80,54 +76,55 @@ class Mesa extends Component {
           utils.showError(this.msg, "Fallo en la carga de datos1:" + error)
         })
       } catch(error){
-        console.log(error)
         utils.showError(this.msg, "Fallo en la carga de datos2:" + error)
       }
     }
 
     //falta chequear que una vez validaron sus conteos no puede volver a cargar datos
-    handleGetMesa = async (cweb3, mesaId) => {
-      const mesaElectionCRUD = contract(MesaElectionCRUDContract)
+    handleGetMesa = async (cweb3, distritoId, escuelaId, mesaId) => {
+      const distritoCRUD = contract(DistritoCRUDContract)
+      const distrito = contract(DistritoContract)
+      const mesaCRUD = contract(MesaCRUDContract)
       const mesa = contract(MesaContract)
-      mesaElectionCRUD.setProvider(cweb3.currentProvider)
+      distritoCRUD.setProvider(cweb3.currentProvider)
+      distrito.setProvider(cweb3.currentProvider)
+      mesaCRUD.setProvider(cweb3.currentProvider)
       mesa.setProvider(cweb3.currentProvider)
       let fromObject
-      let currentUserEmail = currentUser.getEmail(cookie)
       cweb3.eth.getAccounts((error, accounts) => {
         fromObject = {from : accounts[0]}
       })
       try{
-        let mesaCRUDInstance = await mesaElectionCRUD.deployed()
-        let currentMesaAddress = await mesaCRUDInstance.getMesa.call(mesaId, fromObject)
-        let mesaInstance = await mesa.at(currentMesaAddress)
+        let distritoCRUDInstance = await distritoCRUD.deployed()
+        let distritoAddress = await distritoCRUDInstance.getDistrito.call(distritoId, fromObject)
+        let distritoInstance = await distrito.at(distritoAddress)
+        let mesaCRUDAddress = await distritoInstance.getMesaCRUD.call(escuelaId, fromObject)
+        let mesaCRUDInstance = await mesaCRUD.at(mesaCRUDAddress)
+        let newMesaAddress = await mesaCRUDInstance.getMesa.call(mesaId, fromObject)
+        let mesaInstance = await mesa.at(newMesaAddress)
         let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
         let candidates = []
-        let count
-        let isParticipant = await mesaInstance.isValidParticipant.call(currentUserEmail, fromObject)
-        let promises = candidatesList.map(async c => {
-          let currentCandidate = cweb3.toAscii(c)
-          if (isParticipant) {
-            console.log("Participante valido")
-            let result = await mesaInstance.getParticipantVotesForACandidate.call(currentUserEmail, currentCandidate, fromObject)
-            count = result[1]
-          } else {
-            console.log("Participante no valido")
-            count = await mesaInstance.getTotal.call(currentCandidate, fromObject)
-          }
-          candidates.push({"name" : currentCandidate,"counts" : count})
-          return {"name" : cweb3.toAscii(c),"counts" : count}
-        })
-        Promise.all(promises).then(() => {
-          utils.showSuccess(this.msg, "Conteo total de mesa cargado correctamente")
-          this.setState({
-            candidatos : candidates,
-            mesaAddress : currentMesaAddress
+        let isValidParticipant = await mesaInstance.isValidParticipant.call(currentUser.getEmail(cookie), fromObject)
+        let promises
+        if(isValidParticipant){
+          promises = candidatesList.map(c => {
+            return mesaInstance.getParticipantVotesForACandidate.call(currentUser.getEmail(cookie), cweb3.toAscii(c), fromObject)
           })
+        } else {
+          promises = candidatesList.map(c => {
+            return mesaInstance.getTotal.call(cweb3.toAscii(c), fromObject)
+          })
+        }
+        Promise.all(promises).then((results) => {
+          for(const res of results){
+            candidates.push({"name" : cweb3.toAscii(res[0]), "counts" : res[1].toNumber()})
+          }
+          this.setState({candidatos : candidates, mesaAddress : newMesaAddress})
+          utils.showSuccess(this.msg, "Conteo total de mesa cargado correctamente")
         }).catch(error => {
           utils.showError(this.msg, "Fallo en la carga de datos:" + error)
         })
       } catch(err){
-        console.log(err)
         this.setState({isMesaInvalid : true})
       }
     }
@@ -170,42 +167,6 @@ class Mesa extends Component {
       )
     }
 
-    renderAllowedUser(){
-      return (
-        <Container>
-        <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Header as='h3'>Cargar Mesa: {this.state.mesaId}</Header>
-            <Form onSubmit={this.handleLoadMesa.bind(this)}>
-                <Header as='h3'>Candidatos</Header>
-                {this.state.candidatos.map((candidato, idx) => (
-                  <Form.Input
-                    type='number'
-                    key={idx}
-                    label={`Candidato: ${candidato.name}`}
-                    placeholder={`Candidato: ${idx + 1}`}
-                    value={candidato.counts}
-                    onChange={this.handleCandidatoCountsChange(idx)}
-                  />
-                ))}
-                <Button>Cargar Mesa</Button>
-            </Form>
-        </Container>
-      );
-    }
-
-    renderNotAllowedUser(){
-      return (
-        <Container>
-          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Header as='h3'> Mesa no valida</Header>
-          <Button onClick={event => {
-            this.props.history.push("/mesas")
-          }}> Volver a las mesas
-          </Button>
-        </Container>
-      );
-    }
-
     render () {
         if(this.state.isMesaInvalid){
           return this.renderInvalidMesa();
@@ -223,3 +184,27 @@ export default withRouter(Mesa)
 //   onChange={this.handleNewCandidates}
 //   items={this.state.candidatos}
 // />
+
+
+// let promises = candidatesList.map(async c => {
+//   let currentCandidate = cweb3.toAscii(c)
+//   if (isParticipant) {
+//     console.log("Participante valido")
+//     let result = await mesaInstance.getParticipantVotesForACandidate.call(currentUser.getEmail(cookie), currentCandidate, fromObject)
+//     count = result[1]
+//   } else {
+//     console.log("Participante no valido")
+//     count = await mesaInstance.getTotal.call(currentCandidate, fromObject)
+//   }
+//   candidates.push({"name" : currentCandidate,"counts" : count})
+//   return {"name" : cweb3.toAscii(c),"counts" : count}
+// })
+// Promise.all(promises).then(() => {
+//   utils.showSuccess(this.msg, "Conteo total de mesa cargado correctamente")
+//   this.setState({
+//     candidatos : candidates,
+//     mesaAddress : currentMesaAddress
+//   })
+// }).catch(error => {
+//   utils.showError(this.msg, "Fallo en la carga de datos:" + error)
+// })
