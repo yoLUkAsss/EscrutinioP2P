@@ -55,4 +55,7 @@ contract UserElectionCRUD is UserCRUD{
     function setFiscal(bytes32 email) public {
       User(getUserByEmail(email)).setCategory(6);
     }
+    function setApoderado(bytes32 email) public {
+        User(getUserByEmail(email)).setCategory(3);
+    }
 }

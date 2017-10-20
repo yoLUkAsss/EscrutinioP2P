@@ -14,11 +14,11 @@ import {Link} from 'react-router-dom'
 import cookie from 'react-cookies'
 import * as currentUser from '../utils/user_session.js'
 
-class SetFiscalItem extends Component {
+class SetApoderadoItem extends Component {
     render () {
-      if(currentUser.isLogged(cookie) && currentUser.isApoderadoDePartido(cookie)){
+      if(currentUser.isLogged(cookie) && currentUser.isAutoridadElectoral(cookie)){
         return (
-            <Menu.Item header><Link to="/setfiscal">Setear Fiscal</Link></Menu.Item>
+            <Menu.Item header><Link to="/setapoderado">Setear Apoderado</Link></Menu.Item>
         );
       } else{
         return null;
@@ -26,4 +26,4 @@ class SetFiscalItem extends Component {
     }
 }
 
-export default SetFiscalItem
+export default SetApoderadoItem

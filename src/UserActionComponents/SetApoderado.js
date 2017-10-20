@@ -22,12 +22,12 @@ import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import cookie from 'react-cookies'
 
-class SetPresidenteDeMesa extends Component {
+class SetFiscal extends Component {
     constructor() {
         super()
         this.state = {
             email : "",
-            mesaId : 0
+            candidato : ""
         }
     }
 
@@ -41,7 +41,7 @@ class SetPresidenteDeMesa extends Component {
       })
     }
 
-    async handleSetPresidenteDeMesa(event) {
+    async handleSetApoderado(event) {
       event.preventDefault()
       const election = contract(ElectionContract)
       election.setProvider(this.state.web3.currentProvider)
@@ -51,11 +51,11 @@ class SetPresidenteDeMesa extends Component {
       })
       let electionInstance = await election.deployed()
       try{
-        await electionInstance.setPresidenteDeMesa.sendTransaction(currentUser.getEmail(cookie), this.state.email, this.state.mesaId, fromObject)
-        utils.showSuccess(this.msg, "Seteado presidente de mesa")
+        await electionInstance.setApoderado.sendTransaction(currentUser.getEmail(cookie), this.state.email, this.state.candidato, fromObject)
+        utils.showSuccess(this.msg, "Apoderado del partido " + this.state.candidato + " configurado correctamente")
       } catch(error){
         console.log(error)
-        utils.showError(this.msg, "Fallo en el seteo del presidente:" + error)
+        utils.showError(this.msg, "Fallo en la carga del apoderado:" + error)
       }
     }
 
@@ -65,25 +65,27 @@ class SetPresidenteDeMesa extends Component {
             <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
                 <Container>
-                <ComponentTitle title='Asignar Presidente de Mesa'/>
+                <ComponentTitle title='Asignar Apoderado de Partido'/>
                 <Form>
                     <Form.Input
                         required
                         inline
                         type="email"
-                        label='Email'
-                        placeholder='Email'
+                        label='Apoderado'
+                        placeholder='Correo del Apoderado'
                         value={this.state.email}
                         onChange={ (event) => { this.setState({ email : event.target.value }) } }
                     />
                     <Form.Input
-                        type="number"
-                        label='id de la Mesa'
-                        placeholder="id de la Mesa"
-                        value={this.state.mesaId}
-                        onChange={(evt) => {this.setState({ mesaId : evt.target.value })}}
+                        required
+                        inline
+                        type="text"
+                        label='Candidato'
+                        placeholder='Partido Policito asociado'
+                        value={this.state.candidato}
+                        onChange={ (event) => { this.setState({ candidato : event.target.value }) } }
                     />
-                    <Button onClick={this.handleSetPresidenteDeMesa.bind(this)}>
+                    <Button onClick={this.handleSetApoderado.bind(this)}>
                         Asignar
                     </Button>
                 </Form>
@@ -94,4 +96,4 @@ class SetPresidenteDeMesa extends Component {
     }
 }
 
-export default SetPresidenteDeMesa
+export default SetFiscal

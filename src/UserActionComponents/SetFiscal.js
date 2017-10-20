@@ -27,6 +27,7 @@ class SetFiscal extends Component {
         super()
         this.state = {
             email : "",
+            candidato : "",
             mesaId : 0
         }
     }
@@ -51,11 +52,11 @@ class SetFiscal extends Component {
       })
       let electionInstance = await election.deployed()
       try{
-        await electionInstance.setFiscal.sendTransaction(currentUser.getEmail(cookie), this.state.email, this.state.mesaId, fromObject)
-        utils.showSuccess(this.msg, "Seteado fiscal")
+        await electionInstance.setFiscal.sendTransaction(currentUser.getEmail(cookie), this.state.candidato, this.state.email, this.state.mesaId, fromObject)
+        utils.showSuccess(this.msg, "Fiscal Asignado")
       } catch(error){
         console.log(error)
-        utils.showError(this.msg, "Fallo en el seteo del fiscal:" + error)
+        utils.showError(this.msg, "Fallo en la asignación del fiscal:" + error)
       }
     }
 
@@ -65,21 +66,30 @@ class SetFiscal extends Component {
             <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
                 <Container>
-                <ComponentTitle title='Set Fiscal'/>
+                <ComponentTitle title='Asignar Fiscal a una Mesa'/>
                 <Form>
                     <Form.Input
                         required
                         inline
                         type="email"
-                        label='Email'
-                        placeholder='Email'
+                        label='Fiscal'
+                        placeholder='Correo del Fiscal'
                         value={this.state.email}
                         onChange={ (event) => { this.setState({ email : event.target.value }) } }
                     />
                     <Form.Input
+                        required
+                        inline
+                        type="email"
+                        label='Candidato'
+                        placeholder='Partido Policito asociado'
+                        value={this.state.candidato}
+                        onChange={ (event) => { this.setState({ candidato : event.target.value }) } }
+                    />
+                    <Form.Input
                         type="number"
-                        label='id de la Mesa'
-                        placeholder="id de la Mesa"
+                        label='ID de Mesa'
+                        placeholder="ID de la Mesa"
                         value={this.state.mesaId}
                         onChange={(evt) => {this.setState({ mesaId : evt.target.value })}}
                     />

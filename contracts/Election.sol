@@ -9,6 +9,8 @@ contract Election {
     address userCRUDaddress;
     address mesaCRUDaddress;
 
+    mapping (bytes32 => bytes32) apoderados;
+
     bool public created;
     bytes32 autoridadElectoral;
 
@@ -31,6 +33,9 @@ contract Election {
       require(!created);
       UserElectionCRUD(userCRUDaddress).createAutoridadElectoral(email, password);
       MesaElectionCRUD(mesaCRUDaddress).setCandidates(candidates);
+      for (uint8 index = 0; index<candidates.length; index++ ) {
+          apoderados[candidates[index]] = "";
+      }
       autoridadElectoral = email;
       created = true;
       CreateElection(msg.sender);
@@ -46,10 +51,17 @@ contract Election {
         MesaElectionCRUD(mesaCRUDaddress).setPresidenteDeMesa(mesaId, presidente);
     }
 
-    function setFiscal(bytes32 ae, bytes32 fiscal, uint mesaId) public onlyAutoridadElectoral(ae){
+    function setFiscal(bytes32 apoderadoDePartido, bytes32 candidato, bytes32 fiscal, uint mesaId) public {
         /*require(sha3(ae) == sha3(autoridadElectoral));*/
+        require(apoderados[candidato] == apoderadoDePartido);
         UserElectionCRUD(userCRUDaddress).setFiscal(fiscal);
         MesaElectionCRUD(mesaCRUDaddress).setFiscal(mesaId, fiscal);
+    }
+
+    function setApoderado(bytes32 ae, bytes32 apoderado, bytes32 candidato) public onlyAutoridadElectoral(ae) {
+        require(apoderados[candidato] == "");
+        apoderados[candidato] = apoderado;
+        UserElectionCRUD(userCRUDaddress).setApoderado(apoderado);
     }
 
     function createMesa(bytes32 ae) public onlyAutoridadElectoral(ae){

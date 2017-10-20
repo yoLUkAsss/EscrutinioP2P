@@ -6,7 +6,7 @@ import "./Mesa.sol";
 contract MesaElectionCRUD is MesaCRUD{
 
   bool initialized;
-
+  
   mapping (bytes32 => uint) partialCount;
   bytes32[] candidates;
 

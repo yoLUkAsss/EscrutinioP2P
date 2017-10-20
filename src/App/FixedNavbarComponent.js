@@ -17,6 +17,7 @@ import CreateElectionItem from '../NavBarComponents/CreateElectionItem.js'
 
 import SetPresidenteItem from '../NavBarComponents/SetPresidenteItem.js'
 import SetFiscalItem from '../NavBarComponents/SetFiscalItem.js'
+import SetApoderadoItem from '../NavBarComponents/SetApoderadoItem.js'
 
 
 class FixedNavbarComponent extends Component {
@@ -34,6 +35,7 @@ class FixedNavbarComponent extends Component {
           <SignUpItem/>
           <LogOutItem/>
           <MesasItem/>
+          <SetApoderadoItem/>
           <SetPresidenteItem/>
           <SetFiscalItem/>
           <CreateElectionItem/>

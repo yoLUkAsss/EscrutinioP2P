@@ -8,6 +8,7 @@ import FixedNavbarComponent from './FixedNavbarComponent.js'
 import CreateElection from '../UserActionComponents/CreateElection.js'
 import SetPresidenteDeMesa from '../UserActionComponents/SetPresidenteDeMesa.js'
 import SetFiscal from '../UserActionComponents/SetFiscal.js'
+import SetApoderado from '../UserActionComponents/SetApoderado.js'
 import FullMesa from './FullMesa.js'
 
 
@@ -24,6 +25,7 @@ class App extends Component{
           <Route path='/mesas' component={FullMesa}/>
           <Route path='/setpresidente' component={SetPresidenteDeMesa}/>
           <Route path='/setfiscal' component={SetFiscal}/>
+          <Route path='/setapoderado' component={SetApoderado}/>
         </Switch>
     </div>
     )
