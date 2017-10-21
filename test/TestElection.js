@@ -29,11 +29,5 @@ contract('Election', function(accounts) {
     let zeroAddress = "0x0000000000000000000000000000000000000000"
     assert.ok(userCRUDaddress !== zeroAddress , "user crud address")
   })
-  it('a mesa crud address can be acceded by its AutoridadElectoral', async () => {
-    let electionInstance = await Election.deployed()
-    let mesaCRUDaddress = await electionInstance.getMesaCRUDaddress.call("ae@gmail", fromObject)
-    let zeroAddress = "0x0000000000000000000000000000000000000000"
-    assert.ok(mesaCRUDaddress !== zeroAddress , "mesa crud address")
-  })
 
 })
