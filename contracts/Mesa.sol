@@ -32,9 +32,9 @@ contract Mesa {
     bytes32[] candidateList;
     bytes32[] participantList;
     mapping (bytes32 => ParticipantData) participantMap;
-    bytes32 public presidenteMesa;
+    bytes32 public presidenteDeMesaAsignado;
     bool private existPresidenteMesa;
-    bytes32 public vicepresidenteMesa;
+    bytes32 public vicepresidenteDeMesaAsignado;
     bool private existVicepresidenteMesa;
 
     mapping (bytes32 => CandidateData) candidateMap;
@@ -93,7 +93,7 @@ contract Mesa {
     }
 
     function isPresidenteDeMesa(bytes32 participant) public constant returns(bool){
-      return presidenteMesa == participant;
+      return presidenteDeMesaAsignado == participant;
     }
 
     function destroy(address parent) public {
@@ -109,7 +109,7 @@ contract Mesa {
      */
     function setPresidenteDeMesa(bytes32 presidente) public{
       require(! existPresidenteMesa);
-      presidenteMesa = presidente;
+      presidenteDeMesaAsignado = presidente;
       existPresidenteMesa = true;
       addParticipant(presidente, ParticipantData(true, ParticipantCategory.PresidenteMesa));
     }
@@ -117,9 +117,9 @@ contract Mesa {
     /**
     Requiere que no se haya seteado un vicepresidente de mesa
      */
-    function setVicePresidenteDeMesa(bytes32 vicepresidente) public{
+    function setVicepresidenteDeMesa(bytes32 vicepresidente) public{
       require(! existVicepresidenteMesa);
-      vicepresidenteMesa = vicepresidente;
+      vicepresidenteDeMesaAsignado = vicepresidente;
       existVicepresidenteMesa = true;
       addParticipant(vicepresidente, ParticipantData(true, ParticipantCategory.VicepresidenteMesa));
     }
@@ -130,10 +130,10 @@ contract Mesa {
     Solo el presidente de mesa puede validar.
      */
     function check(bytes32 presi) public {
-      require(presidenteMesa == presi);
+      require(presidenteDeMesaAsignado == presi);
       checked = true;
       for (uint8 index = 0 ; index < candidateList.length ; index++) {
-        total[candidateList[index]] = participantMap[presidenteMesa].votes[candidateList[index]];
+        total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
       }
     }
     function getTotal(bytes32 candidate) constant returns (bytes32, uint8) {

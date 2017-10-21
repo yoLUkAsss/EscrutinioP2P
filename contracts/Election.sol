@@ -12,7 +12,7 @@ contract Election {
     mapping (bytes32 => bytes32) apoderados;
 
     bool public created;
-    bytes32 autoridadElectoral;
+    bytes32 autoridadElectoralAsignada;
     bytes32[] candidates;
     function Election (address newUserCRUDaddress, address newDistritoCRUDaddress) public {
       owner = msg.sender;
@@ -20,28 +20,31 @@ contract Election {
       distritoCRUDaddress = newDistritoCRUDaddress;
     }
     function setAutoridadElectoral(bytes32 email) external {
-      require(!created && autoridadElectoral == "");
+      require(!created && autoridadElectoralAsignada == "");
       UserElectionCRUD(userCRUDaddress).setAutoridadElectoral(email);
-      autoridadElectoral = email;
+      autoridadElectoralAsignada = email;
     }
     function createElection(bytes32 email, bytes32[] newCandidates) external {
-      require(!created && autoridadElectoral == email);
+      require(!created && autoridadElectoralAsignada == email);
       candidates = newCandidates;
+      candidates.push("votos en blanco");
+      candidates.push("votos impugnados");
+      candidates.push("votos nulos");
       for (uint8 index = 0; index<candidates.length; index++ ) {
           apoderados[candidates[index]] = "";
       }
       created = true;
     }
-    function createDistrito(bytes32 ae) public {
-      require(created && autoridadElectoral == ae);
+    function createDistrito(bytes32 autoridadElectoral) public {
+      require(created && autoridadElectoralAsignada == autoridadElectoral);
       DistritoCRUD(distritoCRUDaddress).createDistrito();
     }
-    function createEscuela(bytes32 ae, uint distritoId) public {
-        require(created && autoridadElectoral == ae);
+    function createEscuela(bytes32 autoridadElectoral, uint distritoId) public {
+        require(created && autoridadElectoralAsignada == autoridadElectoral);
         DistritoCRUD(distritoCRUDaddress).createEscuela(distritoId);
     }
-    function createMesa(bytes32 ae, uint distritoId, uint escuelaId) public {
-        require(created && autoridadElectoral == ae);
+    function createMesa(bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public {
+        require(created && autoridadElectoralAsignada == autoridadElectoral);
         DistritoCRUD(distritoCRUDaddress).createMesa(distritoId, escuelaId, candidates);
     }
 
@@ -52,18 +55,34 @@ contract Election {
       DistritoCRUD(distritoCRUDaddress).setFiscal(distritoId, escuelaId, mesaId, fiscalEmail);
     }
 
-    function setPresidenteDeMesa(bytes32 ae, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
-      require(created && autoridadElectoral == ae);
-      DistritoCRUD(distritoCRUDaddress).setPresidenteDeMesa(distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
-    }
-
     function getCandidates() public constant returns(bytes32[]){
       return candidates;
     }
 
-    function setApoderado(bytes32 ae, bytes32 apoderado, bytes32 candidato) public {
-        require(autoridadElectoral == ae && apoderados[candidato] == "");
+    function setApoderado(bytes32 autoridadElectoral, bytes32 apoderado, bytes32 candidato) public {
+        require(autoridadElectoralAsignada == autoridadElectoral && apoderados[candidato] == "");
         apoderados[candidato] = apoderado;
         UserElectionCRUD(userCRUDaddress).setApoderado(apoderado);
+    }
+
+    function setDelegadoDeDistrito(bytes32 autoridadElectoral, bytes32 delegadoDistrito, uint8 idDistrito) public {
+        require(autoridadElectoralAsignada == autoridadElectoral);
+        UserElectionCRUD(userCRUDaddress).setDelegadoDeDistrito(delegadoDistrito);
+        DistritoCRUD(distritoCRUDaddress).setDelegadoDeDistrito(delegadoDistrito, idDistrito);
+    }
+
+    function setDelegadoDeEscuela(bytes32 delegadoDistrito, bytes32 delegadoEscuela, uint8 idDistrito, uint8 idEscuela) public {
+        UserElectionCRUD(userCRUDaddress).setDelegadoDeEscuela(delegadoEscuela);
+        DistritoCRUD(distritoCRUDaddress).setDelegadoDeEscuela(delegadoDistrito, delegadoEscuela, idDistrito, idEscuela);
+    }
+
+    function setPresidenteDeMesa(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+      UserElectionCRUD(userCRUDaddress).setPresidenteDeMesa(presidenteDeMesaEmail);
+      DistritoCRUD(distritoCRUDaddress).setPresidenteDeMesa(delegadoEscuela, distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
+    }
+
+    function setVicepresidenteDeMesa(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+      UserElectionCRUD(userCRUDaddress).setVicepresidenteDeMesa(presidenteDeMesaEmail);
+      DistritoCRUD(distritoCRUDaddress).setVicepresidenteDeMesa(delegadoEscuela, distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
     }
 }

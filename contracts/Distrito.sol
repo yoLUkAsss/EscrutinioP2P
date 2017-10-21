@@ -7,6 +7,7 @@ contract Distrito {
   uint[] mesaCRUDIds;
   uint lastMesaCRUDId;
   mapping (uint => MesaCRUDStruct) mesaCRUDMapping;
+  bytes32 delegadoDeDistritoAsignado;
   struct MesaCRUDStruct {
     uint id;
     address mesaCRUDAddress;
@@ -58,9 +59,24 @@ contract Distrito {
     MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setFiscal(mesaId, fiscalEmail);
   }
 
-  function setPresidenteDeMesa(uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+  function setPresidenteDeMesa(bytes32 delegadoEscuela, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
     require(existsMesaCRUD(escuelaId));
-    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setPresidenteDeMesa(mesaId, presidenteDeMesaEmail);
+    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setPresidenteDeMesa(delegadoEscuela, mesaId, presidenteDeMesaEmail);
+  }
+
+  function setVicepresidenteDeMesa(bytes32 delegadoEscuela, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+    require(existsMesaCRUD(escuelaId));
+    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setVicepresidenteDeMesa(delegadoEscuela, mesaId, presidenteDeMesaEmail);
+  }
+
+  function setDelegadoDeDistrito(bytes32 newDelegado) public {
+    require(delegadoDeDistritoAsignado == "");
+    delegadoDeDistritoAsignado = newDelegado;
+  }
+
+  function setDelegadoDeEscuela(bytes32 delegadoDistrito, bytes32 delegadoEscuela, uint escuelaId) public {
+    require(delegadoDeDistritoAsignado == delegadoDistrito);
+    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setDelegadoDeEscuela(delegadoEscuela);
   }
 
 }

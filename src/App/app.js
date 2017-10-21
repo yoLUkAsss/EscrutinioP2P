@@ -12,6 +12,8 @@ import CreateDistrito from '../UserActionComponents/CreateDistrito.js'
 import CreateEscuela from '../UserActionComponents/CreateEscuela.js'
 import SearchMesa from '../UserActionComponents/SearchMesa.js'
 import SetApoderado from '../UserActionComponents/SetApoderado.js'
+import SetDelegadoDeDistrito from '../UserActionComponents/SetDelegadoDeDistrito.js'
+import SetDelegadoDeEscuela from '../UserActionComponents/SetDelegadoDeEscuela.js'
 
 
 class App extends Component{
@@ -30,6 +32,8 @@ class App extends Component{
           <Route path='/setpresidente' component={SetPresidenteDeMesa}/>
           <Route path='/setfiscal' component={SetFiscal}/>
           <Route path='/setapoderado' component={SetApoderado}/>
+          <Route path='/setdelegadodistrito' component={SetDelegadoDeDistrito}/>
+          <Route path='/setdelegadoescuela' component={SetDelegadoDeEscuela}/>
         </Switch>
     </div>
     )

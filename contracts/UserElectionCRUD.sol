@@ -49,16 +49,25 @@ contract UserElectionCRUD is UserCRUD{
     function setUserCategory(bytes32 email, uint cat) internal {
       User(getUserByEmail(email)).setCategory(cat);
     }
-    function setPresidenteDeMesa(bytes32 email) public {
-      User(getUserByEmail(email)).setCategory(4);
-    }
-    function setFiscal(bytes32 email) public {
-      User(getUserByEmail(email)).setCategory(6);
-    }
     function setAutoridadElectoral(bytes32 email) public {
       User(getUserByEmail(email)).setCategory(0);
     }
+    function setDelegadoDeDistrito(bytes32 email) public {
+      User(getUserByEmail(email)).setCategory(1);
+    }
+    function setDelegadoDeEscuela(bytes32 email) public {
+      User(getUserByEmail(email)).setCategory(2);
+    }
     function setApoderado(bytes32 email) public {
       User(getUserByEmail(email)).setCategory(3);
+    }
+    function setPresidenteDeMesa(bytes32 email) public {
+      User(getUserByEmail(email)).setCategory(4);
+    }
+    function setVicepresidenteDeMesa(bytes32 email) public {
+      User(getUserByEmail(email)).setCategory(5);
+    }
+    function setFiscal(bytes32 email) public {
+      User(getUserByEmail(email)).setCategory(6);
     }
 }

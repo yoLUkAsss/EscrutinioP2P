@@ -51,3 +51,11 @@ export function isAutoridadElectoral(cookie){
 export function isApoderadoDePartido(cookie){
   return cookie.load("current_user_category") === '3'
 }
+
+export function isDelegadoDeDistrito(cookie){
+  return cookie.load("current_user_category") === '1'
+}
+
+export function isDelegadoDeEscuela(cookie){
+  return cookie.load("current_user_category") === '2'
+}

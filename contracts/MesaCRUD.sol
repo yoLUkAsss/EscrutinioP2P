@@ -6,6 +6,7 @@ contract MesaCRUD {
   address owner;
   uint[] mesaIds;
   uint lastId;
+  bytes32 delegadoDeEscuelaAsignado;
   struct MesaStruct {
     uint id;
     address mesaAddress;
@@ -50,9 +51,19 @@ contract MesaCRUD {
     require(existsMesa(mesaId));
     Mesa(mesaMapping[mesaId].mesaAddress).setFiscal(fiscalEmail);
   }
-  function setPresidenteDeMesa(uint mesaId, bytes32 presidenteDeMesaEmail) public {
+  function setPresidenteDeMesa(bytes32 delegadoEscuela, uint mesaId, bytes32 presidenteDeMesaEmail) public {
     require(existsMesa(mesaId));
+    require(delegadoDeEscuelaAsignado == delegadoEscuela);
     Mesa(mesaMapping[mesaId].mesaAddress).setPresidenteDeMesa(presidenteDeMesaEmail);
+  }
+  function setVicepresidenteDeMesa(bytes32 delegadoEscuela, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+    require(existsMesa(mesaId));
+    require(delegadoDeEscuelaAsignado == delegadoEscuela);
+    Mesa(mesaMapping[mesaId].mesaAddress).setVicepresidenteDeMesa(presidenteDeMesaEmail);
+  }
+  function setDelegadoDeEscuela(bytes32 newDelegadoDeEscuela) public {
+    require(delegadoDeEscuelaAsignado == "");
+    delegadoDeEscuelaAsignado = newDelegadoDeEscuela;
   }
   /////////////////////////////////////////////////////
   function getCounts(bytes32 candidate) public constant returns(bytes32, uint){

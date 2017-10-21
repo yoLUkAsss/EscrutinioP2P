@@ -17,6 +17,8 @@ import CreateElectionItem from '../NavBarComponents/CreateElectionItem.js'
 import SetPresidenteItem from '../NavBarComponents/SetPresidenteItem.js'
 import SetFiscalItem from '../NavBarComponents/SetFiscalItem.js'
 import SetApoderadoItem from '../NavBarComponents/SetApoderadoItem.js'
+import SetDelegadoDeDistritoItem from '../NavBarComponents/SetDelegadoDeDistritoItem.js'
+import SetDelegadoDeEscuelaItem from '../NavBarComponents/SetDelegadoDeEscuelaItem.js'
 
 import CreateDistritoItem from '../NavBarComponents/CreateDistritoItem.js'
 import CreateEscuelaItem from '../NavBarComponents/CreateEscuelaItem.js'
@@ -39,6 +41,8 @@ class FixedNavbarComponent extends Component {
           <LogOutItem/>
           <SearchMesaItem/>
           <SetApoderadoItem/>
+          <SetDelegadoDeDistritoItem/>
+          <SetDelegadoDeEscuelaItem/>
           <SetPresidenteItem/>
           <SetFiscalItem/>
           <CreateElectionItem/>

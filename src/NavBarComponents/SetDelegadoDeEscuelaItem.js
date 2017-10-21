@@ -14,11 +14,11 @@ import {Link} from 'react-router-dom'
 import cookie from 'react-cookies'
 import * as currentUser from '../utils/user_session.js'
 
-class SetPresidenteItem extends Component {
+class SetDelegadoDeEscuelaItem extends Component {
     render () {
-      if(currentUser.isLogged(cookie) && currentUser.isDelegadoDeEscuela(cookie)){
+      if(currentUser.isLogged(cookie) && currentUser.isDelegadoDeDistrito(cookie)){
         return (
-            <Menu.Item header><Link to="/setpresidente">Setear Presidente</Link></Menu.Item>
+            <Menu.Item header><Link to="/setdelegadoescuela">Asignar Delegado de Escuela</Link></Menu.Item>
         );
       } else{
         return null;
@@ -26,4 +26,4 @@ class SetPresidenteItem extends Component {
     }
 }
 
-export default SetPresidenteItem
+export default SetDelegadoDeEscuelaItem

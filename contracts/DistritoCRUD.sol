@@ -58,8 +58,25 @@ contract DistritoCRUD {
     require(existsDistrito(distritoId));
     Distrito(distritoMapping[distritoId].distritoAddress).setFiscal(escuelaId, mesaId, fiscalEmail);
   }
-  function setPresidenteDeMesa(uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+
+  function setDelegadoDeDistrito(bytes32 delegadoDeDistrito, uint distritoId) public {
     require(existsDistrito(distritoId));
-    Distrito(distritoMapping[distritoId].distritoAddress).setPresidenteDeMesa(escuelaId, mesaId, presidenteDeMesaEmail);
+    Distrito(distritoMapping[distritoId].distritoAddress).setDelegadoDeDistrito(delegadoDeDistrito);
   }
+
+  function setDelegadoDeEscuela(bytes32 delegadoDistrito, bytes32 delegadoEscuela, uint distritoId, uint idEscuela) public {
+    require(existsDistrito(distritoId));
+    Distrito(distritoMapping[distritoId].distritoAddress).setDelegadoDeEscuela(delegadoDistrito, delegadoEscuela, idEscuela);
+  }
+  
+  function setPresidenteDeMesa(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+    require(existsDistrito(distritoId));
+    Distrito(distritoMapping[distritoId].distritoAddress).setPresidenteDeMesa(delegadoEscuela, escuelaId, mesaId, presidenteDeMesaEmail);
+  }
+
+  function setVicepresidenteDeMesa(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
+    require(existsDistrito(distritoId));
+    Distrito(distritoMapping[distritoId].distritoAddress).setVicepresidenteDeMesa(delegadoEscuela, escuelaId, mesaId, presidenteDeMesaEmail);
+  }
+
 }
