@@ -27,7 +27,6 @@ export function getEmail(cookie){
   return cookie.load("current_user_email")
 }
 
-
 export function setCategory(cookie, category){
   cookie.save("current_user_category", category, {path : "/"})
 }
@@ -58,4 +57,16 @@ export function isDelegadoDeDistrito(cookie){
 
 export function isDelegadoDeEscuela(cookie){
   return cookie.load("current_user_category") === '2'
+}
+
+export function isPresidenteDeMesa(cookie){
+  return cookie.load("current_user_category") === '4'
+}
+
+export function isFiscalDeMesa(cookie){
+  return cookie.load("current_user_category") === '6'
+}
+
+export function canLoadMesaUser(cookie){
+  return isPresidenteDeMesa(cookie) || isFiscalDeMesa(cookie)
 }
