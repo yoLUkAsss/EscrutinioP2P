@@ -1,26 +1,40 @@
 import React, {Component} from 'react'
 import {Table} from 'semantic-ui-react'
 
+//props : itemsHeader, son los que aparecen en el header de la tabla
+//props : itemsBody, son los que aparecen en cada row
 class CustomTable extends Component{
   render(){
     return (
       <Table>
         <Table.Header>
           <Table.Row>
-              <Table.HeaderCell>Candidato</Table.HeaderCell>
-            {["c1", "c2"].map((item, id) =>
-                (<Table.HeaderCell key={id}>{item}</Table.HeaderCell>)
-            )}
+            {
+              this.props.itemsHeader.map((ih, id) => {
+                return (<Table.HeaderCell key={id}>{ih}</Table.HeaderCell>)
+              })
+            }
           </Table.Row>
         </Table.Header>
         <Table.Body>
+          {
+            this.props.itemsBody.map((item, idItem) => {
+              return (
+                <Table.Row key={idItem}>
+                  {
+                    Object.values(item).map((value, idValue) => {
+                      return (
+                        <Table.Cell key={idValue}>{value}</Table.Cell>
+                      )
+                    })
+                  }
+                </Table.Row>
+              )
+            })
+          }
           <Table.Row>
-            <Table.Cell>Conteo parcial</Table.Cell>
-            {["c1","c2"].map((item, id) =>
-              (<Table.HeaderCell key={id}>{0}</Table.HeaderCell>)
-            )}
           </Table.Row>
-          </Table.Body>
+        </Table.Body>
       </Table>
     );
   }
