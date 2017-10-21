@@ -1,47 +1,47 @@
 pragma solidity ^0.4.11;
 
-import "./MesaCRUD.sol";
+import "./Escuela.sol";
 
 contract Distrito {
   address owner;
-  uint[] mesaCRUDIds;
-  uint lastMesaCRUDId;
-  mapping (uint => MesaCRUDStruct) mesaCRUDMapping;
+  uint[] escuelaIds;
+  uint lastEscuelaId;
+  mapping (uint => EscuelaStruct) escuelaMapping;
   bytes32 delegadoDeDistritoAsignado;
-  struct MesaCRUDStruct {
+  struct EscuelaStruct {
     uint id;
-    address mesaCRUDAddress;
+    address escuelaAddress;
     uint index;
-    bool isMesaCRUD;
+    bool isEscuela;
   }
   function Distrito() public {
     owner = msg.sender;
   }
-  function createMesaCRUD() public {
-    lastMesaCRUDId += 1;
-    mesaCRUDMapping[lastMesaCRUDId] = MesaCRUDStruct(lastMesaCRUDId, new MesaCRUD(), mesaCRUDIds.length, true);
-    mesaCRUDIds.push(lastMesaCRUDId);
+  function createEscuela() public {
+    lastEscuelaId += 1;
+    escuelaMapping[lastEscuelaId] = EscuelaStruct(lastEscuelaId, new Escuela(), escuelaIds.length, true);
+    escuelaIds.push(lastEscuelaId);
   }
-  function getMesaCRUD(uint id) public constant returns(address){
-    require(existsMesaCRUD(id));
-    return mesaCRUDMapping[id].mesaCRUDAddress;
+  function getEscuela(uint id) public constant returns(address){
+    require(existsEscuela(id));
+    return escuelaMapping[id].escuelaAddress;
   }
-  function existsMesaCRUD(uint id) public constant returns(bool){
-    return mesaCRUDIds.length != 0 && mesaCRUDMapping[id].isMesaCRUD;
+  function existsEscuela(uint id) public constant returns(bool){
+    return escuelaIds.length != 0 && escuelaMapping[id].isEscuela;
   }
-  function getMesasCRUD() public constant returns(uint[]){
-    return mesaCRUDIds;
+  function getEscuelas() public constant returns(uint[]){
+    return escuelaIds;
   }
-  function deleteMesaCRUD(uint id) public{
-    require(existsMesaCRUD(id));
-    uint toDeleteIndex = mesaCRUDMapping[id].index;
-    uint toMoveIndex = mesaCRUDIds[mesaCRUDIds.length - 1];
-    mesaCRUDIds[toDeleteIndex] = toMoveIndex;
-    mesaCRUDMapping[toMoveIndex].index = toDeleteIndex;
-    MesaCRUD(mesaCRUDMapping[id].mesaCRUDAddress).destroy(owner);
-    delete mesaCRUDMapping[id];
-    delete mesaCRUDIds[mesaCRUDIds.length - 1];
-    mesaCRUDIds.length--;
+  function deleteEscuela(uint id) public{
+    require(existsEscuela(id));
+    uint toDeleteIndex = escuelaMapping[id].index;
+    uint toMoveIndex = escuelaIds[escuelaIds.length - 1];
+    escuelaIds[toDeleteIndex] = toMoveIndex;
+    escuelaMapping[toMoveIndex].index = toDeleteIndex;
+    Escuela(escuelaMapping[id].escuelaAddress).destroy(owner);
+    delete escuelaMapping[id];
+    delete escuelaIds[escuelaIds.length - 1];
+    escuelaIds.length--;
   }
   function destroy(address parent) public {
     require(owner == parent);
@@ -49,24 +49,24 @@ contract Distrito {
   }
   //////////////////////////////////////////////////
   function createMesa(uint escuelaId, bytes32[] candidates) public {
-    require(existsMesaCRUD(escuelaId));
-    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).createMesa(candidates);
+    require(existsEscuela(escuelaId));
+    Escuela(escuelaMapping[escuelaId].escuelaAddress).createMesa(candidates);
   }
 
   //////////////////////////////////////////////////
   function setFiscal(uint escuelaId, uint mesaId, bytes32 fiscalEmail) public {
-    require(existsMesaCRUD(escuelaId));
-    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setFiscal(mesaId, fiscalEmail);
+    require(existsEscuela(escuelaId));
+    Escuela(escuelaMapping[escuelaId].escuelaAddress).setFiscal(mesaId, fiscalEmail);
   }
 
   function setPresidenteDeMesa(bytes32 delegadoEscuela, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
-    require(existsMesaCRUD(escuelaId));
-    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setPresidenteDeMesa(delegadoEscuela, mesaId, presidenteDeMesaEmail);
+    require(existsEscuela(escuelaId));
+    Escuela(escuelaMapping[escuelaId].escuelaAddress).setPresidenteDeMesa(delegadoEscuela, mesaId, presidenteDeMesaEmail);
   }
 
   function setVicepresidenteDeMesa(bytes32 delegadoEscuela, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
-    require(existsMesaCRUD(escuelaId));
-    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setVicepresidenteDeMesa(delegadoEscuela, mesaId, presidenteDeMesaEmail);
+    require(existsEscuela(escuelaId));
+    Escuela(escuelaMapping[escuelaId].escuelaAddress).setVicepresidenteDeMesa(delegadoEscuela, mesaId, presidenteDeMesaEmail);
   }
 
   function setDelegadoDeDistrito(bytes32 newDelegado) public {
@@ -76,7 +76,7 @@ contract Distrito {
 
   function setDelegadoDeEscuela(bytes32 delegadoDistrito, bytes32 delegadoEscuela, uint escuelaId) public {
     require(delegadoDeDistritoAsignado == delegadoDistrito);
-    MesaCRUD(mesaCRUDMapping[escuelaId].mesaCRUDAddress).setDelegadoDeEscuela(delegadoEscuela);
+    Escuela(escuelaMapping[escuelaId].escuelaAddress).setDelegadoDeEscuela(delegadoEscuela);
   }
 
 }

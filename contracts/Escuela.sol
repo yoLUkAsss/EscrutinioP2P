@@ -2,7 +2,7 @@ pragma solidity ^0.4.11;
 
 import "./Mesa.sol";
 
-contract MesaCRUD {
+contract Escuela {
   address owner;
   uint[] mesaIds;
   uint lastId;
@@ -14,7 +14,7 @@ contract MesaCRUD {
     bool isMesa;
   }
   mapping (uint => MesaStruct) mesaMapping;
-  function MesaCRUD() public{
+  function Escuela() public{
     owner = msg.sender;
   }
   function createMesa(bytes32[] inputCandidates) public{

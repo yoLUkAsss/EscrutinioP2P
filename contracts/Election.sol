@@ -7,7 +7,6 @@ contract Election {
     address owner;
     address distritoCRUDaddress;
     address userCRUDaddress;
-    address mesaCRUDaddress;
 
     mapping (bytes32 => bytes32) apoderados;
 

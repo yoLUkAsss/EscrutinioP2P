@@ -46,7 +46,7 @@ contract DistritoCRUD {
   ///////////////////////////////////////////////
   function createEscuela(uint distritoId) public {
     require(existsDistrito(distritoId));
-    Distrito(distritoMapping[distritoId].distritoAddress).createMesaCRUD();
+    Distrito(distritoMapping[distritoId].distritoAddress).createEscuela();
   }
 
   function createMesa(uint distritoId, uint escuelaId, bytes32[] candidates) public {
@@ -68,7 +68,7 @@ contract DistritoCRUD {
     require(existsDistrito(distritoId));
     Distrito(distritoMapping[distritoId].distritoAddress).setDelegadoDeEscuela(delegadoDistrito, delegadoEscuela, idEscuela);
   }
-  
+
   function setPresidenteDeMesa(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
     require(existsDistrito(distritoId));
     Distrito(distritoMapping[distritoId].distritoAddress).setPresidenteDeMesa(delegadoEscuela, escuelaId, mesaId, presidenteDeMesaEmail);
