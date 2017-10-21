@@ -65,11 +65,3 @@ class RDLF extends Component {
 }
 
 export default RDLF
-
-//con iconos
-// <Button fluid icon onClick={this.handleDeleteItem(idItem)}>
-//   <Icon name='remove'/>
-// </Button>
-// <Button fluid icon onClick={this.handleAddItem}>
-//   <Icon name='plus'/>
-// </Button>
