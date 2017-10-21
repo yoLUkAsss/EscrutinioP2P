@@ -19,30 +19,35 @@ contract('Escuela', function(accounts) {
 
   it("create an Mesa Contract should add a new mesa into Escuela.", async () => {
     let escuelaInstance = await Escuela.deployed()
-    let tx = await escuelaInstance.createMesa([], "", fromObject)
-    let exists = await escuelaInstance.existsMesa.call(getId(tx))
+    await escuelaInstance.createMesa([], fromObject)
+    let mesas = await escuelaInstance.getMesas.call(fromObject)
+    let mesaId = mesas[mesas.length - 1].toNumber()
+    let exists = await escuelaInstance.existsMesa.call(mesaId)
     assert.ok(exists, "Exists mesa")
-    await escuelaInstance.deleteMesa(getId(tx), fromObject)
+    await escuelaInstance.deleteMesa(mesaId, fromObject)
   })
 
   it("get an existent Mesa should returns its address.", async () => {
     let escuelaInstance = await Escuela.deployed()
-    let tx = await escuelaInstance.createMesa([], "", fromObject)
-    let mesa = await escuelaInstance.getMesa.call(getId(tx), fromObject)
+    await escuelaInstance.createMesa([], fromObject)
+    let mesas = await escuelaInstance.getMesas.call(fromObject)
+    let mesaId = mesas[mesas.length - 1].toNumber()
+    let mesa = await escuelaInstance.getMesa.call(mesaId, fromObject)
     let zero = "0x0000000000000000000000000000000000000000"
     assert.ok(mesa !== zero, "has address")
-    await escuelaInstance.deleteMesa(getId(tx), fromObject)
+    await escuelaInstance.deleteMesa(mesaId, fromObject)
   })
 
   it("delete an mesa by id decrease the length of mesas", async () => {
     let escuelaInstance = await Escuela.deployed()
-    let txcreate = await escuelaInstance.createMesa([], "", fromObject)
-    let exists = await escuelaInstance.existsMesa.call(getId(txcreate), fromObject)
+    await escuelaInstance.createMesa([], fromObject)
+    let mesas = await escuelaInstance.getMesas.call(fromObject)
+    let mesaId = mesas[mesas.length - 1].toNumber()
+    let exists = await escuelaInstance.existsMesa.call(mesaId, fromObject)
     assert.ok(exists, "Exists mesa created")
-    let txdelete = await escuelaInstance.deleteMesa(getId(txcreate), fromObject)
-    let notexists = await escuelaInstance.existsMesa.call(getId(txcreate), fromObject)
+    await escuelaInstance.deleteMesa(mesaId, fromObject)
+    let notexists = await escuelaInstance.existsMesa.call(mesaId, fromObject)
     assert.ok(!notexists, "Not exists mesa deleted")
-    assert.equal(getId(txcreate), getId(txdelete), "ids are equals")
   })
 
 })
