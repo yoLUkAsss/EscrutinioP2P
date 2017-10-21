@@ -52,7 +52,7 @@ class SetDelegadoDeDistrito extends Component {
       let electionInstance = await election.deployed()
       try{
 
-        await electionInstance.setDelegadoDeDistrito.sendTransaction( 
+        await electionInstance.setDelegadoDeDistrito.sendTransaction(
             currentUser.getEmail(cookie),
             this.state.correoDelegado,
             this.state.idDelDistrito,
@@ -65,7 +65,8 @@ class SetDelegadoDeDistrito extends Component {
         utils.showError(this.msg, "Fallo en la :" + error)
       }
     }
-
+    handleDelegado = (event) => { this.setState({ correoDelegado : event.target.value }) }
+    handleDistrito = (evt) => {this.setState({ idDelDistrito : evt.target.value })}
     render () {
         return (
             <Center>
@@ -81,14 +82,14 @@ class SetDelegadoDeDistrito extends Component {
                         label='Delegado'
                         placeholder='Correo del Delegado'
                         value={this.state.correoDelegado}
-                        onChange={ (event) => { this.setState({ correoDelegado : event.target.value }) } }
+                        onChange={this.handleDelegado.bind(this)}
                     />
                     <Form.Input
                         type="number"
                         label='Distrito'
                         placeholder="ID del Distrito"
                         value={this.state.idDelDistrito}
-                        onChange={(evt) => {this.setState({ idDelDistrito : evt.target.value })}}
+                        onChange={this.handleDistrito.bind(this)}
                     />
                     <Button onClick={this.handleSetDelegadoDeDistrito.bind(this)}>
                         Asignar

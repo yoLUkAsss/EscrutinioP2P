@@ -75,6 +75,10 @@ class CreateDistrito extends Component {
       }
     }
 
+    handleEscuelas = (event) => {
+      this.setState({ numberOfEscuelas : event.target.value })
+    }
+
     render () {
         return (
             <Center>
@@ -89,10 +93,7 @@ class CreateDistrito extends Component {
                         label='cantidad de escuelas'
                         placeholder='cantidad de escuelas'
                         value={this.state.numberOfEscuelas}
-                        onChange={ (event) => {
-                          this.setState({ numberOfEscuelas : event.target.value })
-                          }
-                        }
+                        onChange={this.handleEscuelas.bind(this)}
                     />
                     <Button onClick={this.handleCreateDistrito.bind(this)}>
                         Crear Distrito

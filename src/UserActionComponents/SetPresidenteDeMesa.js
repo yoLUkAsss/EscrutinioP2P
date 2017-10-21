@@ -60,7 +60,11 @@ class SetPresidenteDeMesa extends Component {
         utils.showError(this.msg, "Fallo en el seteo del presidente:" + error)
       }
     }
-
+    handleCandidato = (event) => { this.setState({ candidato : event.target.value }) }
+    handleDistrito = (event) => { this.setState({ distritoId : event.target.value }) }
+    handleEscuela = (event) => { this.setState({ escuelaId : event.target.value }) }
+    handleMesa = (event) => { this.setState({ mesaId : event.target.value }) }
+    handlePresidente = (event) => { this.setState({ email : event.target.value }) }
     render () {
         return (
             <Center>
@@ -75,10 +79,7 @@ class SetPresidenteDeMesa extends Component {
                   label='distrito id'
                   placeholder='distrito id'
                   value={this.state.distritoId}
-                  onChange={ (event) => {
-                    this.setState({ distritoId : event.target.value })
-                    }
-                  }
+                  onChange={this.handleDistrito.bind(this)}
                 />
                 <Form.Input
                   required
@@ -86,10 +87,7 @@ class SetPresidenteDeMesa extends Component {
                   label='escuela id'
                   placeholder='escuela id'
                   value={this.state.escuelaId}
-                  onChange={ (event) => {
-                    this.setState({ escuelaId : event.target.value })
-                    }
-                  }
+                  onChange={this.handleEscuela.bind(this)}
                 />
                 <Form.Input
                   required
@@ -97,10 +95,7 @@ class SetPresidenteDeMesa extends Component {
                   label='mesa id'
                   placeholder='mesa id'
                   value={this.state.mesaId}
-                  onChange={ (event) => {
-                    this.setState({ mesaId : event.target.value })
-                    }
-                  }
+                  onChange={this.handleMesa.bind(this)}
                 />
                 <Form.Input
                     required
@@ -109,7 +104,7 @@ class SetPresidenteDeMesa extends Component {
                     label='Email'
                     placeholder='Email'
                     value={this.state.email}
-                    onChange={ (event) => { this.setState({ email : event.target.value }) } }
+                    onChange={this.handlePresidente.bind(this)}
                 />
                     <Button onClick={this.handleSetPresidenteDeMesa.bind(this)}>
                         Asignar

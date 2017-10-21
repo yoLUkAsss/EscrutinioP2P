@@ -62,6 +62,11 @@ class SetFiscal extends Component {
       }
     }
 
+    handleFiscal = (event) => { this.setState({ email : event.target.value }) }
+    handleCandidato = (event) => { this.setState({ candidato : event.target.value }) }
+    handleDistrito = (event) => { this.setState({ distritoId : event.target.value }) }
+    handleEscuela = (event) => { this.setState({ escuelaId : event.target.value }) }
+    handleMesa = (event) => { this.setState({ mesaId : event.target.value }) }
     render () {
         return (
           <Center>
@@ -77,7 +82,7 @@ class SetFiscal extends Component {
                         label='Fiscal'
                         placeholder='Correo del Fiscal'
                         value={this.state.email}
-                        onChange={ (event) => { this.setState({ email : event.target.value }) } }
+                        onChange={this.handleFiscal.bind(this)}
                     />
                     <Form.Input
                         required
@@ -86,7 +91,7 @@ class SetFiscal extends Component {
                         label='Candidato'
                         placeholder='Partido Policito asociado'
                         value={this.state.candidato}
-                        onChange={ (event) => { this.setState({ candidato : event.target.value }) } }
+                        onChange={this.handleCandidato.bind(this)}
                     />
                     <Form.Input
                       required
@@ -94,10 +99,7 @@ class SetFiscal extends Component {
                       label='distrito id'
                       placeholder='distrito id'
                       value={this.state.distritoId}
-                      onChange={ (event) => {
-                        this.setState({ distritoId : event.target.value })
-                        }
-                      }
+                      onChange={this.handleDistrito.bind(this)}
                     />
                     <Form.Input
                       required
@@ -105,10 +107,7 @@ class SetFiscal extends Component {
                       label='escuela id'
                       placeholder='escuela id'
                       value={this.state.escuelaId}
-                      onChange={ (event) => {
-                        this.setState({ escuelaId : event.target.value })
-                        }
-                      }
+                      onChange={this.handleEscuela.bind(this)}
                     />
                     <Form.Input
                       required
@@ -116,10 +115,7 @@ class SetFiscal extends Component {
                       label='mesa id'
                       placeholder='mesa id'
                       value={this.state.mesaId}
-                      onChange={ (event) => {
-                        this.setState({ mesaId : event.target.value })
-                        }
-                      }
+                      onChange={this.handleMesa.bind(this)}
                     />
                     <Button onClick={this.handleSetFiscal.bind(this)}>
                         Setear fiscal

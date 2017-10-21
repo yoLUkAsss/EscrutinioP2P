@@ -6,6 +6,7 @@ import { Container, Button, Form } from 'semantic-ui-react'
 import Center from 'react-center'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
+import cookie from 'react-cookies'
 /**
  * Components
  */
@@ -17,7 +18,7 @@ import RefactoredDLF from '../utils/RDLF.js'
 import contract from 'truffle-contract'
 import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
-
+import * as currentUser from '../utils/user_session.js'
 
 /**
  * Contracts
@@ -28,8 +29,6 @@ class CreateElection extends Component {
     constructor() {
         super()
         this.state = {
-            email : "",
-            password : "",
             candidates : [],
             web3 : null
         }
@@ -47,7 +46,6 @@ class CreateElection extends Component {
 
     async handleCreateElection(event) {
       event.preventDefault()
-      //Variables
       let fromObject
       let candidateList
       const election = contract(ElectionContract)
@@ -60,15 +58,14 @@ class CreateElection extends Component {
         candidateList = this.state.candidates.map( candidate => {
           return candidate.name
         })
-        await electionInstance.createAutoridadElectoral.sendTransaction(this.state.email, this.state.password, fromObject)
-        await electionInstance.createElection.sendTransaction(this.state.email, candidateList, fromObject)
-        utils.showSuccess(this.msg, "Autoridad Electoral creada para la eleccion")
-        this.props.history.push("/")
+        await electionInstance.setAutoridadElectoral.sendTransaction(currentUser.getEmail(cookie), fromObject)
+        await electionInstance.createElection.sendTransaction(currentUser.getEmail(cookie), candidateList, fromObject)
+        utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
       } catch(error){
-        utils.showError(this.msg, "Fallo en el registro:" + error)
+        console.log(error)
+        utils.showError(this.msg, "Fallo en la creacion de la eleccion")
       }
     }
-
     handleNewCandidates = (newCandidates) => {
       this.setState({candidates : newCandidates})
     }
@@ -79,32 +76,8 @@ class CreateElection extends Component {
               <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
                 <Container>
-                  <ComponentTitle title='Crear Autoridad Electoral'/>
+                  <ComponentTitle title='Crear Eleccion con los siguientes candidatos'/>
                   <Form>
-                    <Form.Input
-                        required
-                        inline
-                        type='email'
-                        label='Email'
-                        placeholder='Email'
-                        value={this.state.email}
-                        onChange={ (event) => {
-                          this.setState({ email : event.target.value })
-                          }
-                        }
-                    />
-                    <Form.Input
-                        required
-                        inline
-                        type='password'
-                        label='Contraseña'
-                        placeholder='Contraseña'
-                        value={this.state.password}
-                        onChange={ (event) => {
-                          this.setState({ password : event.target.value })
-                        }
-                      }
-                    />
                     <RefactoredDLF
                       title='Candidatos'
                       type='text'

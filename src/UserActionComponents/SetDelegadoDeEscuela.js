@@ -53,7 +53,7 @@ class SetDelegadoDeEscuela extends Component {
       let electionInstance = await election.deployed()
       try{
 
-        await electionInstance.setDelegadoDeEscuela.sendTransaction( 
+        await electionInstance.setDelegadoDeEscuela.sendTransaction(
             currentUser.getEmail(cookie),
             this.state.correoDelegado,
             this.state.idDelDistrito,
@@ -67,7 +67,9 @@ class SetDelegadoDeEscuela extends Component {
         utils.showError(this.msg, "Fallo en la :" + error)
       }
     }
-
+    handleDelegadoEscuela = (event) => { this.setState({ correoDelegado : event.target.value }) }
+    handleDistrito = (evt) => {this.setState({ idDelDistrito : evt.target.value })}
+    handleEscuela = (evt) => {this.setState({ idDeLaEscuela : evt.target.value })}
     render () {
         return (
             <Center>
@@ -83,21 +85,21 @@ class SetDelegadoDeEscuela extends Component {
                         label='Delegado'
                         placeholder='Correo del Delegado'
                         value={this.state.correoDelegado}
-                        onChange={ (event) => { this.setState({ correoDelegado : event.target.value }) } }
+                        onChange={this.handleDelegadoEscuela.bind(this)}
                     />
                     <Form.Input
                         type="number"
                         label='Distrito'
                         placeholder="ID del Distrito"
                         value={this.state.idDelDistrito}
-                        onChange={(evt) => {this.setState({ idDelDistrito : evt.target.value })}}
+                        onChange={this.handleDistrito.bind(this)}
                     />
                     <Form.Input
                         type="number"
                         label='Escuela'
                         placeholder="ID de la escuela"
                         value={this.state.idDeLaEscuela}
-                        onChange={(evt) => {this.setState({ idDeLaEscuela : evt.target.value })}}
+                        onChange={this.handleEscuela.bind(this)}
                     />
                     <Button onClick={this.handleSetDelegadoDeEscuela.bind(this)}>
                         Asignar

@@ -59,6 +59,8 @@ class SetFiscal extends Component {
       }
     }
 
+    handleCandidato = (event) => { this.setState({ candidato : event.target.value }) }
+    handleApoderado = (event) => { this.setState({ email : event.target.value }) }
     render () {
         return (
             <Center>
@@ -74,7 +76,7 @@ class SetFiscal extends Component {
                         label='Apoderado'
                         placeholder='Correo del Apoderado'
                         value={this.state.email}
-                        onChange={ (event) => { this.setState({ email : event.target.value }) } }
+                        onChange={this.handleApoderado.bind(this)}
                     />
                     <Form.Input
                         required
@@ -83,7 +85,7 @@ class SetFiscal extends Component {
                         label='Candidato'
                         placeholder='Partido Policito asociado'
                         value={this.state.candidato}
-                        onChange={ (event) => { this.setState({ candidato : event.target.value }) } }
+                        onChange={this.handleCandidato.bind(this)}
                     />
                     <Button onClick={this.handleSetApoderado.bind(this)}>
                         Asignar

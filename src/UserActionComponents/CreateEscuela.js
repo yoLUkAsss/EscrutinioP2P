@@ -71,6 +71,16 @@ class CreateEscuela extends Component {
       }
     }
 
+    handleMesas = (event) => {
+      this.setState({ cantidadMesas : event.target.value })
+    }
+    handleEscuelas = (event) => {
+      this.setState({ escuelaId : event.target.value })
+    }
+    handleDistritos = (event) => {
+      this.setState({ distritoId : event.target.value })
+    }
+
     render () {
         return (
             <Center>
@@ -85,10 +95,7 @@ class CreateEscuela extends Component {
                         label='distrito id'
                         placeholder='distrito id'
                         value={this.state.distritoId}
-                        onChange={ (event) => {
-                          this.setState({ distritoId : event.target.value })
-                          }
-                        }
+                        onChange={this.handleDistritos.bind(this)}
                     />
                     <Form.Input
                         required
@@ -96,10 +103,7 @@ class CreateEscuela extends Component {
                         label='escuela id'
                         placeholder='escuela id'
                         value={this.state.escuelaId}
-                        onChange={ (event) => {
-                          this.setState({ escuelaId : event.target.value })
-                          }
-                        }
+                        onChange={this.handleEscuelas.bind(this)}
                     />
                     <Form.Input
                         required
@@ -107,10 +111,7 @@ class CreateEscuela extends Component {
                         label='cantidad de mesas'
                         placeholder='cantidad de mesas'
                         value={this.state.cantidadMesas}
-                        onChange={ (event) => {
-                          this.setState({ cantidadMesas : event.target.value })
-                          }
-                        }
+                        onChange={this.handleMesas.bind(this)}
                     />
                     <Button onClick={this.handleCreateEscuela.bind(this)}>
                         Crear Mesas

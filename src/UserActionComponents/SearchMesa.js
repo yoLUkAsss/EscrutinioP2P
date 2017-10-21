@@ -39,6 +39,12 @@ class SearchMesa extends Component {
       this.props.history.push(this.props.match.url + "/" + this.state.distritoId + "/" + this.state.escuelaId + "/" + this.state.mesaId)
     }
 
+    handleMesa = (evt) => {this.setState({ mesaId : evt.target.value })}
+
+    handleEscuela = (evt) => {this.setState({ escuelaId : evt.target.value })}
+
+    handleDistrito = (evt) => {this.setState({ distritoId : evt.target.value })}
+
     render () {
       return (
         <Container>
@@ -50,21 +56,21 @@ class SearchMesa extends Component {
                     label='id del distrito'
                     placeholder="id del distrito"
                     value={this.state.distritoId}
-                    onChange={(evt) => {this.setState({ distritoId : evt.target.value })}}
+                    onChange={this.handleDistrito.bind(this)}
                 />
                 <Form.Input
                     type="number"
                     label='id de la escuela'
                     placeholder="id de la escuela"
                     value={this.state.escuelaId}
-                    onChange={(evt) => {this.setState({ escuelaId : evt.target.value })}}
+                    onChange={this.handleEscuela.bind(this)}
                 />
                 <Form.Input
                     type="number"
                     label='id de la Mesa'
                     placeholder="id de la Mesa"
                     value={this.state.mesaId}
-                    onChange={(evt) => {this.setState({ mesaId : evt.target.value })}}
+                    onChange={this.handleMesa.bind(this)}
                 />
               <Form.Button content='Buscar' onClick={this.handleSearchMesa.bind(this)}/>
           </Form>
