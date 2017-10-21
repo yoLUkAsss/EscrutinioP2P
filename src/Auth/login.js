@@ -49,6 +49,10 @@ class Login extends Component {
       })
     }
 
+    handleEmail = (evt) => {this.setState({ email : evt.target.value })}
+
+    handlePassword = (event) => { this.setState({ password : event.target.value }) }
+
     handleLogin = async (event) => {
       const userElection = contract(UserElectionCRUDcontract)
       const user = contract(UserContract)
@@ -90,7 +94,7 @@ class Login extends Component {
                       label='Email'
                       placeholder='fiscal@email ex..'
                       value={this.state.email}
-                      onChange={(evt) => {this.setState({ email : evt.target.value })}}
+                      onChange={this.handleEmail.bind(this)}
                   />
                   <Form.Input
                       required
@@ -99,7 +103,7 @@ class Login extends Component {
                       label='Contraseña'
                       placeholder='Contraseña'
                       value={this.state.password}
-                      onChange={ (event) => { this.setState({ password : event.target.value }) } }
+                      onChange={this.handlePassword.bind(this)}
                   />
                   <Button onClick={this.handleLogin.bind(this)}>Iniciar Sesion</Button>
               </Form>

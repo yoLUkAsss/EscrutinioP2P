@@ -57,10 +57,8 @@ class LogOutItem extends Component {
       try{
         let userInstance = await user.at(currentUser.getAddress(cookie))
         await userInstance.logout.sendTransaction(fromObject)
-        currentUser.clean(cookie)
-        utils.showSuccess(this.msg, "Cierre de sesion exitoso")
-        //cambia la url
-        this.props.history.push("/")
+        await currentUser.clean(cookie)
+        utils.showSuccess(this.msg, "Cierre de sesion exitoso", () => {this.props.history.push("/")})
       } catch(err){
         utils.showError(this.msg, "Fallo en el cierre de session")
       }

@@ -50,7 +50,7 @@ class Escuela extends Component {
         let distritoCRUDInstance = await distritoCRUD.deployed()
         let distritoAddress = await distritoCRUDInstance.getDistrito.call(distritoId, fromObject)
         let distritoInstance = await distrito.at(distritoAddress)
-        let existsEscuela = await distritoInstance.existsMesaCRUD.call(escuelaId, fromObject)
+        let existsEscuela = await distritoInstance.existsEscuela.call(escuelaId, fromObject)
         if(!existsEscuela){
           this.setState({isEscuelaInvalid : true})
         }
@@ -70,6 +70,8 @@ class Escuela extends Component {
       }
     }
 
+    handleMesa = (evt) => {this.setState({ mesaId : evt.target.value })}
+
     renderValidEscuela(){
       return (
         <Container>
@@ -81,7 +83,7 @@ class Escuela extends Component {
               label='id de la mesa'
               placeholder="id de la mesa"
               value={this.state.mesaId}
-              onChange={(evt) => {this.setState({ mesaId : evt.target.value })}}
+              onChange={this.handleMesa.bind(this)}
             />
           <Form.Button content='Buscar' onClick={this.handleSearchMesa.bind(this)}/>
         </Form>

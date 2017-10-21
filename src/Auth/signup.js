@@ -40,6 +40,14 @@ class Signup extends Component {
       })
     }
 
+    handleEmail = (event) => {
+      this.setState({ email : event.target.value })
+    }
+
+    handlePassword = (event) => {
+      this.setState({ password : event.target.value })
+    }
+
     handleRegister = (event) => {
       event.preventDefault()
       const userElection = contract(UserElectionCRUD)
@@ -52,8 +60,7 @@ class Signup extends Component {
         {from:accounts[0], gas : 3000000})
         }).then( (result) => {
           console.log("Transaction Sent")
-          utils.showSuccess(this.msg, "Registro exitoso")
-          this.props.history.push("/")
+          utils.showSuccess(this.msg, "Registro exitoso", ()=>{this.props.history.push("/")})
         }).catch( (error) => {
           console.log("Error while executing transaction")
           console.log("ERROR: " + JSON.stringify(error, undefined, 2))
@@ -77,7 +84,7 @@ class Signup extends Component {
                         label='Email'
                         placeholder='Email'
                         value={this.state.email}
-                        onChange={ (event) => { this.setState({ email : event.target.value }) } }
+                        onChange={this.handleEmail.bind(this)}
                     />
                     <Form.Input
                         required
@@ -86,7 +93,7 @@ class Signup extends Component {
                         label='Contraseña'
                         placeholder='Contraseña'
                         value={this.state.password}
-                        onChange={ (event) => { this.setState({ password : event.target.value }) } }
+                        onChange={this.handlePassword.bind(this)}
                     />
                     <Button onClick={this.handleRegister}>
                         Registrar

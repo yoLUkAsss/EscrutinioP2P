@@ -10,11 +10,12 @@ import contract from 'truffle-contract'
 import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
+import CustomTable from '../utils/CustomTable.js'
 
 // Contracts
 import DistritoCRUDContract from '../../build/contracts/DistritoCRUD.json'
 import DistritoContract from '../../build/contracts/Distrito.json'
-import MesaCRUDContract from '../../build/contracts/MesaCRUD.json'
+import EscuelaContract from '../../build/contracts/Escuela.json'
 import MesaContract from '../../build/contracts/Mesa.json'
 
 //ver si se puede usar RefactoredDLF
@@ -48,6 +49,7 @@ class Mesa extends Component {
     ////////////////////////////////////////////////////////////////////////////////
     //Manejan los cambios en los conteos
     handleCandidatoCountsChange = (idx) => (evt) => {
+      evt.preventDefault()
       const newCandidatos = this.state.candidatos.map((candidato, pidx) => {
         if (idx !== pidx) return candidato
         return { ...candidato, counts: evt.target.value }
@@ -58,7 +60,6 @@ class Mesa extends Component {
     getMesaId = () => {
       return this.props.match.params.distritoId +""+ this.props.match.params.escuelaId +""+ this.props.match.params.mesaId
     }
-
 
     //carga los datos de un participante
     handleLoadMesa = async (event) => {
@@ -88,11 +89,11 @@ class Mesa extends Component {
     handleGetMesa = async (cweb3, distritoId, escuelaId, mesaId) => {
       const distritoCRUD = contract(DistritoCRUDContract)
       const distrito = contract(DistritoContract)
-      const mesaCRUD = contract(MesaCRUDContract)
+      const escuela = contract(EscuelaContract)
       const mesa = contract(MesaContract)
       distritoCRUD.setProvider(cweb3.currentProvider)
       distrito.setProvider(cweb3.currentProvider)
-      mesaCRUD.setProvider(cweb3.currentProvider)
+      escuela.setProvider(cweb3.currentProvider)
       mesa.setProvider(cweb3.currentProvider)
       let fromObject
       cweb3.eth.getAccounts((error, accounts) => {
@@ -102,9 +103,9 @@ class Mesa extends Component {
         let distritoCRUDInstance = await distritoCRUD.deployed()
         let distritoAddress = await distritoCRUDInstance.getDistrito.call(distritoId, fromObject)
         let distritoInstance = await distrito.at(distritoAddress)
-        let mesaCRUDAddress = await distritoInstance.getMesaCRUD.call(escuelaId, fromObject)
-        let mesaCRUDInstance = await mesaCRUD.at(mesaCRUDAddress)
-        let newMesaAddress = await mesaCRUDInstance.getMesa.call(mesaId, fromObject)
+        let escuelaAddress = await distritoInstance.getEscuela.call(escuelaId, fromObject)
+        let escuelaInstance = await escuela.at(escuelaAddress)
+        let newMesaAddress = await escuelaInstance.getMesa.call(mesaId, fromObject)
         let mesaInstance = await mesa.at(newMesaAddress)
         let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
         let candidates = []
@@ -126,7 +127,7 @@ class Mesa extends Component {
           this.setState({candidatos : candidates, mesaAddress : newMesaAddress})
           utils.showSuccess(this.msg, "Conteo total de mesa cargado correctamente")
         }).catch(error => {
-          utils.showError(this.msg, "Fallo en la carga de datos:" + error)
+          utils.showError(this.msg, "Fallo en la carga de la mesa:" + error)
           this.setState({isMesaInvalid : true})
         })
       } catch(err){
@@ -134,29 +135,84 @@ class Mesa extends Component {
       }
     }
 
-    renderValidMesa(){
+    handleCheckMesa = async (event) => {
+      event.preventDefault()
+      let fromObject
+      const mesa = contract(MesaContract)
+      mesa.setProvider(this.state.web3.currentProvider)
+      this.state.web3.eth.getAccounts((error, accounts) => {
+        fromObject = {from : accounts[0], gas : 3000000}
+      })
+      try{
+        let mesaInstance = await mesa.at(this.state.mesaAddress)
+        await mesaInstance.check.sendTransaction(currentUser.getEmail(cookie), fromObject)
+        utils.showSuccess(this.msg, "Validacion de votos correcto")
+        console.log("validacion correcta")
+      } catch(error){
+        utils.showError(this.msg, "Fallo en la validacion de votos")
+        console.log("validacion fallo")
+      }
+    }
+
+    renderMesaNotLoadable(){
       return (
         <Container>
         <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
           <Header as='h3'>Cargar Mesa: {this.getMesaId()}</Header>
             <Form>
                 <Header as='h3'>Candidatos</Header>
-                {this.state.candidatos.map((candidato, idx) => (
-                  <Form.Input
-                    type='number'
-                    key={idx}
-                    label={`Candidato: ${candidato.name}`}
-                    placeholder={`Candidato: ${idx + 1}`}
-                    value={candidato.counts}
-                    onChange={this.handleCandidatoCountsChange(idx)}
-                  />
-                ))}
-                <Button onClick={this.handleLoadMesa.bind(this)}>
-                  Cargar Mesa
-                </Button>
+                <CustomTable itemsHeader={["Candidato","Conteo"]} itemsBody={this.state.candidatos}/>
             </Form>
         </Container>
-      );
+      )
+    }
+
+    renderMesaLoadable(){
+        return (
+          <Container>
+          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+            <Header as='h3'>Cargar Mesa: {this.getMesaId()}</Header>
+              <Form>
+                  <Header as='h3'>Candidatos</Header>
+                  {
+                    this.state.candidatos.map((candidato, idx) => (
+                      <Form.Input
+                        type='number'
+                        key={idx}
+                        label={`Candidato: ${candidato.name}`}
+                        placeholder={`Candidato: ${idx + 1}`}
+                        value={candidato.counts}
+                        onChange={this.handleCandidatoCountsChange(idx)}
+                      />
+                    ))
+                  }
+                  <Button onClick={this.handleLoadMesa.bind(this)}>
+                    Cargar Mesa
+                  </Button>
+              </Form>
+              {this.renderCanCheck()}
+          </Container>
+        )
+    }
+
+    renderValidMesa(){
+      if(currentUser.canLoadMesaUser(cookie)){
+        return this.renderMesaLoadable()
+      } else{
+        return this.renderMesaNotLoadable()
+      }
+    }
+
+    renderCanCheck(){
+      if(currentUser.isPresidenteDeMesa(cookie)){
+        return (
+          <Button onClick={this.handleCheckMesa.bind(this)}>
+            Validar conteo
+          </Button>
+        )
+      } else {
+        return null
+      }
     }
 
     renderInvalidMesa(){
@@ -182,34 +238,3 @@ class Mesa extends Component {
 }
 
 export default withRouter(Mesa)
-// <RefactoredDLF
-//   title='Candidatos'
-//   type='number'
-//   placeholder='Nombre de Candidato'
-//   onChange={this.handleNewCandidates}
-//   items={this.state.candidatos}
-// />
-
-
-// let promises = candidatesList.map(async c => {
-//   let currentCandidate = cweb3.toAscii(c)
-//   if (isParticipant) {
-//     console.log("Participante valido")
-//     let result = await mesaInstance.getParticipantVotesForACandidate.call(currentUser.getEmail(cookie), currentCandidate, fromObject)
-//     count = result[1]
-//   } else {
-//     console.log("Participante no valido")
-//     count = await mesaInstance.getTotal.call(currentCandidate, fromObject)
-//   }
-//   candidates.push({"name" : currentCandidate,"counts" : count})
-//   return {"name" : cweb3.toAscii(c),"counts" : count}
-// })
-// Promise.all(promises).then(() => {
-//   utils.showSuccess(this.msg, "Conteo total de mesa cargado correctamente")
-//   this.setState({
-//     candidatos : candidates,
-//     mesaAddress : currentMesaAddress
-//   })
-// }).catch(error => {
-//   utils.showError(this.msg, "Fallo en la carga de datos:" + error)
-// })

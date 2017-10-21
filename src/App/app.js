@@ -5,7 +5,7 @@ import Home from './Home.js'
 import Login from '../Auth/login.js'
 import Signup from '../Auth/signup.js'
 import FixedNavbarComponent from './FixedNavbarComponent.js'
-import CreateElection from '../prototypes/CreateElection.js'
+import CreateElection from '../UserActionComponents/CreateElection.js'
 import SetPresidenteDeMesa from '../UserActionComponents/SetPresidenteDeMesa.js'
 import SetFiscal from '../UserActionComponents/SetFiscal.js'
 import CreateDistrito from '../UserActionComponents/CreateDistrito.js'
@@ -15,6 +15,8 @@ import SetApoderado from '../UserActionComponents/SetApoderado.js'
 import SetDelegadoDeDistrito from '../UserActionComponents/SetDelegadoDeDistrito.js'
 import SetDelegadoDeEscuela from '../UserActionComponents/SetDelegadoDeEscuela.js'
 
+import Error404 from '../ErrorComponents/Error404.js'
+import '../ErrorComponents/Error404.css'
 
 class App extends Component{
   render() {
@@ -34,6 +36,7 @@ class App extends Component{
           <Route path='/setapoderado' component={SetApoderado}/>
           <Route path='/setdelegadodistrito' component={SetDelegadoDeDistrito}/>
           <Route path='/setdelegadoescuela' component={SetDelegadoDeEscuela}/>
+          <Route component={Error404}/>
         </Switch>
     </div>
     )
