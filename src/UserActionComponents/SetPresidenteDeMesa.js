@@ -26,9 +26,9 @@ class SetPresidenteDeMesa extends Component {
     constructor() {
         super()
         this.state = {
-          distritoId : 1,
-          escuelaId : 1,
-          mesaId : 1,
+          distritoId : "",
+          escuelaId : "",
+          mesaId : "",
           email : ""
         }
     }

@@ -29,9 +29,9 @@ class CreateEscuela extends Component {
     constructor() {
         super()
         this.state = {
-          distritoId : 1,
-          escuelaId : 1,
-          cantidadMesas : 1,
+          distritoId : "",
+          escuelaId : "",
+          cantidadMesas : "",
           web3 : null
         }
     }

@@ -30,7 +30,7 @@ class CreateDistrito extends Component {
     constructor() {
         super()
         this.state = {
-            numberOfEscuelas : 1,
+            numberOfEscuelas : "",
             web3 : null
         }
     }
