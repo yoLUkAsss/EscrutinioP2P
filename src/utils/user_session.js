@@ -70,3 +70,24 @@ export function isFiscalDeMesa(cookie){
 export function canLoadMesaUser(cookie){
   return isPresidenteDeMesa(cookie) || isFiscalDeMesa(cookie)
 }
+
+export function identifyRol(cookie) {
+  switch (cookie.load("current_user_category")) {
+    case "0":
+      return "red"
+    case "1":
+      return "orange"
+    case "2":
+      return "yellow"
+    case "3":
+      return "green"
+    case "4":
+      return "blue"
+    case "5":
+      return "purple"
+    case "6":
+      return "brown"
+    default:
+      return "grey"
+  }
+}
