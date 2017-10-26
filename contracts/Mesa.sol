@@ -27,8 +27,6 @@ contract Mesa {
     // Total por candidato
     mapping (bytes32 => uint8) total;
     ////////////////////////////////////////
-
-    address owner;
     bytes32[] candidateList;
     bytes32[] participantList;
     mapping (bytes32 => ParticipantData) participantMap;
@@ -45,7 +43,6 @@ contract Mesa {
     bool public checked;
 
     function Mesa(bytes32[] inputCandidates) public{
-      owner = msg.sender;
       candidateList = inputCandidates;
       for(uint i=0;i<inputCandidates.length;i++){
         candidateMap[inputCandidates[i]] = CandidateData(true, 0);
@@ -96,10 +93,6 @@ contract Mesa {
       return presidenteDeMesaAsignado == participant;
     }
 
-    function destroy(address parent) public {
-      selfdestruct(parent);
-    }
-
     function setFiscal(bytes32 fiscal) public {
       addParticipant(fiscal, ParticipantData(true, ParticipantCategory.Fiscal));
     }
@@ -136,7 +129,7 @@ contract Mesa {
         total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
       }
     }
-    function getTotal(bytes32 candidate) constant returns (bytes32, uint8) {
+    function getTotal(bytes32 candidate) public constant returns (bytes32, uint8) {
         require(isValidCandidate(candidate));
         return (candidate, total[candidate]);
     }
