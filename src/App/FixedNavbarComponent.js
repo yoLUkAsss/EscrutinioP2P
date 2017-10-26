@@ -25,16 +25,30 @@ import CreateEscuelaItem from '../NavBarComponents/CreateEscuelaItem.js'
 
 import SearchMesaItem from '../NavBarComponents/SearchMesaItem.js'
 
+import * as currentUser from '../utils/user_session.js'
+
 class FixedNavbarComponent extends Component {
+
+  constructor() {
+      super()
+      this.state = {
+          color : "grey"
+      }
+  }
 
   componentWillMount() {
       console.log("USER: " + cookie.load("current_user_address"))
+      this.forceUpdate()
+  }
+
+  getRolIdentifier() {
+    return currentUser.identifyRol(cookie)
   }
 
   render() {
     let navbar =
       <div>
-        <Menu fixed='top' inverted>
+        <Menu fixed='top' inverted color={this.getRolIdentifier()}>
           <Menu.Item header><Link to="/">Home</Link></Menu.Item>
           <LogInItem/>
           <SignUpItem/>
