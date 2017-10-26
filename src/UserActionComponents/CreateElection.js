@@ -78,14 +78,12 @@ class CreateElection extends Component {
         let electionInstance = await election.deployed()
         let lines = this.getLines(file).filter(x => {return x !== ""})
         let ids, idDistrito, idEscuela, idMesa
-        console.log(lines)
         let promises = lines.map(line => {
           ids = this.getLine(line)
           idDistrito = ids[0]
           idEscuela = ids[1]
           idMesa = ids[2]
-          console.log(idDistrito, idEscuela, idMesa)
-          return electionInstance.createElectionByCSV.sendTransaction(idDistrito, idEscuela , idMesa, fromObject)
+          return electionInstance.createElectionByCSV.sendTransaction(currentUser.getEmail(cookie), idDistrito, idEscuela , idMesa, fromObject)
         })
         Promise.all(promises).then(() => {
           console.log("working correctly")
