@@ -35,6 +35,8 @@ class CreateElection extends Component {
             candidates : [],
             web3 : null
         }
+        this.reader = new FileReader()
+        // this.files = null
     }
 
     componentWillMount() {
@@ -48,37 +50,53 @@ class CreateElection extends Component {
     }
 
     handleFiles = files => {
-      let reader = new FileReader()
-      reader.onload = e => {
-        console.log(reader.result)
-        // this.handleReadElectionCSV(reader.result)
+      this.reader.onload = e => {
+        this.createElectionByCSV(this.reader.result)
       }
-      reader.readAsText(files[0])
+      this.reader.readAsText(files[0])
     }
 
+    //ver: https://github.com/adaltas/node-csv
     //distrito,escuela,mesa
-    handleReadElectionCSV = async (csv) => {
-      // let fromObject
-      // let candidateList
-      // const election = contract(ElectionContract)
-      // election.setProvider(this.state.web3.currentProvider)
-      // this.state.web3.eth.getAccounts((err, accs) => {
-      //   fromObject = {from:accs[0], gas : 3000000}
-      // })
-      // let electionInstance = await election.deployed()
-      let distrito
-      let escuela
-      let mesa
 
-      for(let line of csv){
-        distrito = line[0]
-        escuela = line[1]
-        mesa = line[2]
-        // electionInstance.createElectionByCSV(distrito, escuela, mesa)
-        console.log(line)
-        console.log(distrito)
-        console.log(escuela)
-        console.log(mesa)
+    getLines = (csv) => {
+      return csv.split(/r?\n/)
+    }
+
+    getLine = (line) => {
+      return line.split(/;|,/)
+    }
+
+    async createElectionByCSV(file) {
+      let fromObject
+      const election = contract(ElectionContract)
+      election.setProvider(this.state.web3.currentProvider)
+      this.state.web3.eth.getAccounts((err, accs) => {
+        fromObject = {from:accs[0], gas : 3000000}
+      })
+      try{
+        let electionInstance = await election.deployed()
+        let lines = this.getLines(file).filter(x => {return x !== ""})
+        let ids, idDistrito, idEscuela, idMesa
+        console.log(lines)
+        let promises = lines.map(line => {
+          ids = this.getLine(line)
+          idDistrito = ids[0]
+          idEscuela = ids[1]
+          idMesa = ids[2]
+          console.log(idDistrito, idEscuela, idMesa)
+          return electionInstance.createElectionByCSV.sendTransaction(idDistrito, idEscuela , idMesa, fromObject)
+        })
+        Promise.all(promises).then(() => {
+          console.log("working correctly")
+          utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
+        }).catch(err => {
+          console.log("some thing failed")
+          // throw new Error("failed create distrito/escuela/mesa")
+        })
+      } catch(error){
+        console.log(error)
+        utils.showError(this.msg, "Fallo en la creacion de la eleccion")
       }
     }
 
