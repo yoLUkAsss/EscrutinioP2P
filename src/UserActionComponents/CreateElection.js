@@ -2,11 +2,14 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
+import { Container, Button, Form, Divider, Header } from 'semantic-ui-react'
 import Center from 'react-center'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
+
+import ReactFileReader from 'react-file-reader';
+
 /**
  * Components
  */
@@ -44,6 +47,41 @@ class CreateElection extends Component {
       })
     }
 
+    handleFiles = files => {
+      let reader = new FileReader()
+      reader.onload = e => {
+        console.log(reader.result)
+        // this.handleReadElectionCSV(reader.result)
+      }
+      reader.readAsText(files[0])
+    }
+
+    //distrito,escuela,mesa
+    handleReadElectionCSV = async (csv) => {
+      // let fromObject
+      // let candidateList
+      // const election = contract(ElectionContract)
+      // election.setProvider(this.state.web3.currentProvider)
+      // this.state.web3.eth.getAccounts((err, accs) => {
+      //   fromObject = {from:accs[0], gas : 3000000}
+      // })
+      // let electionInstance = await election.deployed()
+      let distrito
+      let escuela
+      let mesa
+
+      for(let line of csv){
+        distrito = line[0]
+        escuela = line[1]
+        mesa = line[2]
+        // electionInstance.createElectionByCSV(distrito, escuela, mesa)
+        console.log(line)
+        console.log(distrito)
+        console.log(escuela)
+        console.log(mesa)
+      }
+    }
+
     async handleCreateElection(event) {
       event.preventDefault()
       let fromObject
@@ -70,6 +108,17 @@ class CreateElection extends Component {
       this.setState({candidates : newCandidates})
     }
 
+    renderFileReader = () => {
+      return (
+            <div>
+              <Header as='h3'>Cargar datos en csv: distrito,escuela,mesa</Header>
+              <ReactFileReader handleFiles={this.handleFiles} fileTypes={'.csv'}>
+                <button className='btn'>Upload</button>
+              </ReactFileReader>
+            </div>
+             )
+    }
+
     render () {
         return (
             <Center>
@@ -91,6 +140,8 @@ class CreateElection extends Component {
                         Crear Eleccion
                     </Button>
                   </Form>
+                  <Divider/>
+                  {this.renderFileReader()}
                 </Container>
               </div>
             </Center>
