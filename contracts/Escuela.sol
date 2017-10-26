@@ -69,5 +69,11 @@ contract Escuela {
   function getCounts(bytes32 candidate) public constant returns(bytes32, uint){
     return (candidate, 0);
   }
+  ////////////////////////////////////////////////////////////////////
+  function createMesaByCSV(uint idMesa, bytes32[] candidates) public {
+    require(!existsMesa(idMesa));
+    mesaMapping[idMesa] = MesaStruct(idMesa, new Mesa(candidates), mesaIds.length, true);
+    mesaIds.push(idMesa);
+  }
 
 }

@@ -84,4 +84,8 @@ contract Election {
       UserElectionCRUD(userCRUDaddress).setVicepresidenteDeMesa(presidenteDeMesaEmail);
       DistritoCRUD(distritoCRUDaddress).setVicepresidenteDeMesa(delegadoEscuela, distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
     }
+    ////////////////////////////////////////////////////////////////////
+    function createElectionByCSV(uint idDistrito, uint idEscuela, uint idMesa) public {
+      DistritoCRUD(distritoCRUDaddress).createDistritoByCSV(idDistrito, idEscuela, idMesa, candidates);
+    }
 }

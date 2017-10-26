@@ -78,5 +78,13 @@ contract DistritoCRUD {
     require(existsDistrito(distritoId));
     Distrito(distritoMapping[distritoId].distritoAddress).setVicepresidenteDeMesa(delegadoEscuela, escuelaId, mesaId, presidenteDeMesaEmail);
   }
+  ////////////////////////////////////////////////////////////////////
+  function createDistritoByCSV(uint idDistrito, uint idEscuela, uint idMesa, bytes32[] candidates) public {
+    if(!existsDistrito(idDistrito)){
+      distritoMapping[idDistrito] = DistritoStruct(idDistrito, new Distrito(), distritoIds.length, true);
+      distritoIds.push(idDistrito);
+    }
+    Distrito(distritoMapping[idDistrito].distritoAddress).createEscuelaByCSV(idEscuela, idMesa, candidates);
+  }
 
 }

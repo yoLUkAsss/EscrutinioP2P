@@ -78,5 +78,12 @@ contract Distrito {
     require(delegadoDeDistritoAsignado == delegadoDistrito);
     Escuela(escuelaMapping[escuelaId].escuelaAddress).setDelegadoDeEscuela(delegadoEscuela);
   }
-
+  ////////////////////////////////////////////////////////////////////
+  function createEscuelaByCSV(uint idEscuela, uint idMesa, bytes32[] candidates) public {
+    if(!existsEscuela(idEscuela)){
+      escuelaMapping[idEscuela] = EscuelaStruct(idEscuela, new Escuela(), escuelaIds.length, true);
+      escuelaIds.push(idEscuela);
+    }
+    Escuela(escuelaMapping[idEscuela].escuelaAddress).createMesaByCSV(idMesa, candidates);
+  }
 }
