@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import { Switch, Route } from 'react-router-dom'
 
+import cookie from 'react-cookies'
+
 import Home from './Home.js'
 import Login from '../Auth/login.js'
 import Signup from '../Auth/signup.js'
@@ -18,7 +20,45 @@ import SetDelegadoDeEscuela from '../UserActionComponents/SetDelegadoDeEscuela.j
 import Error404 from '../ErrorComponents/Error404.js'
 import '../ErrorComponents/Error404.css'
 
+import contract from 'truffle-contract'
+import getWeb3 from '../utils/getWeb3'
+import * as currentUser from '../utils/user_session.js'
+
+/**
+ * Contracts
+*/
+import ElectionContract from '../../build/contracts/Election.json'
+
+
 class App extends Component{
+
+  constructor() {
+    super()
+    this.state = {
+        web3 : null
+    }
+  }
+
+  async componentWillMount() {
+    currentUser.setElectionCreated(cookie, false)
+    getWeb3.then(results => {
+      this.setState({
+        web3: results.web3
+      })
+    }).catch(() => {
+      console.log('Error finding web3.')
+    })
+    let fromObject
+    const election = contract(ElectionContract)
+    election.setProvider(this.state.web3.currentProvider)
+    this.state.web3.eth.getAccounts((err, accs) => {
+      fromObject = {from:accs[0], gas : 3000000}
+    })
+    let electionInstance = await election.deployed()
+    let isCreated = await electionInstance.isCreated.call(currentUser.getEmail(cookie), fromObject)
+    currentUser.setElectionCreated(cookie, isCreated)
+  }
+
   render() {
     return (
     <div>

@@ -60,6 +60,7 @@ class CreateElection extends Component {
         })
         await electionInstance.setAutoridadElectoral.sendTransaction(currentUser.getEmail(cookie), fromObject)
         await electionInstance.createElection.sendTransaction(currentUser.getEmail(cookie), candidateList, fromObject)
+        currentUser.setElectionCreated(cookie,true)
         utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
       } catch(error){
         console.log(error)

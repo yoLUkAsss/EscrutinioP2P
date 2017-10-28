@@ -16,7 +16,7 @@ import * as currentUser from '../utils/user_session.js'
 
 class CreateElectionItem extends Component {
     render () {
-      if(currentUser.isLogged(cookie)){
+      if(currentUser.isLogged(cookie) && !currentUser.isElectionCreated(cookie) ){
         return (
             <Menu.Item header><Link to="/election">Crear eleccion</Link></Menu.Item>
         );
