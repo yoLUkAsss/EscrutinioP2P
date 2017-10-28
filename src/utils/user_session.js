@@ -9,13 +9,19 @@ export function clean(cookie){
   cookie.remove("current_user_email")
   cookie.remove("current_user_address")
   cookie.remove("current_user_category")
+  cookie.remove("current_user_distrito")
+  cookie.remove("current_user_escuela")
+  cookie.remove("current_user_mesa")
 }
 
 export function getCookies(cookie) {
   return {
     "email" : cookie.load("current_user_email"),
     "address" : cookie.load("current_user_address"),
-    "category" : cookie.load("current_user_category")
+    "category" : cookie.load("current_user_category"),
+    "distrito" : cookie.load("current_user_distrito"),
+    "escuela" : cookie.load("current_user_escuela"),
+    "mesa" : cookie.load("current_user_mesa")
   }
 }
 
@@ -90,4 +96,14 @@ export function identifyRol(cookie) {
     default:
       return "grey"
   }
+}
+
+export function setDistrito(cookie, idDistrito){
+  cookie.save("current_user_distrito", idDistrito, {path : "/"})
+}
+export function setEscuela(cookie, idEscuela){
+  cookie.save("current_user_escuela", idEscuela, {path : "/"})
+}
+export function setMesa(cookie, idMesa){
+  cookie.save("current_user_mesa", idMesa, {path : "/"})
 }

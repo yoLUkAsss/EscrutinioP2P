@@ -46,28 +46,37 @@ contract UserElectionCRUD is UserCRUD{
     esta operacion, sea mejor dejar el conjunto de funciones q esta conlleva en election
     */
     //setear roles
-    function setUserCategory(bytes32 email, uint cat) internal {
-      User(getUserByEmail(email)).setCategory(cat);
-    }
     function setAutoridadElectoral(bytes32 email) public {
       User(getUserByEmail(email)).setCategory(0);
     }
-    function setDelegadoDeDistrito(bytes32 email) public {
+    function setDelegadoDeDistrito(bytes32 email, uint idDistrito) public {
       User(getUserByEmail(email)).setCategory(1);
+      User(getUserByEmail(email)).setDistrito(idDistrito);
     }
-    function setDelegadoDeEscuela(bytes32 email) public {
+    function setDelegadoDeEscuela(bytes32 email, uint idDistrito, uint idEscuela) public {
       User(getUserByEmail(email)).setCategory(2);
+      User(getUserByEmail(email)).setDistrito(idDistrito);
+      User(getUserByEmail(email)).setEscuela(idEscuela);
     }
     function setApoderado(bytes32 email) public {
       User(getUserByEmail(email)).setCategory(3);
     }
-    function setPresidenteDeMesa(bytes32 email) public {
+    function setPresidenteDeMesa(bytes32 email, uint idDistrito, uint idEscuela, uint idMesa) public {
       User(getUserByEmail(email)).setCategory(4);
+      User(getUserByEmail(email)).setDistrito(idDistrito);
+      User(getUserByEmail(email)).setEscuela(idEscuela);
+      User(getUserByEmail(email)).setMesa(idMesa);
     }
-    function setVicepresidenteDeMesa(bytes32 email) public {
+    function setVicepresidenteDeMesa(bytes32 email, uint idDistrito, uint idEscuela, uint idMesa) public {
       User(getUserByEmail(email)).setCategory(5);
+      User(getUserByEmail(email)).setDistrito(idDistrito);
+      User(getUserByEmail(email)).setEscuela(idEscuela);
+      User(getUserByEmail(email)).setMesa(idMesa);
     }
-    function setFiscal(bytes32 email) public {
+    function setFiscal(bytes32 email, uint idDistrito, uint idEscuela, uint idMesa) public {
       User(getUserByEmail(email)).setCategory(6);
+      User(getUserByEmail(email)).setDistrito(idDistrito);
+      User(getUserByEmail(email)).setEscuela(idEscuela);
+      User(getUserByEmail(email)).setMesa(idMesa);
     }
 }

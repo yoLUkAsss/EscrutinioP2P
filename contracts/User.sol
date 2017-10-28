@@ -11,6 +11,10 @@ contract User{
   //Fiscal 6
   // Usuario General 7
 
+    uint idDistrito;
+    uint idEscuela;
+    uint idMesa;
+
     bytes32 public email;
     bytes32 public password;
     bool public isLogged;
@@ -21,11 +25,9 @@ contract User{
         password = pass;
         category = cat;
     }
-
-    function getUser() public constant returns(address, bytes32, uint){
-      return (this, email, category);
+    function getUser() public constant returns(address, bytes32, uint, uint, uint, uint){
+      return (this, email, category, idDistrito, idEscuela, idMesa);
     }
-
     function login(bytes32 pass) public{
         if(password != pass) revert();
         isLogged = true;
@@ -47,5 +49,14 @@ contract User{
     }
     function setCategory(uint cat) public {
       category = cat;
+    }
+    function setDistrito(uint id) public {
+      idDistrito = id;
+    }
+    function setEscuela(uint id) public {
+      idEscuela = id;
+    }
+    function setMesa(uint id) public {
+      idMesa = id;
     }
 }

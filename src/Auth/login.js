@@ -74,6 +74,9 @@ class Login extends Component {
         currentUser.setAddress(cookie, currUser[0])
         currentUser.setEmail(cookie, this.state.web3.toAscii(currUser[1]))
         currentUser.setCategory(cookie, currUser[2].toNumber())
+        currentUser.setDistrito(cookie, currUser[3].toNumber())
+        currentUser.setEscuela(cookie, currUser[4].toNumber())
+        currentUser.setMesa(cookie, currUser[5].toNumber())
         utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
       } catch(err){
         utils.showError(this.msg, "Fallo en el inicio de sesion")

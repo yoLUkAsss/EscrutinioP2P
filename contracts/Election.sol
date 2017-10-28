@@ -38,11 +38,6 @@ contract Election {
       return candidates;
     }
     ////////////////////////////////////////////////////////////////////
-    function setFiscal(bytes32 apoderadoDePartido, bytes32 candidato, bytes32 fiscalEmail, uint distritoId, uint escuelaId, uint mesaId) public {
-      require(apoderados[candidato] == apoderadoDePartido);
-      UserElectionCRUD(userCRUDaddress).setFiscal(fiscalEmail);
-      DistritoCRUD(distritoCRUDaddress).setFiscal(distritoId, escuelaId, mesaId, fiscalEmail);
-    }
     function setApoderado(bytes32 autoridadElectoral, bytes32 apoderado, bytes32 candidato) public {
         require(autoridadElectoralAsignada == autoridadElectoral && apoderados[candidato] == "");
         apoderados[candidato] = apoderado;
@@ -50,22 +45,25 @@ contract Election {
     }
     function setDelegadoDeDistrito(bytes32 autoridadElectoral, bytes32 delegadoDistrito, uint8 idDistrito) public {
         require(autoridadElectoralAsignada == autoridadElectoral);
-        UserElectionCRUD(userCRUDaddress).setDelegadoDeDistrito(delegadoDistrito);
+        UserElectionCRUD(userCRUDaddress).setDelegadoDeDistrito(delegadoDistrito, idDistrito);
         DistritoCRUD(distritoCRUDaddress).setDelegadoDeDistrito(delegadoDistrito, idDistrito);
     }
     function setDelegadoDeEscuela(bytes32 delegadoDistrito, bytes32 delegadoEscuela, uint8 idDistrito, uint8 idEscuela) public {
-        UserElectionCRUD(userCRUDaddress).setDelegadoDeEscuela(delegadoEscuela);
+        UserElectionCRUD(userCRUDaddress).setDelegadoDeEscuela(delegadoEscuela, idDistrito, idEscuela);
         DistritoCRUD(distritoCRUDaddress).setDelegadoDeEscuela(delegadoDistrito, delegadoEscuela, idDistrito, idEscuela);
     }
-
     function setPresidenteDeMesa(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
-      UserElectionCRUD(userCRUDaddress).setPresidenteDeMesa(presidenteDeMesaEmail);
+      UserElectionCRUD(userCRUDaddress).setPresidenteDeMesa(presidenteDeMesaEmail, distritoId, escuelaId, mesaId);
       DistritoCRUD(distritoCRUDaddress).setPresidenteDeMesa(delegadoEscuela, distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
     }
-
     function setVicepresidenteDeMesa(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
-      UserElectionCRUD(userCRUDaddress).setVicepresidenteDeMesa(presidenteDeMesaEmail);
+      UserElectionCRUD(userCRUDaddress).setVicepresidenteDeMesa(presidenteDeMesaEmail, distritoId, escuelaId, mesaId);
       DistritoCRUD(distritoCRUDaddress).setVicepresidenteDeMesa(delegadoEscuela, distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
+    }
+    function setFiscal(bytes32 apoderadoDePartido, bytes32 candidato, bytes32 fiscalEmail, uint distritoId, uint escuelaId, uint mesaId) public {
+      require(apoderados[candidato] == apoderadoDePartido);
+      UserElectionCRUD(userCRUDaddress).setFiscal(fiscalEmail, distritoId, escuelaId, mesaId);
+      DistritoCRUD(distritoCRUDaddress).setFiscal(distritoId, escuelaId, mesaId, fiscalEmail);
     }
     ////////////////////////////////////////////////////////////////////
     function createElectionByCSV(bytes32 autoridadElectoral, uint idDistrito, uint idEscuela, uint idMesa) public {
