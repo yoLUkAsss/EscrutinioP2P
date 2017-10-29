@@ -16,8 +16,8 @@ import ComponentTitle from '../utils/ComponentTitle.js'
  */
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
+import * as api from '../utils/api-call.js'
 import getWeb3 from '../utils/getWeb3'
-
 /**
 *   Contracts
 */
@@ -34,53 +34,23 @@ class Login extends Component {
         super();
         this.state = {
             email : "",
-            password : "",
-            web3 : null
+            password : ""
         }
     }
 
-    componentWillMount() {
-      getWeb3.then(results => {
-        this.setState({
-          web3: results.web3
-        })
-      }).catch(() => {
-        console.log('Error finding web3.')
-      })
-    }
-
     handleEmail = (evt) => {this.setState({ email : evt.target.value })}
-
     handlePassword = (event) => { this.setState({ password : event.target.value }) }
 
-    handleLogin = async (event) => {
-      const userElection = contract(UserElectionCRUDcontract)
-      const user = contract(UserContract)
-      userElection.setProvider(this.state.web3.currentProvider)
-      user.setProvider(this.state.web3.currentProvider)
-
-      let fromObject
-      this.state.web3.eth.getAccounts((error, accounts) => {
-        fromObject = {from:accounts[0]}
-      })
-      try{
-        let userElectionInstance = await userElection.deployed()
-        let userAddress = await userElectionInstance.getUserByEmail.call(this.state.email, fromObject)
-        let userInstance = await user.at(userAddress)
-        fromObject.gas = 3000000
-        userInstance.login.sendTransaction(this.state.password, fromObject)
-        delete fromObject.gas
-        let currUser = await userInstance.getUser.call(fromObject)
-        currentUser.setAddress(cookie, currUser[0])
-        currentUser.setEmail(cookie, this.state.web3.toAscii(currUser[1]))
-        currentUser.setCategory(cookie, currUser[2].toNumber())
-        currentUser.setDistrito(cookie, currUser[3].toNumber())
-        currentUser.setEscuela(cookie, currUser[4].toNumber())
-        currentUser.setMesa(cookie, currUser[5].toNumber())
+    handleLogin = (event) => {
+      event.preventDefault()
+      api.login(this.state.email, this.state.password).then(res => {
+        console.log(res)
+        currentUser.setUser(cookie, res.data)
+        // utils.showSuccess(this.msg, "Inicio de sesion exitoso")
         utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
-      } catch(err){
+      }).catch(err => {
         utils.showError(this.msg, "Fallo en el inicio de sesion")
-      }
+      })
     }
     render () {
         return (

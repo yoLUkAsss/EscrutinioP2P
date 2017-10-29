@@ -1,10 +1,3 @@
-export function get_current_user() {
-    return {
-        "email" : this.email,
-        "category" : this.category
-    }
-}
-
 export function clean(cookie){
   cookie.remove("current_user_email")
   cookie.remove("current_user_address")
@@ -13,8 +6,10 @@ export function clean(cookie){
   cookie.remove("current_user_escuela")
   cookie.remove("current_user_mesa")
 }
-
-export function getCookies(cookie) {
+//////////////////////////////////////////////////////////////
+//      GETTERS
+//////////////////////////////////////////////////////////////
+export function getUser(cookie) {
   return {
     "email" : cookie.load("current_user_email"),
     "address" : cookie.load("current_user_address"),
@@ -24,39 +19,21 @@ export function getCookies(cookie) {
     "mesa" : cookie.load("current_user_mesa")
   }
 }
-
 export function getAddress(cookie) {
     return cookie.load("current_user_address")
 }
-
 export function getEmail(cookie){
   return cookie.load("current_user_email")
 }
-
-export function setCategory(cookie, category){
-  cookie.save("current_user_category", category, {path : "/"})
-}
-
-export function setEmail(cookie, email){
-  cookie.save("current_user_email", email, {path : "/"})
-}
-
-export function setAddress(cookie, new_address) {
-  cookie.save("current_user_address", new_address, {path : "/"})
-}
-
+//////////////////////////////////////////////////////////////
+//      QUERIES
+//////////////////////////////////////////////////////////////
 export function isLogged(cookie){
   return cookie.load("current_user_address") !== undefined
 }
-
 export function isAutoridadElectoral(cookie){
   return cookie.load("current_user_category") === '0'
 }
-
-export function isApoderadoDePartido(cookie){
-  return cookie.load("current_user_category") === '3'
-}
-
 export function isDelegadoDeDistrito(cookie){
   return cookie.load("current_user_category") === '1'
 }
@@ -64,19 +41,47 @@ export function isDelegadoDeDistrito(cookie){
 export function isDelegadoDeEscuela(cookie){
   return cookie.load("current_user_category") === '2'
 }
-
+export function isApoderadoDePartido(cookie){
+  return cookie.load("current_user_category") === '3'
+}
 export function isPresidenteDeMesa(cookie){
   return cookie.load("current_user_category") === '4'
 }
-
 export function isFiscalDeMesa(cookie){
   return cookie.load("current_user_category") === '6'
 }
-
 export function canLoadMesaUser(cookie){
   return isPresidenteDeMesa(cookie) || isFiscalDeMesa(cookie)
 }
-
+//////////////////////////////////////////////////////////////
+//      SETTERS
+//////////////////////////////////////////////////////////////
+export function setUser(cookie, user){
+  setAddress(cookie, user.address)
+  setEmail(cookie, user.email)
+  setCategory(cookie, user.category)
+  setDistrito(cookie, user.distrito)
+  setEscuela(cookie, user.escuela)
+  setMesa(cookie, user.mesa)
+}
+export function setAddress(cookie, new_address) {
+  cookie.save("current_user_address", new_address, {path : "/"})
+}
+export function setEmail(cookie, email){
+  cookie.save("current_user_email", email, {path : "/"})
+}
+export function setCategory(cookie, category){
+  cookie.save("current_user_category", category, {path : "/"})
+}
+export function setDistrito(cookie, idDistrito){
+  cookie.save("current_user_distrito", idDistrito, {path : "/"})
+}
+export function setEscuela(cookie, idEscuela){
+  cookie.save("current_user_escuela", idEscuela, {path : "/"})
+}
+export function setMesa(cookie, idMesa){
+  cookie.save("current_user_mesa", idMesa, {path : "/"})
+}
 export function identifyRol(cookie) {
   switch (cookie.load("current_user_category")) {
     case "0":
@@ -96,14 +101,4 @@ export function identifyRol(cookie) {
     default:
       return "grey"
   }
-}
-
-export function setDistrito(cookie, idDistrito){
-  cookie.save("current_user_distrito", idDistrito, {path : "/"})
-}
-export function setEscuela(cookie, idEscuela){
-  cookie.save("current_user_escuela", idEscuela, {path : "/"})
-}
-export function setMesa(cookie, idMesa){
-  cookie.save("current_user_mesa", idMesa, {path : "/"})
 }

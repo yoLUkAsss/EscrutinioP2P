@@ -13,9 +13,10 @@ import AlertContainer from 'react-alert'
 /**
  * Controller for Component
  */
- import getWeb3 from '../utils/getWeb3'
- import * as utils from '../utils/utils.js'
- import * as currentUser from '../utils/user_session.js'
+import getWeb3 from '../utils/getWeb3'
+import * as utils from '../utils/utils.js'
+import * as currentUser from '../utils/user_session.js'
+import * as api from '../utils/api-call.js'
 
 /**
 * Contracts
@@ -29,39 +30,15 @@ usa los siguientes props:
 
 */
 class LogOutItem extends Component {
-    constructor() {
-        super();
-        this.state = {
-            web3 : null
-        }
-    }
-
-    componentWillMount() {
-      getWeb3.then(results => {
-        this.setState({
-          web3: results.web3
-        })
-      }).catch(() => {
-        console.log('Error finding web3.')
-      })
-    }
-
-    handleLogout = async (event) => {
+    handleLogout = (event) => {
       event.preventDefault()
-      const user = contract(UserContract)
-      user.setProvider(this.state.web3.currentProvider)
-      let fromObject
-      this.state.web3.eth.getAccounts((err, accounts) => {
-        fromObject = {from:accounts[0], gas:3000000}
-      })
-      try{
-        let userInstance = await user.at(currentUser.getAddress(cookie))
-        await userInstance.logout.sendTransaction(fromObject)
-        await currentUser.clean(cookie)
+      console.log(currentUser.getUser(cookie))
+      api.logout(currentUser.getAddress(cookie)).then((res) => {
+        currentUser.clean(cookie)
         utils.showSuccess(this.msg, "Cierre de sesion exitoso", () => {this.props.history.push("/")})
-      } catch(err){
+      }).catch((err) => {
         utils.showError(this.msg, "Fallo en el cierre de session")
-      }
+      })
     }
     render () {
       if(currentUser.isLogged(cookie)){

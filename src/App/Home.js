@@ -18,7 +18,7 @@ class Home extends Component {
 
     seeinfo(event) {
         event.preventDefault()
-        console.log(JSON.stringify(utils.getCookies(cookie), undefined, 2))
+        console.log(JSON.stringify(utils.getUser(cookie), undefined, 2))
     }
 
     cleaninfo(event) {
