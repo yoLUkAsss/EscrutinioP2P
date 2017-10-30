@@ -13,6 +13,9 @@ class RDLF extends Component {
       add : props.add || "add",
       del : props.del || "delete"
     }
+    // this.handleChangeItem = this.handleChangeItem.bind(this)
+    // this.handleAddItem = this.handleAddItem.bind(this)
+    // this.handleDeleteItem = this.handleDeleteItem.bind(this)
   }
 
   handleChangeItem = (idItem) => (evt) => {

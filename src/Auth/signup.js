@@ -19,6 +19,7 @@ import contract from 'truffle-contract'
 import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
 import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
+import * as api from '../utils/api-call.js'
 
 class Signup extends Component {
     constructor() {
@@ -28,16 +29,6 @@ class Signup extends Component {
             password : ""
         }
         this.handleRegister = this.handleRegister.bind(this)
-    }
-
-    componentWillMount() {
-      getWeb3.then(results => {
-        this.setState({
-          web3: results.web3
-        })
-      }).catch(() => {
-        console.log('Error finding web3.')
-      })
     }
 
     handleEmail = (event) => {
@@ -50,22 +41,11 @@ class Signup extends Component {
 
     handleRegister = (event) => {
       event.preventDefault()
-      const userElection = contract(UserElectionCRUD)
-      userElection.setProvider(this.state.web3.currentProvider)
-      this.state.web3.eth.getAccounts((error, accounts) => {
-        userElection.deployed().then( (userElectionCrudInstance) => {
-        return userElectionCrudInstance.signup.sendTransaction(
-          this.state.email,
-          this.state.password,
-        {from:accounts[0], gas : 3000000})
-        }).then( (result) => {
-          console.log("Transaction Sent")
-          utils.showSuccess(this.msg, "Registro exitoso", ()=>{this.props.history.push("/")})
-        }).catch( (error) => {
-          console.log("Error while executing transaction")
-          console.log("ERROR: " + JSON.stringify(error, undefined, 2))
-          utils.showError(this.msg, "Fallo en el registro see:" + error)
-        })
+      api.signup(this.state.email, this.state.password).then(res => {
+        // utils.showSuccess(this.msg, "Registro Exitoso")
+        utils.showSuccess(this.msg, "Registro exitoso", () => {this.props.history.push("/")})
+      }).catch(error => {
+        utils.showError(this.msg, error.response.data)
       })
     }
 
