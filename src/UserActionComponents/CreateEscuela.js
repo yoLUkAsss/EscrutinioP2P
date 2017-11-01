@@ -19,6 +19,7 @@ import contract from 'truffle-contract'
 import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
+import * as api from '../utils/api-call.js'
 
 /**
  * Contracts
@@ -31,44 +32,16 @@ class CreateEscuela extends Component {
         this.state = {
           distritoId : "",
           escuelaId : "",
-          cantidadMesas : "",
-          web3 : null
+          cantidadMesas : ""
         }
     }
-
-    componentWillMount() {
-      getWeb3.then(results => {
-        this.setState({
-          web3: results.web3
-        })
-      }).catch(() => {
-        console.log('Error finding web3.')
-      })
-    }
-
-    async handleCreateEscuela(event) {
+    handleCreateEscuela(event) {
       event.preventDefault()
-      let fromObject
-      const election = contract(ElectionContract)
-      election.setProvider(this.state.web3.currentProvider)
-      this.state.web3.eth.getAccounts((err, accs) => {
-        fromObject = {from:accs[0], gas : 3000000}
+      api.initEscuela(currentUser.getEmail(cookie), parseInt(this.state.distritoId), parseInt(this.state.escuelaId), parseInt(this.state.cantidadMesas)).then((res) => {
+        utils.showSuccess(this.msg, "Escuela creada correctamente")
+      }).catch(err => {
+        utils.showError(this.msg, "Fallo la creacion de la escuela")
       })
-      let electionInstance = await election.deployed()
-      try{
-        let promises = []
-        for(let i = 0; i < this.state.cantidadMesas; i++){
-          promises.push(await electionInstance.createMesa.sendTransaction(currentUser.getEmail(cookie), this.state.distritoId, this.state.escuelaId, fromObject))
-        }
-        Promise.all(promises).then(() => {
-          utils.showSuccess(this.msg, "Escuela creada correctamente")
-        }).catch(error => {
-          console.log(error)
-          utils.showError(this.msg, "Fallo la creacion de la escuela")
-        })
-      } catch(error){
-        utils.showError(this.msg, "Fallo:" + error)
-      }
     }
 
     handleMesas = (event) => {

@@ -19,7 +19,7 @@ import contract from 'truffle-contract'
 import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
-
+import * as api from '../utils/api-call.js'
 /**
  * Contracts
 */
@@ -30,55 +30,27 @@ class CreateDistrito extends Component {
     constructor() {
         super()
         this.state = {
-            numberOfEscuelas : "",
-            web3 : null
+          escuelas : "",
+          distrito : ""
         }
     }
-
-    componentWillMount() {
-      getWeb3.then(results => {
-        this.setState({
-          web3: results.web3
-        })
-      }).catch(() => {
-        console.log('Error finding web3.')
-      })
-    }
-
-    async handleCreateDistrito(event) {
+    handleCreateDistrito(event) {
       event.preventDefault()
-      let fromObject
-      const election = contract(ElectionContract)
-      const distritoCRUD = contract(DistritoCRUDContract)
-      distritoCRUD.setProvider(this.state.web3.currentProvider)
-      election.setProvider(this.state.web3.currentProvider)
-      this.state.web3.eth.getAccounts((err, accs) => {
-        fromObject = {from:accs[0], gas : 3000000}
+      api.initDistrito(currentUser.getEmail(cookie), parseInt(this.state.distrito), parseInt(this.state.escuelas)).then((res) => {
+        console.log(res)
+        utils.showSuccess(this.msg, "Distrito creado correctamente")
+      }).catch(err => {
+        console.log(err)
+        utils.showError(this.msg, "Fallo la creacion del distrito")
       })
-      let electionInstance = await election.deployed()
-      let distritoCRUDinstance = await distritoCRUD.deployed()
-      try{
-        await electionInstance.createDistrito.sendTransaction(currentUser.getEmail(cookie), fromObject)
-        let distritoId = await distritoCRUDinstance.lastDistritoId.call(fromObject)
-        let promises = []
-        for(let i = 0; i < this.state.numberOfEscuelas; i++){
-          promises.push(electionInstance.createEscuela.sendTransaction(currentUser.getEmail(cookie), distritoId, fromObject))
-        }
-        Promise.all(promises).then(() => {
-          utils.showSuccess(this.msg, "Distrito creado correctamente")
-        }).catch(error => {
-          console.log(error)
-          utils.showError(this.msg, "Fallo la creacion del distrito")
-        })
-      } catch(error){
-        utils.showError(this.msg, "Fallo:" + error)
-      }
     }
 
     handleEscuelas = (event) => {
-      this.setState({ numberOfEscuelas : event.target.value })
+      this.setState({ escuelas : event.target.value })
     }
-
+    handleDistrito = (event) => {
+      this.setState({ distrito : event.target.value })
+    }
     render () {
         return (
             <Center>
@@ -88,11 +60,19 @@ class CreateDistrito extends Component {
                   <ComponentTitle title='Crear Distrito'/>
                   <Form>
                     <Form.Input
+                      required
+                      type='number'
+                      label='id de distrito'
+                      placeholder='id de distrito'
+                      value={this.state.distrito}
+                      onChange={this.handleDistrito.bind(this)}
+                    />
+                    <Form.Input
                         required
                         type='number'
                         label='cantidad de escuelas'
                         placeholder='cantidad de escuelas'
-                        value={this.state.numberOfEscuelas}
+                        value={this.state.escuelas}
                         onChange={this.handleEscuelas.bind(this)}
                     />
                     <Button onClick={this.handleCreateDistrito.bind(this)}>
