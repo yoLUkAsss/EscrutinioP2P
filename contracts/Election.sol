@@ -18,13 +18,13 @@ contract Election {
       userCRUDaddress = newUserCRUDaddress;
       distritoCRUDaddress = newDistritoCRUDaddress;
     }
-    function setAutoridadElectoral(bytes32 email) external {
+    /*function setAutoridadElectoral(bytes32 email) external {
       require(!created && autoridadElectoralAsignada == "");
       UserElectionCRUD(userCRUDaddress).setAutoridadElectoral(email);
       autoridadElectoralAsignada = email;
-    }
+    }*/
     function createElection(bytes32 email, bytes32[] newCandidates) external {
-      require(!created && autoridadElectoralAsignada == email);
+      require(!created && autoridadElectoralAsignada == "");
       candidates = newCandidates;
       candidates.push("votos en blanco");
       candidates.push("votos impugnados");
@@ -32,11 +32,27 @@ contract Election {
       for (uint8 index = 0; index<candidates.length; index++ ) {
           apoderados[candidates[index]] = "";
       }
+      UserElectionCRUD(userCRUDaddress).setAutoridadElectoral(email);
+      autoridadElectoralAsignada = email;
       created = true;
     }
     function getCandidates() public constant returns(bytes32[]){
       return candidates;
     }
+
+    function createDistrito(bytes32 autoridadElectoral, uint distritoId) public {
+      require(created && autoridadElectoralAsignada == autoridadElectoral);
+      DistritoCRUD(distritoCRUDaddress).createDistrito(distritoId);
+    }
+    function createEscuela(bytes32 autoridadElectoral, uint distritoId) public {
+      require(created && autoridadElectoralAsignada == autoridadElectoral);
+      DistritoCRUD(distritoCRUDaddress).createEscuela(distritoId);
+    }
+    function createMesa(bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public {
+      require(created && autoridadElectoralAsignada == autoridadElectoral);
+      DistritoCRUD(distritoCRUDaddress).createMesa(distritoId, escuelaId, candidates);
+    }
+
     ////////////////////////////////////////////////////////////////////
     function setApoderado(bytes32 autoridadElectoral, bytes32 apoderado, bytes32 candidato) public {
         require(autoridadElectoralAsignada == autoridadElectoral && apoderados[candidato] == "");
@@ -66,8 +82,8 @@ contract Election {
       DistritoCRUD(distritoCRUDaddress).setFiscal(distritoId, escuelaId, mesaId, fiscalEmail);
     }
     ////////////////////////////////////////////////////////////////////
-    function createElectionByCSV(bytes32 autoridadElectoral, uint idDistrito, uint idEscuela, uint idMesa) public {
+    /*function createElectionByCSV(bytes32 autoridadElectoral, uint idDistrito, uint idEscuela, uint idMesa) public {
       require(created && autoridadElectoralAsignada == autoridadElectoral);
       DistritoCRUD(distritoCRUDaddress).createDistritoByCSV(idDistrito, idEscuela, idMesa, candidates);
-    }
+    }*/
 }

@@ -3,6 +3,7 @@ pragma solidity ^0.4.11;
 import "./Escuela.sol";
 
 contract Distrito {
+  uint lastEscuelaId;
   uint[] escuelaIds;
   mapping (uint => EscuelaStruct) escuelaMapping;
   bytes32 delegadoDeDistritoAsignado;
@@ -12,6 +13,16 @@ contract Distrito {
     uint index;
     bool isEscuela;
   }
+  function createEscuela() public {
+    lastEscuelaId += 1;
+    escuelaMapping[lastEscuelaId] = EscuelaStruct(lastEscuelaId, new Escuela(), escuelaIds.length, true);
+    escuelaIds.push(lastEscuelaId);
+  }
+  function createMesa(uint escuelaId, bytes32[] candidates) public {
+    require(existsEscuela(escuelaId));
+    Escuela(escuelaMapping[escuelaId].escuelaAddress).createMesa(candidates);
+  }
+  //////////////////////////////////////////////////
   function getEscuela(uint id) public constant returns(address){
     require(existsEscuela(id));
     return escuelaMapping[id].escuelaAddress;
@@ -48,11 +59,11 @@ contract Distrito {
     Escuela(escuelaMapping[escuelaId].escuelaAddress).setDelegadoDeEscuela(delegadoEscuela);
   }
   ////////////////////////////////////////////////////////////////////
-  function createEscuelaByCSV(uint idEscuela, uint idMesa, bytes32[] candidates) public {
+  /*function createEscuelaByCSV(uint idEscuela, uint idMesa, bytes32[] candidates) public {
     if(!existsEscuela(idEscuela)){
       escuelaMapping[idEscuela] = EscuelaStruct(idEscuela, new Escuela(), escuelaIds.length, true);
       escuelaIds.push(idEscuela);
     }
     Escuela(escuelaMapping[idEscuela].escuelaAddress).createMesaByCSV(idMesa, candidates);
-  }
+  }*/
 }

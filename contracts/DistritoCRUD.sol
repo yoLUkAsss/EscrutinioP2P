@@ -11,6 +11,19 @@ contract DistritoCRUD {
     uint index;
     bool isDistrito;
   }
+  function createDistrito(uint distritoId) public {
+    distritoMapping[distritoId] = DistritoStruct(distritoId, new Distrito(), distritoIds.length, true);
+    distritoIds.push(distritoId);
+  }
+  function createEscuela(uint distritoId) public {
+    require(existsDistrito(distritoId));
+    Distrito(distritoMapping[distritoId].distritoAddress).createEscuela();
+  }
+  function createMesa(uint distritoId, uint escuelaId, bytes32[] candidates) public {
+    require(existsDistrito(distritoId));
+    Distrito(distritoMapping[distritoId].distritoAddress).createMesa(escuelaId, candidates);
+  }
+  ////////////////////////////////////////////////
   function getDistrito(uint id) public constant returns(address){
     require(existsDistrito(id));
     return distritoMapping[id].distritoAddress;
@@ -47,12 +60,12 @@ contract DistritoCRUD {
     Distrito(distritoMapping[distritoId].distritoAddress).setVicepresidenteDeMesa(delegadoEscuela, escuelaId, mesaId, presidenteDeMesaEmail);
   }
   ////////////////////////////////////////////////////////////////////
-  function createDistritoByCSV(uint idDistrito, uint idEscuela, uint idMesa, bytes32[] candidates) public {
+  /*function createDistritoByCSV(uint idDistrito, uint idEscuela, uint idMesa, bytes32[] candidates) public {
     if(!existsDistrito(idDistrito)){
       distritoMapping[idDistrito] = DistritoStruct(idDistrito, new Distrito(), distritoIds.length, true);
       distritoIds.push(idDistrito);
     }
     Distrito(distritoMapping[idDistrito].distritoAddress).createEscuelaByCSV(idEscuela, idMesa, candidates);
-  }
+  }*/
 
 }

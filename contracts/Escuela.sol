@@ -3,6 +3,7 @@ pragma solidity ^0.4.11;
 import "./Mesa.sol";
 
 contract Escuela {
+  uint lastId;
   uint[] mesaIds;
   bytes32 delegadoDeEscuelaAsignado;
   struct MesaStruct {
@@ -12,6 +13,11 @@ contract Escuela {
     bool isMesa;
   }
   mapping (uint => MesaStruct) mesaMapping;
+  function createMesa(bytes32[] inputCandidates) public{
+    lastId += 1;
+    mesaMapping[lastId] = MesaStruct(lastId, new Mesa(inputCandidates), mesaIds.length, true);
+    mesaIds.push(lastId);
+  }
   function existsMesa(uint id) public constant returns(bool){
     return mesaIds.length != 0 && mesaMapping[id].isMesa;
   }
@@ -46,10 +52,10 @@ contract Escuela {
     return (candidate, 0);
   }
   ////////////////////////////////////////////////////////////////////
-  function createMesaByCSV(uint idMesa, bytes32[] candidates) public {
+  /*function createMesaByCSV(uint idMesa, bytes32[] candidates) public {
     require(!existsMesa(idMesa));
     mesaMapping[idMesa] = MesaStruct(idMesa, new Mesa(candidates), mesaIds.length, true);
     mesaIds.push(idMesa);
-  }
+  }*/
 
 }
