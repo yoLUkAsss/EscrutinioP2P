@@ -28,6 +28,14 @@ contract User{
     function getUser() public constant returns(address, bytes32, uint, uint, uint, uint){
       return (this, email, category, idDistrito, idEscuela, idMesa);
     }
+
+    function loginVerify(bytes32 pass) public returns (bool,bytes32){
+        if(password != pass) {
+            return (true, "Contraseña incorrecta");
+        } else {
+            return (false, "");
+        }
+    }
     function login(bytes32 pass) public{
         if(password != pass) revert();
         isLogged = true;

@@ -43,9 +43,9 @@ class Signup extends Component {
       event.preventDefault()
       api.signup(this.state.email, this.state.password).then(res => {
         // utils.showSuccess(this.msg, "Registro Exitoso")
-            utils.showSuccess(this.msg, "Registro exitoso", () => {this.props.history.push("/")})
-      }).catch(err => {
-        utils.showError(this.msg, "Fallo en el registro")
+        utils.showSuccess(this.msg, "Registro exitoso", () => {this.props.history.push("/")})
+      }).catch(error => {
+        utils.showError(this.msg, error.response.data)
       })
     }
 

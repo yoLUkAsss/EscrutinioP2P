@@ -50,6 +50,18 @@ export function isPresidenteDeMesa(cookie){
 export function isFiscalDeMesa(cookie){
   return cookie.load("current_user_category") === '6'
 }
+export function getElectionCreated(cookie){
+  return cookie.load("current_user_election_created")
+}
+
+export function setElectionCreated(cookie, value){
+  cookie.save("current_user_election_created", value, {path : "/"})
+}
+
+export function isElectionCreated(cookie){
+  return cookie.load("current_user_election_created") === true
+}
+
 export function canLoadMesaUser(cookie){
   return isPresidenteDeMesa(cookie) || isFiscalDeMesa(cookie)
 }

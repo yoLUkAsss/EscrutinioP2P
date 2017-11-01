@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import { Switch, Route } from 'react-router-dom'
 
+import cookie from 'react-cookies'
+
 import Home from './Home.js'
 import Login from '../Auth/login.js'
 import Signup from '../Auth/signup.js'
@@ -18,7 +20,31 @@ import SetDelegadoDeEscuela from '../UserActionComponents/SetDelegadoDeEscuela.j
 import Error404 from '../ErrorComponents/Error404.js'
 import '../ErrorComponents/Error404.css'
 
+import * as currentUser from '../utils/user_session.js'
+import * as api from '../utils/api-call.js'
+
+
+/**
+ * Contracts
+*/
+import ElectionContract from '../../build/contracts/Election.json'
+
+
 class App extends Component{
+
+  constructor() {
+    super()
+  }
+
+  // componentWillMount() {
+  //   currentUser.setElectionCreated(cookie, false)
+  //    api.isCreated().then( result => {
+  //      currentUser.setElectionCreated(cookie, result)
+  //    }).catch(err => {
+  //      currentUser.setElectionCreated(cookie, false)
+  //    })
+  // }
+
   render() {
     return (
     <div>

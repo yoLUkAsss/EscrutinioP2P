@@ -32,11 +32,11 @@ usa los siguientes props:
 class LogOutItem extends Component {
     handleLogout = (event) => {
       event.preventDefault()
-      console.log(currentUser.getUser(cookie))
       api.logout(currentUser.getAddress(cookie)).then((res) => {
         currentUser.clean(cookie)
         utils.showSuccess(this.msg, "Cierre de sesion exitoso", () => {this.props.history.push("/")})
       }).catch((err) => {
+        // console.log(JSON.stringify(err, undefined, 2))
         utils.showError(this.msg, "Fallo en el cierre de session")
       })
     }

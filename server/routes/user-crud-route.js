@@ -10,6 +10,6 @@ router.route('/').post(UserCRUDCtrl.createUser)
 
 router.route('/signup').post(UserCRUDCtrl.signup)
 router.route('/login').post(UserCRUDCtrl.login)
-router.route('/logout').post(UserCRUDCtrl.login)
+router.route('/logout').post(UserCRUDCtrl.logout)
 
 export default router;

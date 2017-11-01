@@ -58,7 +58,7 @@ class Mesa extends Component {
     }
     ////////////////////////////////////////////////////////////////////////////////
     getMesaId = () => {
-      return this.props.match.params.distritoId +""+ this.props.match.params.escuelaId +""+ this.props.match.params.mesaId
+      return "Distrito: " + this.props.match.params.distritoId +" Escuela: " + this.props.match.params.escuelaId +" Mesa: " + this.props.match.params.mesaId
     }
 
     //carga los datos de un participante
@@ -219,7 +219,7 @@ class Mesa extends Component {
       return (
         <Container>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Header as='h3'> Mesa: {this.getMesaId()} no valida</Header>
+          <Header as='h3'> {this.getMesaId()} no corresponde a una mesa válida</Header>
           <Button onClick={event => {
             this.props.history.push("/mesas")
           }}> Volver a las mesas

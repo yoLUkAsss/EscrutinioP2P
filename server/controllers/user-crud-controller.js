@@ -62,60 +62,49 @@ export class UserCRUDController {
     email : string,
     password : string
   */
-  signup(req, res){
-    try{
-      userCRUDInstance.then((currentInstance) => {
-        currentInstance.signup.sendTransaction(req.body.email, req.body.password, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
-        })
-      })
-    } catch(err){
-      res.json("failed")
-    }
+  async signup(req, res){
+    userCRUDInstance
+    .then( async (currentInstance) => {
+      let signupVerify = await currentInstance.signupVerify.call(req.body.email, req.body.password, fromObject)
+      if (signupVerify[0]) { throw new Error(web3.toAscii(signupVerify[1])) }
+      await currentInstance.signup.sendTransaction(req.body.email, req.body.password, fromObject)
+      res.status(201).json(req.body.email)
+    })
+    .catch( (error) => {
+      res.status(400).json(error.message)
+    })
   }
   /*
     email : string,
     password : string
   */
   async login(req, res){
-    try{
-      userCRUDInstance.then((currentInstance) => {
-        currentInstance.getUserByEmail.call(req.body.email, fromObject).then((userAddress) => {
-        user.at(userAddress).then(async (userInstance) => {
-          await userInstance.login.sendTransaction(req.body.password, fromObject)
-          userInstance.getUser.call(fromObject).then((loggedUser) => {
-            res.json(userToJson(loggedUser))
-            }).catch(err => {
-              res.json("failed")
-            })
-          })
-        }).catch(err => {
-          res.json("failed")
-        })
-      })
-    } catch(err){
-      res.json("failed")
-    }
+    userCRUDInstance
+    .then( async (currentInstance) => {
+      let userAddressVerify = await currentInstance.getUserByEmailVerify.call(req.body.email, fromObject)
+      if (userAddressVerify[0]) { throw new Error(web3.toAscii(userAddressVerify[1])) }
+      let userAddress = await currentInstance.getUserByEmail.call(req.body.email, fromObject)
+      let userInstance = await user.at(userAddress)
+      let loginVerify = await userInstance.loginVerify.call(req.body.password, fromObject)
+      if (loginVerify[0]) { throw new Error(web3.toAscii(loginVerify[1])) }
+      await userInstance.login.sendTransaction(req.body.password, fromObject)
+      let loggedUser = await userInstance.getUser.call(fromObject)
+      res.status(200).json(userToJson(loggedUser))
+    })
+    .catch( (error) => {
+      res.status(400).json(error.message)
+    })
   }
   /*
-    email : string
+    address : string
   */
-  logout(req, res){
-    try{
-      user.at(req.address).then(userInstance => {
-        userInstance.logout.sendTransaction(fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
-        })
-      }).catch(err => {
-        res.json("failed")
-      })
-    } catch(err){
-      res.json("failed")
+  async logout(req, res){
+    try {
+      let userInstance = await user.at(req.body.address)
+      await userInstance.logout.sendTransaction(fromObject)
+      res.status(200).json("usuario deslogeado")
+    } catch (error) {
+      res.status(400).json(error.message)
     }
   }
-
 }

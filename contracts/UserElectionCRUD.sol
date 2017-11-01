@@ -10,11 +10,21 @@ contract UserElectionCRUD is UserCRUD{
 
 
 
+    function signupVerify(bytes32 email, bytes32 pass) public returns (bool,bytes32){
+        return createUserByEmailVerify(email, pass, 7);
+    }
     function signup(bytes32 email, bytes32 pass) public {
         createUserByEmail(email, pass, 7);
     }
 
 
+    function createUserByEmailVerify(bytes32 email, bytes32 password, uint category) internal returns (bool,bytes32) {
+        if(existsUser(emailMap[email])) {
+          return (true, "Username se encuentra en uso");
+        } else {
+          return (false, "");
+        }
+    }
     function createUserByEmail(bytes32 email, bytes32 password, uint category) internal {
         if(existsUser(emailMap[email])) revert();
         createUser(email, password, category);
@@ -33,6 +43,14 @@ contract UserElectionCRUD is UserCRUD{
 
     function createAutoridadElectoral(bytes32 email, bytes32 password) public {
         createUserByEmail(email, password, 0);
+    }
+
+    function getUserByEmailVerify(bytes32 email) public constant returns(bool,bytes32){
+      if(!existsUserByEmail(email)) {
+        return (true, "Usuario inexistente");
+      } else {
+        return (false, "");
+      }
     }
 
     function getUserByEmail(bytes32 email) public constant returns(address){

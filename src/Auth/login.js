@@ -44,12 +44,18 @@ class Login extends Component {
     handleLogin = (event) => {
       event.preventDefault()
       api.login(this.state.email, this.state.password).then(res => {
-        console.log(res)
         currentUser.setUser(cookie, res.data)
-        // utils.showSuccess(this.msg, "Inicio de sesion exitoso")
-        utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
-      }).catch(err => {
-        utils.showError(this.msg, "Fallo en el inicio de sesion")
+        api.isCreated().then( result => {
+          currentUser.setElectionCreated(cookie, result)
+          utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
+          // utils.showSuccess(this.msg, "Inicio de sesion exitoso")
+        }).catch(err => {
+          currentUser.setElectionCreated(cookie, false)
+          utils.showError(this.msg, "problem with election created")
+        })
+      }).catch(error => {
+        console.log(JSON.stringify(error, undefined, 2))
+        utils.showError(this.msg, error.response.data)
       })
     }
     render () {

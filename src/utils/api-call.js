@@ -10,8 +10,8 @@ export function login(userEmail, userPassword){
   return axios.post(urlBase + 'users/login', {email : userEmail, password : userPassword})
 }
 
-export function logout(userEmail){
-  return axios.post(urlBase + 'users/logout', {email : userEmail})
+export function logout(userAddress){
+  return axios.post(urlBase + 'users/logout', {address : userAddress})
 }
 
 export function initDistrito(userEmail, distrito, cantidadDeEscuelas){
@@ -37,4 +37,8 @@ export function initElection(userEmail, newCandidates){
     email : userEmail,
     candidates : newCandidates
   })
+}
+
+export function isCreated() {
+  return axios.get(urlBase + "election/initialized")
 }
