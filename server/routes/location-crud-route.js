@@ -6,6 +6,8 @@ const LocationCtrl = new LocationController()
 
 router.route('/').get(LocationCtrl.getLocations)
 router.route('/:locationId').get(LocationCtrl.getLocation)
-router.route('/').post(LocationCtrl.createLocation)
+
+router.route('/initdistrito').post(LocationCtrl.initDistrito)
+router.route('/initescuela').post(LocationCtrl.initEscuela)
 
 export default router;

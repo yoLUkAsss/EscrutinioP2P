@@ -7,9 +7,9 @@ const ElectionCtrl = new ElectionController()
 router.route('/').get(ElectionCtrl.getHome)
 
 router.route('/candidates').get(ElectionCtrl.getCandidates)
-router.route('/initiliazed').get(ElectionCtrl.getInitializedElection)
+router.route('/initialized').get(ElectionCtrl.getInitializedElection)
 
-router.route('/initializeelection').post(ElectionCtrl.initElection)
+router.route('/initelection').post(ElectionCtrl.initElection)
 
 router.route('/setautoridadelectoral').post(ElectionCtrl.setAutoridadElectoral)
 router.route('/setapoderadodepartido').post(ElectionCtrl.setApoderadoDePartido)

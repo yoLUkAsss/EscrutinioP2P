@@ -2,7 +2,7 @@ import { fromObject, electionInstance, web3 } from '../utils/web3-utils.js'
 
 export class ElectionController {
   getHome(req, res){
-    console.log(currentElection)
+    console.log(electionInstance)
     res.json("HOLA HOME")
   }
   getCandidates(req, res){
@@ -10,29 +10,29 @@ export class ElectionController {
       electionInstance.then((currentInstance) => {
         currentInstance.getCandidates.call(fromObject).then((candidates) => {
           res.json(candidates)
-        }).catch(err => {
-          res.json("failed")
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   getInitializedElection(req, res){
     try{
       electionInstance.then((currentInstance) => {
         currentInstance.created.call(fromObject).then((result) => {
-          res.json(result)
-        }).catch(err => {
-          res.json("failed")
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   /* body should have
@@ -41,16 +41,16 @@ export class ElectionController {
   initElection(req, res){
     try{
       electionInstance.then((currentInstance) => {
-        currentInstance.createElection.sendTransaction(req.body.email, req.body.candidates, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
+        currentInstance.createElection.sendTransaction(req.body.email, req.body.candidates, fromObject).then((result) => {
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   /* body should have
@@ -58,16 +58,16 @@ export class ElectionController {
   setAutoridadElectoral(req, res){
     try{
       electionInstance.then((currentInstance) => {
-        currentInstance.setAutoridadElectoral.sendTransaction(req.body.email, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
+        currentInstance.setAutoridadElectoral.sendTransaction(req.body.email, fromObject).then((result) => {
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   /* body should have
@@ -77,16 +77,16 @@ export class ElectionController {
   setApoderadoDePartido(req, res){
     try{
       electionInstance.then((currentInstance) => {
-        currentInstance.setApoderado.sendTransaction(req.body.autoridadElectoralEmail, req.body.apoderadoDePartidoEmail, req.body.candidate, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
+        currentInstance.setApoderado.sendTransaction(req.body.autoridadElectoralEmail, req.body.apoderadoDePartidoEmail, req.body.candidate, fromObject).then((result) => {
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   /* body:
@@ -97,16 +97,16 @@ export class ElectionController {
   setDelegadoDeDistrito(req, res){
     try{
       electionInstance.then((currentInstance) => {
-        currentInstance.setDelegadoDeDistrito.sendTransaction(req.body.autoridadElectoralEmail, req.body.delegadoDeDistritoEmail, req.body.distritoId, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
+        currentInstance.setDelegadoDeDistrito.sendTransaction(req.body.autoridadElectoralEmail, req.body.delegadoDeDistritoEmail, req.body.distritoId, fromObject).then((result) => {
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   /* body:
@@ -118,16 +118,16 @@ export class ElectionController {
   setDelegadoDeEscuela(req, res){
     try{
       electionInstance.then((currentInstance) => {
-        currentInstance.setDelegadoDeEscuela.sendTransaction(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
+        currentInstance.setDelegadoDeEscuela.sendTransaction(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject).then((result) => {
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   /* body:
@@ -140,16 +140,16 @@ export class ElectionController {
   setPresidenteDeMesa(req, res){
     try{
       electionInstance.then((currentInstance) => {
-        currentInstance.setPresidenteDeMesa.sendTransaction(req.delegadoDeEscuelaEmail, req.presidenteDeMesaEmail, req.distritoId, req.escuelaId, req.mesaId, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
+        currentInstance.setPresidenteDeMesa.sendTransaction(req.delegadoDeEscuelaEmail, req.presidenteDeMesaEmail, req.distritoId, req.escuelaId, req.mesaId, fromObject).then((result) => {
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   /* body:
@@ -162,16 +162,16 @@ export class ElectionController {
   setVicepresidenteDeMesa(req, res){
     try{
       electionInstance.then((currentInstance) => {
-        currentInstance.setVicepresidenteDeMesa.sendTransaction(req.delegadoDeEscuelaEmail, req.vicepresidenteDeMesaEmail, req.distritoId, req.escuelaId, req.mesaId, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
+        currentInstance.setVicepresidenteDeMesa.sendTransaction(req.delegadoDeEscuelaEmail, req.vicepresidenteDeMesaEmail, req.distritoId, req.escuelaId, req.mesaId, fromObject).then((result) => {
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
   /* body:
@@ -184,16 +184,16 @@ export class ElectionController {
   setFiscal(req, res){
     try{
       electionInstance.then((currentInstance) => {
-        currentInstance.setFiscal.sendTransaction(req.body.apoderadoDePartidoEmail, req.body.fiscalEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, fromObject).then((idTx) => {
-          res.json("work")
-        }).catch(err => {
-          res.json("failed")
+        currentInstance.setFiscal.sendTransaction(req.body.apoderadoDePartidoEmail, req.body.fiscalEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, fromObject).then((result) => {
+          res.status(200).json(result)
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
         })
-      }).catch(err => {
-        res.json("failed")
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
       })
-    } catch(err){
-      res.json("failed")
+    } catch(error){
+      res.status(400).json({ message : error.message })
     }
   }
 }
