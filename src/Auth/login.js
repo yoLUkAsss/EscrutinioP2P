@@ -17,13 +17,13 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
-import getWeb3 from '../utils/getWeb3'
+// import getWeb3 from '../utils/getWeb3'
 /**
 *   Contracts
 */
-import UserElectionCRUDcontract from '../../build/contracts/UserElectionCRUD.json'
-import UserContract from '../../build/contracts/User.json'
-import contract from 'truffle-contract'
+// import UserElectionCRUDcontract from '../../build/contracts/UserElectionCRUD.json'
+// import UserContract from '../../build/contracts/User.json'
+// import contract from 'truffle-contract'
 
 /**
 usa los siguientes props:

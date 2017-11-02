@@ -13,7 +13,7 @@ import AlertContainer from 'react-alert'
 /**
  * Controller for Component
  */
-import getWeb3 from '../utils/getWeb3'
+// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
@@ -21,8 +21,8 @@ import * as api from '../utils/api-call.js'
 /**
 * Contracts
 */
-import UserContract from '../../build/contracts/User.json'
-import contract from 'truffle-contract'
+// import UserContract from '../../build/contracts/User.json'
+// import contract from 'truffle-contract'
 
 /**
 usa los siguientes props:

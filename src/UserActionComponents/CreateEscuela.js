@@ -15,8 +15,8 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
-import contract from 'truffle-contract'
-import getWeb3 from '../utils/getWeb3'
+// import contract from 'truffle-contract'
+// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
@@ -24,7 +24,7 @@ import * as api from '../utils/api-call.js'
 /**
  * Contracts
 */
-import ElectionContract from '../../build/contracts/Election.json'
+// import ElectionContract from '../../build/contracts/Election.json'
 
 class CreateEscuela extends Component {
     constructor() {
@@ -37,7 +37,7 @@ class CreateEscuela extends Component {
     }
     handleCreateEscuela(event) {
       event.preventDefault()
-      api.initEscuela(currentUser.getEmail(cookie), parseInt(this.state.distritoId), parseInt(this.state.escuelaId), parseInt(this.state.cantidadMesas)).then((res) => {
+      api.initEscuela(currentUser.getEmail(cookie), parseInt(this.state.distritoId, 10), parseInt(this.state.escuelaId, 10), parseInt(this.state.cantidadMesas, 10)).then((res) => {
         utils.showSuccess(this.msg, "Escuela creada correctamente")
       }).catch(err => {
         utils.showError(this.msg, "Fallo la creacion de la escuela")

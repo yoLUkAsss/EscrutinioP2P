@@ -15,16 +15,16 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
-import contract from 'truffle-contract'
-import getWeb3 from '../utils/getWeb3'
+// import contract from 'truffle-contract'
+// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
 /**
  * Contracts
 */
-import ElectionContract from '../../build/contracts/Election.json'
-import DistritoCRUDContract from '../../build/contracts/DistritoCRUD.json'
+// import ElectionContract from '../../build/contracts/Election.json'
+// import DistritoCRUDContract from '../../build/contracts/DistritoCRUD.json'
 
 class CreateDistrito extends Component {
     constructor() {
@@ -36,7 +36,7 @@ class CreateDistrito extends Component {
     }
     handleCreateDistrito(event) {
       event.preventDefault()
-      api.initDistrito(currentUser.getEmail(cookie), parseInt(this.state.distrito), parseInt(this.state.escuelas)).then((res) => {
+      api.initDistrito(currentUser.getEmail(cookie), parseInt(this.state.distrito, 10), parseInt(this.state.escuelas, 10)).then((res) => {
         console.log(res)
         utils.showSuccess(this.msg, "Distrito creado correctamente")
       }).catch(err => {

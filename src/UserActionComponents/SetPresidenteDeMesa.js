@@ -13,13 +13,11 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
-import ElectionContract from '../../build/contracts/Election.json'
-import getWeb3 from '../utils/getWeb3'
-import contract from 'truffle-contract'
 
 import AlertContainer from 'react-alert'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
+import * as api from '../utils/api-call.js'
 import cookie from 'react-cookies'
 
 class SetPresidenteDeMesa extends Component {
@@ -33,32 +31,14 @@ class SetPresidenteDeMesa extends Component {
         }
     }
 
-    componentWillMount() {
-      getWeb3.then(results => {
-        this.setState({
-          web3: results.web3
-        })
-      }).catch(() => {
-        console.log('Error finding web3.')
-      })
-    }
-
-    async handleSetPresidenteDeMesa(event) {
+    handleSetPresidenteDeMesa(event) {
       event.preventDefault()
-      const election = contract(ElectionContract)
-      election.setProvider(this.state.web3.currentProvider)
-      let fromObject
-      this.state.web3.eth.getAccounts((err, accs) => {
-        fromObject = {from:accs[0], gas : 3000000}
-      })
-      let electionInstance = await election.deployed()
-      try{
-        await electionInstance.setPresidenteDeMesa.sendTransaction(currentUser.getEmail(cookie), this.state.distritoId, this.state.escuelaId, this.state.mesaId, this.state.email, fromObject)
+      api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.state.distritoId, this.state.escuelaId, this.state.mesaId).then(res => {
         utils.showSuccess(this.msg, "Seteado presidente de mesa")
-      } catch(error){
+      }).catch(error => {
         console.log(error)
         utils.showError(this.msg, "Fallo en el seteo del presidente:" + error)
-      }
+      })
     }
     handleCandidato = (event) => { this.setState({ candidato : event.target.value }) }
     handleDistrito = (event) => { this.setState({ distritoId : event.target.value }) }

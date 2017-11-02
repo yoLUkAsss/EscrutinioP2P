@@ -16,7 +16,7 @@ import escuelaContract from '../../build/contracts/Escuela.json'
 import mesaContract from '../../build/contracts/Mesa.json'
 //const userElectionCRUDContract = require('../build/contracts/userElectionCRUD.json')
 import userElectionCRUDContract from '../../build/contracts/UserElectionCRUD.json'
-
+//const user = require('../build/contracts/user.json')
 import userContract from '../../build/contracts/User.json'
 
 // Import contract address
@@ -24,6 +24,9 @@ const election = contract(electionContract)
 const distritoCRUD = contract(distritoCRUDContract)
 const userCRUD = contract(userElectionCRUDContract)
 const user = contract(userContract)
+const distrito = contract(distritoContract)
+const escuela = contract(escuelaContract)
+const mesa = contract(mesaContract)
 // const escuela = contract(escuelaContract)
 // Checking if Web3 has been injected by the browser (Mist/MetaMask)
 let web3
@@ -36,13 +39,17 @@ election.setProvider(web3.currentProvider)
 distritoCRUD.setProvider(web3.currentProvider)
 userCRUD.setProvider(web3.currentProvider)
 user.setProvider(web3.currentProvider)
+distrito.setProvider(web3.currentProvider)
+escuela.setProvider(web3.currentProvider)
+mesa.setProvider(web3.currentProvider)
+
 // escuela.setProvider(web3.currentProvider)
-let electionInstance = election.deployed()
-let distritoCRUDInstance = distritoCRUD.deployed()
-let userCRUDInstance = userCRUD.deployed()
+// let electionInstance = election.deployed()
+// let distritoCRUDInstance = distritoCRUD.deployed()
+// let userCRUDInstance = userCRUD.deployed()
 let fromObject
 web3.eth.getAccounts((err, accs) => {
   fromObject = { from : accs[0], gas : 3000000}
 })
 
-export { fromObject, electionInstance, distritoCRUDInstance, userCRUDInstance, user, web3 }
+export { fromObject, election, distritoCRUD, userCRUD, user, distrito, escuela, mesa, web3 }

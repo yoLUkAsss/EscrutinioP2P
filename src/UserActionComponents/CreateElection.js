@@ -2,13 +2,13 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form, Divider, Header } from 'semantic-ui-react'
+import { Container, Button, Form } from 'semantic-ui-react'
 import Center from 'react-center'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
 
-import ReactFileReader from 'react-file-reader';
+// import ReactFileReader from 'react-file-reader';
 
 /**
  * Components
@@ -18,8 +18,8 @@ import RefactoredDLF from '../utils/RDLF.js'
 /**
  * Controller for Component
  */
-import contract from 'truffle-contract'
-import getWeb3 from '../utils/getWeb3'
+// import contract from 'truffle-contract'
+// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
@@ -27,7 +27,7 @@ import * as api from '../utils/api-call.js'
 /**
  * Contracts
 */
-import ElectionContract from '../../build/contracts/Election.json'
+// import ElectionContract from '../../build/contracts/Election.json'
 
 class CreateElection extends Component {
     constructor() {
@@ -38,10 +38,10 @@ class CreateElection extends Component {
     }
     handleCreateElection(event){
       event.preventDefault()
-      api.initElection(currentUser.getEmail(cookie), this.state.candidates).then((res) => {
+      api.initElection(currentUser.getEmail(cookie), this.state.candidates.map(x => {return x.name})).then((res) => {
         currentUser.setElectionCreated(cookie, true)
         utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
-      }).catch(err => {
+      }).catch(error => {
         console.log(error)
         utils.showError(this.msg, "Fallo en la creacion de la eleccion")
       })

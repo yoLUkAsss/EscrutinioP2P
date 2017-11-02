@@ -15,9 +15,9 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
-import contract from 'truffle-contract'
-import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
-import getWeb3 from '../utils/getWeb3'
+// import contract from 'truffle-contract'
+// import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
+// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as api from '../utils/api-call.js'
 

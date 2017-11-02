@@ -1,4 +1,4 @@
-import { fromObject, userCRUDInstance, user, web3 } from '../utils/web3-utils.js'
+import { fromObject, userCRUD, user, web3 } from '../utils/web3-utils.js'
 
 function userToJson(user){
   return {
@@ -15,7 +15,7 @@ export class UserCRUDController {
   /*    returns usersId : [int]   */
   getUsers(req, res){
     try{
-      userCRUDInstance.then((currentInstance) => {
+      userCRUD.deployed().then((currentInstance) => {
         currentInstance.getUsers.call(fromObject).then((usersId) => {
           res.json(usersId)
         }).catch(err => {
@@ -29,7 +29,7 @@ export class UserCRUDController {
   /*    returns userAddress : string   */
   getUser(req, res){
     try{
-      userCRUDInstance.then((currentInstance) => {
+      userCRUD.deployed().then((currentInstance) => {
         currentInstance.getUser.call(req.params.userId, fromObject).then((userAddress) => {
           res.json(userAddress)
         }).catch(err => {
@@ -47,7 +47,7 @@ export class UserCRUDController {
   */
   createUser(req, res){
     try{
-      userCRUDInstance.then((currentInstance) => {
+      userCRUD.deployed().then((currentInstance) => {
         currentInstance.createUser.sendTransaction(req.body.email, req.body.password, req.body.category, fromObject).then((idTx) => {
           res.json("work")
         }).catch(err => {
@@ -63,7 +63,7 @@ export class UserCRUDController {
     password : string
   */
   async signup(req, res){
-    userCRUDInstance
+    userCRUD.deployed()
     .then( async (currentInstance) => {
       let signupVerify = await currentInstance.signupVerify.call(req.body.email, req.body.password, fromObject)
       if (signupVerify[0]) { throw new Error(web3.toAscii(signupVerify[1])) }
@@ -79,7 +79,7 @@ export class UserCRUDController {
     password : string
   */
   async login(req, res){
-    userCRUDInstance
+    userCRUD.deployed()
     .then( async (currentInstance) => {
       let userAddressVerify = await currentInstance.getUserByEmailVerify.call(req.body.email, fromObject)
       if (userAddressVerify[0]) { throw new Error(web3.toAscii(userAddressVerify[1])) }

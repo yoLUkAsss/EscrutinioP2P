@@ -9,7 +9,7 @@ import TotalMesas from '../App/TotalMesas.js'
 import Mesa from '../App/Mesa.js'
 
 // Utils
-import getWeb3 from '../utils/getWeb3'
+// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 
 // Contracts
@@ -20,19 +20,8 @@ class SearchMesa extends Component {
         this.state = {
           distritoId : "",
           escuelaId : "",
-          mesaId : "",
-          web3 : null
+          mesaId : ""
         }
-    }
-
-    componentWillMount() {
-      getWeb3.then(results => {
-        this.setState({
-          web3: results.web3
-        })
-      }).catch(() => {
-        console.log('Error finding web3.')
-      })
     }
 
     handleSearchMesa = (event) => {

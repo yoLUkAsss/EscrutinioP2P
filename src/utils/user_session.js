@@ -25,6 +25,15 @@ export function getAddress(cookie) {
 export function getEmail(cookie){
   return cookie.load("current_user_email")
 }
+export function getDistrito(cookie){
+  return cookie.load("current_user_distrito")
+}
+export function getEscuela(cookie){
+  return cookie.load("current_user_escuela")
+}
+export function getMesa(cookie){
+  return cookie.load("current_user_mesa")
+}
 //////////////////////////////////////////////////////////////
 //      QUERIES
 //////////////////////////////////////////////////////////////

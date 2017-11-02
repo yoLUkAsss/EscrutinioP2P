@@ -24,6 +24,7 @@ import CreateDistritoItem from '../NavBarComponents/CreateDistritoItem.js'
 import CreateEscuelaItem from '../NavBarComponents/CreateEscuelaItem.js'
 
 import SearchMesaItem from '../NavBarComponents/SearchMesaItem.js'
+import LoadMesaItem from '../NavBarComponents/LoadMesaItem.js'
 
 import * as currentUser from '../utils/user_session.js'
 
@@ -54,6 +55,7 @@ class FixedNavbarComponent extends Component {
           <SignUpItem/>
           <LogOutItem/>
           <SearchMesaItem/>
+          <LoadMesaItem/>
           <SetApoderadoItem/>
           <SetDelegadoDeDistritoItem/>
           <SetDelegadoDeEscuelaItem/>

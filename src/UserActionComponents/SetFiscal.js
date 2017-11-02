@@ -13,13 +13,10 @@ import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
-import ElectionContract from '../../build/contracts/Election.json'
-import getWeb3 from '../utils/getWeb3'
-import contract from 'truffle-contract'
-
 import AlertContainer from 'react-alert'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
+import * as api from '../utils/api-call.js'
 import cookie from 'react-cookies'
 
 class SetFiscal extends Component {
@@ -34,32 +31,14 @@ class SetFiscal extends Component {
       }
     }
 
-    componentWillMount() {
-      getWeb3.then(results => {
-        this.setState({
-          web3: results.web3
-        })
-      }).catch(() => {
-        console.log('Error finding web3.')
-      })
-    }
-
-    async handleSetFiscal(event) {
+    handleSetFiscal(event) {
       event.preventDefault()
-      const election = contract(ElectionContract)
-      election.setProvider(this.state.web3.currentProvider)
-      let fromObject
-      this.state.web3.eth.getAccounts((err, accs) => {
-        fromObject = {from:accs[0], gas : 3000000}
-      })
-      let electionInstance = await election.deployed()
-      try{
-        await electionInstance.setFiscal.sendTransaction(currentUser.getEmail(cookie), this.state.candidato, this.state.email, this.state.distritoId, this.state.escuelaId, this.state.mesaId, fromObject)
+      api.setFiscal(currentUser.getEmail(cookie), this.state.candidato, this.state.email, this.state.distritoId, this.state.escuelaId, this.state.mesaId).then(res => {
         utils.showSuccess(this.msg, "Fiscal Asignado")
-      } catch(error){
+      }).catch(error => {
         console.log(error)
         utils.showError(this.msg, "Fallo en la asignación del fiscal:" + error)
-      }
+      })
     }
 
     handleFiscal = (event) => { this.setState({ email : event.target.value }) }
