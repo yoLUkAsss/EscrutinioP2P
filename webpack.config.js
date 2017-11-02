@@ -26,7 +26,13 @@ module.exports = {
     filename: 'index_bundle.js'
   },
   module: {
-    loaders: [
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader : "eslint-loader",
+        enforce: "pre"
+      },
       { test: /\.js$/,
         loader: 'babel-loader',
         options: {
