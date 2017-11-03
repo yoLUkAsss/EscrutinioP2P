@@ -39,20 +39,21 @@ export class ElectionController {
     email: string,
     candidates : [string] */
   initElection(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        electionInstance.createElection.sendTransaction(req.body.email, req.body.candidates, fromObject).then((result) => {
-          res.status(200).json(result)
-        }).catch(error => {
-          res.status(400).json({ message : error.message })
-        })
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
-      })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
+    election.deployed()
+    .then( async electionInstance => {
+      let result = await electionInstance.createElectionVerify.call(req.body.email, req.body.candidates, fromObject)
+      if (result[0]) {
+        res.status(400).json( web3.toAscii(result[1]) )
+      } else {
+        await electionInstance.createElection.sendTransaction(req.body.email, req.body.candidates, fromObject)
+        res.status(200).json( "Elección creada correctamente" )
+      }
+    })
+    .catch( error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
+  
   /* body should have
     email: string*/
   setAutoridadElectoral(req, res){

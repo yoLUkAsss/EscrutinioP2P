@@ -43,7 +43,7 @@ class CreateElection extends Component {
         utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
       }).catch(error => {
         console.log(error)
-        utils.showError(this.msg, "Fallo en la creacion de la eleccion")
+        utils.showError(this.msg, error.response.data)
       })
     }
     handleNewCandidates = (newCandidates) => {

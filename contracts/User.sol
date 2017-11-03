@@ -29,6 +29,9 @@ contract User{
       return (this, email, category, idDistrito, idEscuela, idMesa);
     }
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
     function loginVerify(bytes32 pass) public returns (bool,bytes32){
         if(password != pass) {
             return (true, "Contraseña incorrecta");
@@ -40,6 +43,11 @@ contract User{
         if(password != pass) revert();
         isLogged = true;
     }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
     function logout() public {
         isLogged = false;
     }
@@ -55,9 +63,24 @@ contract User{
     function destroy(address parent) public {
         selfdestruct(parent);
     }
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function setCategoryVerify(uint cat) public returns (bool, bytes32) {
+        if (category != 7) {
+            return (true, "Usuario posee otra categoria");
+        } else {
+            return (false, "");
+        }
+    }
     function setCategory(uint cat) public {
       category = cat;
     }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
+    
     function setDistrito(uint id) public {
       idDistrito = id;
     }
