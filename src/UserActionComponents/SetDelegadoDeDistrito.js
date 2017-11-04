@@ -2,7 +2,7 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Header, Button, Form } from 'semantic-ui-react'
+import { Container, Header, Button, Form, Confirm} from 'semantic-ui-react'
 // import Center from 'react-center'
 
 /**
@@ -24,21 +24,25 @@ class SetDelegadoDeDistrito extends Component {
         super()
         this.state = {
             correoDelegado : "",
-            idDelDistrito : ""
+            distrito : "",
+            open : false
         }
     }
+    show = () => this.setState({ open: true })
+    close = () => this.setState({ open: false })
 
     handleSetDelegadoDeDistrito(event) {
       event.preventDefault()
-      api.setDelegadoDeDistrito(currentUser.getEmail(cookie), this.state.correoDelegado, this.state.idDelDistrito).then(res => {
+      api.setDelegadoDeDistrito(currentUser.getEmail(cookie), this.state.correoDelegado, this.state.distrito).then(res => {
         utils.showSuccess(this.msg, "Delegado de Distrito Asignado Correctamente")
       }).catch(error => {
         console.log(error)
         utils.showError(this.msg, "Fallo en la :" + error)
       })
+      this.setState({open : false})
     }
     handleDelegado = (event) => { this.setState({ correoDelegado : event.target.value }) }
-    handleDistrito = (evt) => {this.setState({ idDelDistrito : evt.target.value })}
+    handleDistrito = (event) => { this.setState({ distrito : event.target.value }) }
     render () {
         return (
             <Container text>
@@ -53,17 +57,24 @@ class SetDelegadoDeDistrito extends Component {
                       value={this.state.correoDelegado}
                       onChange={this.handleDelegado.bind(this)}
                     />
-                    <Form.Input
+                    <Form.Field
+                      control='input'
+                      min={1}
                       required
-                      type="number"
-                      label='Distrito'
-                      placeholder="ID del Distrito"
-                      value={this.state.idDelDistrito}
+                      type='number'
+                      label='ID del Distrito'
+                      placeholder='ID del Distrito'
+                      value={this.state.distrito}
                       onChange={this.handleDistrito.bind(this)}
                     />
-                    <Button onClick={this.handleSetDelegadoDeDistrito.bind(this)}>
-                        Asignar
-                    </Button>
+                    <Button onClick={this.show.bind(this)}>Asignar</Button>
+                    <Confirm
+                      open={this.state.open}
+                      header='Asignacion de Delegado de Distrito'
+                      content={`Estas seguro de asignar al usuario ${this.state.correoDelegado} como delegado del distrito ${this.state.distrito}`}
+                      onCancel={this.close.bind(this)}
+                      onConfirm={this.handleSetDelegadoDeDistrito.bind(this)}
+                    />
                 </Form>
             </Container>
         );
@@ -71,3 +82,12 @@ class SetDelegadoDeDistrito extends Component {
 }
 
 export default SetDelegadoDeDistrito
+// <Form.Input
+//   required
+//   type="number"
+//   label='ID del Distrito'
+//   placeholder='ID del Distrito'
+//   value={this.state.distrito}
+//   onChange={this.handleDistrito.bind(this)
+//   }
+// />

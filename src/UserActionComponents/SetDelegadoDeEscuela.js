@@ -2,13 +2,13 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
+import { Container, Button, Form, Confirm, Header } from 'semantic-ui-react'
+// import Center from 'react-center'
 
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 
 /**
  * Controller for Component
@@ -24,60 +24,60 @@ class SetDelegadoDeEscuela extends Component {
         super()
         this.state = {
             correoDelegado : "",
-            idDelDistrito : "",
-            idDeLaEscuela : ""
+            escuela : "",
+            open : false
         }
+        this.distrito = currentUser.getDistrito(cookie)
     }
     handleSetDelegadoDeEscuela(event) {
       event.preventDefault()
-      api.setDelegadoDeEscuela(currentUser.getEmail(cookie), this.state.correoDelegado, this.state.idDelDistrito, this.state.idDeLaEscuela).then(res => {
+      api.setDelegadoDeEscuela(currentUser.getEmail(cookie), this.state.correoDelegado, this.distrito, this.state.escuela).then(res => {
         utils.showSuccess(this.msg, "Delegado de Distrito Asignado Correctamente")
       }).catch(error => {
         console.log(error)
         utils.showError(this.msg, "Fallo en la :" + error)
       })
+      this.setState({open : false})
     }
     handleDelegadoEscuela = (event) => { this.setState({ correoDelegado : event.target.value }) }
-    handleDistrito = (evt) => {this.setState({ idDelDistrito : evt.target.value })}
-    handleEscuela = (evt) => {this.setState({ idDeLaEscuela : evt.target.value })}
+    handleEscuela = (event) => { this.setState({ escuela : event.target.value }) }
+    show = () => this.setState({ open: true })
+    close = () => this.setState({ open: false })
+
     render () {
         return (
-            <Center>
-            <div>
-                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
-                <ComponentTitle title='Asignar Delegado de Escuela'/>
-                <Form>
-                    <Form.Input
-                        required
-                        inline
-                        type="email"
-                        label='Delegado'
-                        placeholder='Correo del Delegado'
-                        value={this.state.correoDelegado}
-                        onChange={this.handleDelegadoEscuela.bind(this)}
-                    />
-                    <Form.Input
-                        type="number"
-                        label='Distrito'
-                        placeholder="ID del Distrito"
-                        value={this.state.idDelDistrito}
-                        onChange={this.handleDistrito.bind(this)}
-                    />
-                    <Form.Input
-                        type="number"
-                        label='Escuela'
-                        placeholder="ID de la escuela"
-                        value={this.state.idDeLaEscuela}
-                        onChange={this.handleEscuela.bind(this)}
-                    />
-                    <Button onClick={this.handleSetDelegadoDeEscuela.bind(this)}>
-                        Asignar
-                    </Button>
-                </Form>
-                </Container>
-            </div>
-            </Center>
+            <Container text>
+              <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+              <Header as='h3'>Asignar Delegado de Escuela</Header>
+              <Form>
+                  <Form.Input
+                      required
+                      type="email"
+                      label='Delegado'
+                      placeholder='Correo del Delegado'
+                      value={this.state.correoDelegado}
+                      onChange={this.handleDelegadoEscuela.bind(this)}
+                  />
+                  <Form.Field
+                    control='input'
+                    min={1}
+                    required
+                    type='number'
+                    label='ID de la Escuela'
+                    placeholder='ID de la Escuela'
+                    value={this.state.escuela}
+                    onChange={this.handleEscuela.bind(this)}
+                  />
+                  <Button onClick={this.show.bind(this)}>Asignar</Button>
+                  <Confirm
+                    open={this.state.open}
+                    header='Asignacion de Delegado de Escuela'
+                    content={`Estas seguro de asignar al usuario ${this.state.correoDelegado} como delegado de la escuela ${this.distrito}${this.state.escuela}`}
+                    onCancel={this.close.bind(this)}
+                    onConfirm={this.handleSetDelegadoDeEscuela.bind(this)}
+                  />
+              </Form>
+            </Container>
         );
     }
 }

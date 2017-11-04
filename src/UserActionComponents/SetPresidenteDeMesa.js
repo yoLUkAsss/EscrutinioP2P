@@ -2,13 +2,13 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
+import { Container, Button, Form, Confirm, Header} from 'semantic-ui-react'
+// import Center from 'react-center'
 
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 
 /**
  * Controller for Component
@@ -24,75 +24,62 @@ class SetPresidenteDeMesa extends Component {
     constructor() {
         super()
         this.state = {
-          distritoId : "",
-          escuelaId : "",
-          mesaId : "",
-          email : ""
+          email : "",
+          mesa : "",
+          open : false
         }
+        this.distrito = currentUser.getDistrito(cookie)
+        this.escuela = currentUser.getEscuela(cookie)
     }
 
     handleSetPresidenteDeMesa(event) {
       event.preventDefault()
-      api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.state.distritoId, this.state.escuelaId, this.state.mesaId).then(res => {
+      api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.state.mesa).then(res => {
         utils.showSuccess(this.msg, "Seteado presidente de mesa")
       }).catch(error => {
         console.log(error)
         utils.showError(this.msg, "Fallo en el seteo del presidente:" + error)
       })
+      this.setState({open : false})
     }
-    handleCandidato = (event) => { this.setState({ candidato : event.target.value }) }
-    handleDistrito = (event) => { this.setState({ distritoId : event.target.value }) }
-    handleEscuela = (event) => { this.setState({ escuelaId : event.target.value }) }
-    handleMesa = (event) => { this.setState({ mesaId : event.target.value }) }
+    show = () => this.setState({ open: true })
+    close = () => this.setState({ open: false })
     handlePresidente = (event) => { this.setState({ email : event.target.value }) }
+    handleMesa = (event) => { this.setState({ mesa : event.target.value }) }
     render () {
         return (
-            <Center>
-            <div>
-                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
-                <ComponentTitle title='Asignar Presidente de Mesa'/>
-                <Form>
-                <Form.Input
-                  required
-                  type='number'
-                  label='distrito id'
-                  placeholder='distrito id'
-                  value={this.state.distritoId}
-                  onChange={this.handleDistrito.bind(this)}
-                />
-                <Form.Input
-                  required
-                  type='number'
-                  label='escuela id'
-                  placeholder='escuela id'
-                  value={this.state.escuelaId}
-                  onChange={this.handleEscuela.bind(this)}
-                />
-                <Form.Input
-                  required
-                  type='number'
-                  label='mesa id'
-                  placeholder='mesa id'
-                  value={this.state.mesaId}
-                  onChange={this.handleMesa.bind(this)}
-                />
+            <Container text>
+              <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+              <Header as='h3'>Asignar Presidente de Mesa</Header>
+              <Form>
                 <Form.Input
                     required
-                    inline
                     type="email"
                     label='Email'
                     placeholder='Email'
                     value={this.state.email}
                     onChange={this.handlePresidente.bind(this)}
                 />
-                    <Button onClick={this.handleSetPresidenteDeMesa.bind(this)}>
-                        Asignar
-                    </Button>
-                </Form>
-                </Container>
-            </div>
-            </Center>
+                <Form.Field
+                  control='input'
+                  min={1}
+                  required
+                  type='number'
+                  label='ID de la Mesa'
+                  placeholder='ID de la Mesa'
+                  value={this.state.mesa}
+                  onChange={this.handleMesa.bind(this)}
+                />
+                <Button onClick={this.show.bind(this)}>Asignar</Button>
+                <Confirm
+                  open={this.state.open}
+                  header='Asignacion de Presidente'
+                  content={`Estas seguro de asignar al usuario ${this.state.email} como presidente de la mesa ${this.distrito}${this.escuela}${this.state.mesa}`}
+                  onCancel={this.close.bind(this)}
+                  onConfirm={this.handleSetPresidenteDeMesa.bind(this)}
+                />
+              </Form>
+            </Container>
         );
     }
 }
