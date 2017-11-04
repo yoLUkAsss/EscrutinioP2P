@@ -2,13 +2,13 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
+import { Container, Button, Header, Form } from 'semantic-ui-react'
+// import Center from 'react-center'
 
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 
 /**
  * Controller for Component
@@ -48,61 +48,55 @@ class SetFiscal extends Component {
     handleMesa = (event) => { this.setState({ mesaId : event.target.value }) }
     render () {
         return (
-          <Center>
-            <div>
-                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
-                <ComponentTitle title='Asignar Fiscal a una Mesa'/>
-                <Form>
-                    <Form.Input
-                        required
-                        inline
-                        type="email"
-                        label='Fiscal'
-                        placeholder='Correo del Fiscal'
-                        value={this.state.email}
-                        onChange={this.handleFiscal.bind(this)}
-                    />
-                    <Form.Input
-                        required
-                        inline
-                        type="email"
-                        label='Candidato'
-                        placeholder='Partido Policito asociado'
-                        value={this.state.candidato}
-                        onChange={this.handleCandidato.bind(this)}
-                    />
-                    <Form.Input
+            <Container text>
+              <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+              <Header as='h3'>Asignar Fiscal a una Mesa</Header>
+              <Form>
+                  <Form.Input
                       required
-                      type='number'
-                      label='distrito id'
-                      placeholder='distrito id'
-                      value={this.state.distritoId}
-                      onChange={this.handleDistrito.bind(this)}
-                    />
-                    <Form.Input
+                      type="email"
+                      label='Correo del Fiscal'
+                      placeholder='Correo del Fiscal'
+                      value={this.state.email}
+                      onChange={this.handleFiscal.bind(this)}
+                  />
+                  <Form.Input
                       required
-                      type='number'
-                      label='escuela id'
-                      placeholder='escuela id'
-                      value={this.state.escuelaId}
-                      onChange={this.handleEscuela.bind(this)}
-                    />
-                    <Form.Input
-                      required
-                      type='number'
-                      label='mesa id'
-                      placeholder='mesa id'
-                      value={this.state.mesaId}
-                      onChange={this.handleMesa.bind(this)}
-                    />
-                    <Button onClick={this.handleSetFiscal.bind(this)}>
-                        Setear fiscal
-                    </Button>
-                </Form>
-              </Container>
-            </div>
-          </Center>
+                      type="email"
+                      label='Candidato'
+                      placeholder='Partido Policito asociado'
+                      value={this.state.candidato}
+                      onChange={this.handleCandidato.bind(this)}
+                  />
+                  <Form.Input
+                    required
+                    type='number'
+                    label='ID del Distrito'
+                    placeholder='ID del Distrito'
+                    value={this.state.distritoId}
+                    onChange={this.handleDistrito.bind(this)}
+                  />
+                  <Form.Input
+                    required
+                    type='number'
+                    label='ID de la Escuela'
+                    placeholder='ID de la Escuela'
+                    value={this.state.escuelaId}
+                    onChange={this.handleEscuela.bind(this)}
+                  />
+                  <Form.Input
+                    required
+                    type='number'
+                    label='ID de la Mesa'
+                    placeholder='ID de la Mesa'
+                    value={this.state.mesaId}
+                    onChange={this.handleMesa.bind(this)}
+                  />
+                  <Button onClick={this.handleSetFiscal.bind(this)}>
+                      Setear fiscal
+                  </Button>
+              </Form>
+            </Container>
         );
     }
 }

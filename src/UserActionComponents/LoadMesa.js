@@ -97,7 +97,7 @@ class LoadMesa extends Component {
 
     renderMesaLoadable(){
         return (
-          <Container>
+          <Container text>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
             <Header as='h3'>Cargar Mesa: {this.getMesaId()}</Header>
               <Form>
@@ -124,7 +124,7 @@ class LoadMesa extends Component {
     }
     renderInvalidMesa(){
       return (
-        <Container>
+        <Container text>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
           <Header as='h3'> {this.getMesaId()} no corresponde a una mesa válida</Header>
           <Button onClick={event => {

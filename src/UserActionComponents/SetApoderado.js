@@ -2,13 +2,13 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
+import { Container, Header, Button, Form } from 'semantic-ui-react'
+// import Center from 'react-center'
 
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 
 /**
  * Controller for Component
@@ -42,11 +42,9 @@ class SetFiscal extends Component {
     handleApoderado = (event) => { this.setState({ email : event.target.value }) }
     render () {
         return (
-            <Center>
-            <div>
+            <Container text>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
-                <ComponentTitle title='Asignar Apoderado de Partido'/>
+                <Header as='h3'>Asignar Apoderado de Partido</Header>
                 <Form>
                     <Form.Input
                         required
@@ -70,9 +68,7 @@ class SetFiscal extends Component {
                         Asignar
                     </Button>
                 </Form>
-                </Container>
-            </div>
-            </Center>
+            </Container>
         );
     }
 }

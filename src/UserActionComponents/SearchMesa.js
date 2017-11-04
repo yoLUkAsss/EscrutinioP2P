@@ -39,25 +39,25 @@ class SearchMesa extends Component {
         <Container>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
           <Form >
-              <Header as='h2'> Buscar mesa</Header>
+              <Header as='h3'> Buscar mesa</Header>
                 <Form.Input
                     type="number"
-                    label='id del distrito'
-                    placeholder="id del distrito"
+                    label='ID del Distrito'
+                    placeholder="ID del Distrito"
                     value={this.state.distritoId}
                     onChange={this.handleDistrito.bind(this)}
                 />
                 <Form.Input
                     type="number"
-                    label='id de la escuela'
-                    placeholder="id de la escuela"
+                    label='ID de la Escuela'
+                    placeholder="ID de la Escuela"
                     value={this.state.escuelaId}
                     onChange={this.handleEscuela.bind(this)}
                 />
                 <Form.Input
                     type="number"
-                    label='id de la Mesa'
-                    placeholder="id de la Mesa"
+                    label='ID de la Mesa'
+                    placeholder="ID de la Mesa"
                     value={this.state.mesaId}
                     onChange={this.handleMesa.bind(this)}
                 />

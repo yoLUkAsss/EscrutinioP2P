@@ -2,13 +2,13 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
+import { Container, Header, Button, Form } from 'semantic-ui-react'
+// import Center from 'react-center'
 
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 
 /**
  * Controller for Component
@@ -41,35 +41,31 @@ class SetDelegadoDeDistrito extends Component {
     handleDistrito = (evt) => {this.setState({ idDelDistrito : evt.target.value })}
     render () {
         return (
-            <Center>
-            <div>
+            <Container text>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
-                <ComponentTitle title='Asignar Delegado de Distrito'/>
+                <Header as='h3'>Asignar Delegado de Distrito</Header>
                 <Form>
                     <Form.Input
-                        required
-                        inline
-                        type="email"
-                        label='Delegado'
-                        placeholder='Correo del Delegado'
-                        value={this.state.correoDelegado}
-                        onChange={this.handleDelegado.bind(this)}
+                      required
+                      type="email"
+                      label='Delegado'
+                      placeholder='Correo del Delegado'
+                      value={this.state.correoDelegado}
+                      onChange={this.handleDelegado.bind(this)}
                     />
                     <Form.Input
-                        type="number"
-                        label='Distrito'
-                        placeholder="ID del Distrito"
-                        value={this.state.idDelDistrito}
-                        onChange={this.handleDistrito.bind(this)}
+                      required
+                      type="number"
+                      label='Distrito'
+                      placeholder="ID del Distrito"
+                      value={this.state.idDelDistrito}
+                      onChange={this.handleDistrito.bind(this)}
                     />
                     <Button onClick={this.handleSetDelegadoDeDistrito.bind(this)}>
                         Asignar
                     </Button>
                 </Form>
-                </Container>
-            </div>
-            </Center>
+            </Container>
         );
     }
 }
