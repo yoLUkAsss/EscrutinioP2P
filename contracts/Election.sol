@@ -13,16 +13,16 @@ contract Election {
     bool public created;
     bytes32 autoridadElectoralAsignada;
     bytes32[] candidates;
-    
-    
-    
+
+
+
     function Election (address newUserCRUDaddress, address newDistritoCRUDaddress) public {
       owner = msg.sender;
       userCRUDaddress = newUserCRUDaddress;
       distritoCRUDaddress = newDistritoCRUDaddress;
     }
 
-    
+
     /*function setAutoridadElectoral(bytes32 email) external {
       require(!created && autoridadElectoralAsignada == "");
       UserElectionCRUD(userCRUDaddress).setAutoridadElectoral(email);
@@ -38,7 +38,7 @@ contract Election {
       }
       if (autoridadElectoralAsignada != "") {
         return (true, "Ya existe autoridad electoral");
-      } 
+      }
       if (newCandidates.length < 2) {
         return (true, "Los candidatos deben ser 2+");
       } else {
@@ -67,7 +67,14 @@ contract Election {
     }
 
 
-
+    function isValidCandidate(bytes32 candidate) public constant returns(bool){
+      for(uint8 index = 0; index < candidates.length; index++){
+        if(candidates[index] == candidate){
+          return true;
+        }
+      }
+      return false;
+    }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
     function createDistritoVerify(bytes32 autoridadElectoral, uint distritoId) public returns (bool, bytes32){
@@ -124,7 +131,7 @@ contract Election {
       require(created && autoridadElectoralAsignada == autoridadElectoral);
       DistritoCRUD(distritoCRUDaddress).createMesa(distritoId, escuelaId, candidates);
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////    
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -133,15 +140,18 @@ contract Election {
     function setApoderadoVerify(bytes32 autoridadElectoral, bytes32 apoderado, bytes32 candidato) public returns (bool, bytes32) {
       if (autoridadElectoralAsignada != autoridadElectoral) {
         return (true, "Debe ser autoridad electoral");
-      } 
+      }
       if (apoderados[candidato] != "") {
         return (true, "Ya existe apoderado asignado");
+      }
+      if (!isValidCandidate(candidato)) {
+        return (true, "Candidato no existe");
       } else {
         return UserElectionCRUD(userCRUDaddress).setApoderadoVerify(apoderado);
       }
     }
     function setApoderado(bytes32 autoridadElectoral, bytes32 apoderado, bytes32 candidato) public {
-        require(autoridadElectoralAsignada == autoridadElectoral && apoderados[candidato] == "");
+        require(autoridadElectoralAsignada == autoridadElectoral && apoderados[candidato] == "" && isValidCandidate(candidato));
         apoderados[candidato] = apoderado;
         UserElectionCRUD(userCRUDaddress).setApoderado(apoderado);
     }
@@ -193,7 +203,7 @@ contract Election {
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////  
+/////////////////////////////////////////////////////////////////////////////////////////////////
     function setPresidenteDeMesaVerify(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public returns (bool, bytes32) {
       bool huboError;
       bytes32 mensaje;
@@ -203,7 +213,7 @@ contract Election {
       } else {
         return DistritoCRUD(distritoCRUDaddress).setPresidenteDeMesaVerify(delegadoEscuela, distritoId, escuelaId, mesaId, presidenteDeMesaEmail);
       }
-    }  
+    }
     function setPresidenteDeMesa(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
       UserElectionCRUD(userCRUDaddress).setPresidenteDeMesa(presidenteDeMesaEmail, distritoId, escuelaId, mesaId);
       DistritoCRUD(distritoCRUDaddress).setPresidenteDeMesa(delegadoEscuela, distritoId, escuelaId, mesaId, presidenteDeMesaEmail);

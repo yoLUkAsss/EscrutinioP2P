@@ -24,7 +24,7 @@ contract('Escuela', function(accounts) {
     let mesaId = mesas[mesas.length - 1].toNumber()
     let exists = await escuelaInstance.existsMesa.call(mesaId)
     assert.ok(exists, "Exists mesa")
-    await escuelaInstance.deleteMesa(mesaId, fromObject)
+    // await escuelaInstance.deleteMesa(mesaId, fromObject)
   })
 
   it("get an existent Mesa should returns its address.", async () => {
@@ -35,19 +35,19 @@ contract('Escuela', function(accounts) {
     let mesa = await escuelaInstance.getMesa.call(mesaId, fromObject)
     let zero = "0x0000000000000000000000000000000000000000"
     assert.ok(mesa !== zero, "has address")
-    await escuelaInstance.deleteMesa(mesaId, fromObject)
+    // await escuelaInstance.deleteMesa(mesaId, fromObject)
   })
 
-  it("delete an mesa by id decrease the length of mesas", async () => {
-    let escuelaInstance = await Escuela.deployed()
-    await escuelaInstance.createMesa([], fromObject)
-    let mesas = await escuelaInstance.getMesas.call(fromObject)
-    let mesaId = mesas[mesas.length - 1].toNumber()
-    let exists = await escuelaInstance.existsMesa.call(mesaId, fromObject)
-    assert.ok(exists, "Exists mesa created")
-    await escuelaInstance.deleteMesa(mesaId, fromObject)
-    let notexists = await escuelaInstance.existsMesa.call(mesaId, fromObject)
-    assert.ok(!notexists, "Not exists mesa deleted")
-  })
+  // it("delete an mesa by id decrease the length of mesas", async () => {
+  //   let escuelaInstance = await Escuela.deployed()
+  //   await escuelaInstance.createMesa([], fromObject)
+  //   let mesas = await escuelaInstance.getMesas.call(fromObject)
+  //   let mesaId = mesas[mesas.length - 1].toNumber()
+  //   let exists = await escuelaInstance.existsMesa.call(mesaId, fromObject)
+  //   assert.ok(exists, "Exists mesa created")
+  //   await escuelaInstance.deleteMesa(mesaId, fromObject)
+  //   let notexists = await escuelaInstance.existsMesa.call(mesaId, fromObject)
+  //   assert.ok(!notexists, "Not exists mesa deleted")
+  // })
 
 })

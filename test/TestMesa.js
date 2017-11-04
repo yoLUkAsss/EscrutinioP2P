@@ -8,7 +8,7 @@ contract('Mesa', function(accounts) {
     let candidates = await mesaInstance.getCandidatesList.call(fromObject)
     assert.equal(candidates.length, 2, "There are 2 candidates.")
 
-    await mesaInstance.destroy(accounts[0])
+    // await mesaInstance.destroy(accounts[0])
   })
 
   it("set fiscal should add 1 participant", async () => {
@@ -18,7 +18,7 @@ contract('Mesa', function(accounts) {
     let isFiscal = await mesaInstance.isFiscal.call(email, fromObject)
 
     assert.ok(isFiscal, "fiscal added correctly")
-    await mesaInstance.destroy(accounts[0])
+    // await mesaInstance.destroy(accounts[0])
   })
 
   it("set presidente should add 1 participant and set presidente", async () => {
@@ -28,7 +28,7 @@ contract('Mesa', function(accounts) {
     let isPresidenteDeMesa = await mesaInstance.isPresidenteDeMesa.call(email, fromObject)
     assert.ok(isPresidenteDeMesa, "presidente added correctly")
 
-    await mesaInstance.destroy(accounts[0])
+    // await mesaInstance.destroy(accounts[0])
   })
 
 })
