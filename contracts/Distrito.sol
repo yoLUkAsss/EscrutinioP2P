@@ -18,12 +18,15 @@ contract Distrito {
     bool isEscuela;
   }
   
-  
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
   function createEscuela() public {
     lastEscuelaId += 1;
     escuelaMapping[lastEscuelaId] = EscuelaStruct(lastEscuelaId, new Escuela(), escuelaIds.length, true);
     escuelaIds.push(lastEscuelaId);
   }
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -32,7 +35,7 @@ contract Distrito {
     if (! existsEscuela(escuelaId)) {
       return (true, "ID de escuela inexistente");
     } else {
-      return (false, "");
+      return Escuela(escuelaMapping[escuelaId].escuelaAddress).createMesaVerify(candidates);
     }
   }
   function createMesa(uint escuelaId, bytes32[] candidates) public {
@@ -40,6 +43,41 @@ contract Distrito {
     Escuela(escuelaMapping[escuelaId].escuelaAddress).createMesa(candidates);
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function mesasCreatedVerify(uint escuelaId) public returns (bool, bytes32) {
+      if (! existsEscuela(escuelaId)) {
+        return (true, "ID de escuela inexistente");
+      } else {
+        return Escuela(escuelaMapping[escuelaId].escuelaAddress).mesasCreatedVerify();
+      }
+    }
+    function mesasCreated(uint escuelaId) public {
+      require(existsEscuela(escuelaId));
+      Escuela(escuelaMapping[escuelaId].escuelaAddress).mesasCreated();
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function completeMesaVerify(uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
+      if (! existsEscuela(escuelaId)) {
+        return (true, "ID de escuela inexistente");
+      } else {
+        return Escuela(escuelaMapping[escuelaId].escuelaAddress).completeMesaVerify(mesaId, personas);
+      }
+    }
+    function completeMesa(uint escuelaId, uint mesaId, uint personas) public {
+      require(existsEscuela(escuelaId));
+      Escuela(escuelaMapping[escuelaId].escuelaAddress).completeMesa(mesaId, personas);
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
   //////////////////////////////////////////////////
   function getEscuela(uint id) public constant returns(address){
@@ -124,6 +162,23 @@ contract Distrito {
   function setDelegadoDeEscuela(bytes32 delegadoDistrito, bytes32 delegadoEscuela, uint escuelaId) public {
     require(delegadoDeDistritoAsignado == delegadoDistrito);
     Escuela(escuelaMapping[escuelaId].escuelaAddress).setDelegadoDeEscuela(delegadoEscuela);
+  }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+  function loadMesaVerify(bytes32 participante, uint escuelaId, uint mesaId, bytes32[] candidatos, uint[] conteos) public returns (bool, bytes32) {
+    if (! existsEscuela(escuelaId)) {
+      return (true, "ID de escuela inexistente");
+    } else {
+      return Escuela(escuelaMapping[escuelaId].escuelaAddress).loadMesaVerify(participante, mesaId, candidatos, conteos);
+    }
+  }
+  function loadMesa(bytes32 participante, uint escuelaId, uint mesaId, bytes32[] candidatos, uint[] conteos) public {
+    require(existsEscuela(escuelaId));
+    Escuela(escuelaMapping[escuelaId].escuelaAddress).loadMesa(participante, mesaId, candidatos, conteos);
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////  
 

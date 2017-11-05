@@ -7,7 +7,7 @@ contract Mesa {
     
     ////////////////////////////////////////
     // Total por candidato
-    mapping (bytes32 => uint8) total;
+    mapping (bytes32 => uint) total;
     ////////////////////////////////////////
     bytes32[] candidateList;
     bytes32[] participantList;
@@ -21,6 +21,8 @@ contract Mesa {
     Datos cargados y validados al sistema
      */
     bool public checked;
+
+    uint cantidadDePersonas;
     
     
     /**
@@ -29,8 +31,10 @@ contract Mesa {
     struct ParticipantData {
       bool isValidParticipant;
       ParticipantCategory category;
-      mapping (bytes32 => uint8) votes;
+      mapping (bytes32 => uint) votes;
     }
+    mapping(bytes32 => bool) participanteValidoConteo;
+
     struct CandidateData {
       bool isValidCandidate;
       uint votes;
@@ -42,6 +46,7 @@ contract Mesa {
       for(uint i=0;i<inputCandidates.length;i++){
         candidateMap[inputCandidates[i]] = CandidateData(true, 0);
       }
+      cantidadDePersonas = 0;
     }
 
 
@@ -58,6 +63,23 @@ contract Mesa {
       if(participantMap[p].isValidParticipant) revert();
       participantMap[p] = pd;
       participantList.push(p);
+      participanteValidoConteo[p] = false;
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function completeMesaVerify(uint personas) public returns (bool, bytes32) {
+      if (cantidadDePersonas != 0){
+        return (true, "Total de personas ya cargadas");
+      } else {
+        return (false, "");
+      }
+    }
+    function completeMesa(uint personas) public {
+      require(cantidadDePersonas == 0);
+      cantidadDePersonas = personas;
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -71,7 +93,7 @@ contract Mesa {
         return participantList;
     }
 
-    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) external constant returns (bytes32, uint8) {
+    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) external constant returns (bytes32, uint) {
       if(!isValidParticipant(participant) || !isValidCandidate(candidate)) revert();
       return (candidate, participantMap[participant].votes[candidate]);
     }
@@ -79,18 +101,21 @@ contract Mesa {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function loadVotesForParticipantVerify(bytes32 participant, bytes32 candidate, uint8 votos) external returns (bool, bytes32) {
+    function loadVotesForParticipantVerify(bytes32 participant, bytes32 candidate, uint votos) public returns (bool, bytes32) {
       if (! isValidCandidate(candidate)) {
         return (true, "Candidato no valido");
       }
       if (! isValidParticipant(participant)) {
         return (true, "Participante no valido");
+      } 
+      if (cantidadDePersonas == 0) {
+        return (true, "Falta asignar total de personas");
       } else {
         return (false, "");
       }
     }
-    function loadVotesForParticipant(bytes32 participant, bytes32 candidate, uint8 votos) external {
-      require(isValidCandidate(candidate) && isValidParticipant(participant));
+    function loadVotesForParticipant(bytes32 participant, bytes32 candidate, uint votos) private {
+      require(isValidCandidate(candidate) && isValidParticipant(participant) && cantidadDePersonas > 0);
       participantMap[participant].votes[candidate] = votos;
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +196,7 @@ contract Mesa {
     function check(bytes32 presi) public {
       require(presidenteDeMesaAsignado == presi);
       checked = true;
-      for (uint8 index = 0 ; index < candidateList.length ; index++) {
+      for (uint index = 0 ; index < candidateList.length ; index++) {
         total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
       }
     }
@@ -179,12 +204,62 @@ contract Mesa {
 
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function checkFiscalVerify(bytes32 participant) public returns (bool, bytes32) {
+      if (! isValidParticipant(participant)) {
+        return (true, "Debe ser fiscal en la mesa");
+      } 
+      if (participanteValidoConteo[participant] == true) {
+        return (true, "Planilla ya validada");
+      } else {
+        return (false, "");
+      }
+    }
+    function checkFiscal(bytes32 participant) public {
+      require(isValidParticipant(participant) && participanteValidoConteo[participant] == false);
+      participanteValidoConteo[participant] = true;
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function getTotal(bytes32 candidate) public constant returns (bytes32, uint8) {
+    function getTotal(bytes32 candidate) public constant returns (bytes32, uint) {
         require(isValidCandidate(candidate));
         return (candidate, total[candidate]);
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function loadMesaVerify(bytes32 participante, bytes32[] candidatos, uint[] conteos) public returns (bool, bytes32) {
+      if (candidatos.length != conteos.length) {
+        return (true, "Planilla incorrecta");
+      }
+      if (! isValidParticipant(participante)) {
+        return (true, "Participante no valido");
+      }
+      for (uint i=0 ; i<candidatos.length ; i++) {
+        bool huboError;
+        bytes32 mensaje;
+        (huboError, mensaje) = loadVotesForParticipantVerify(participante, candidatos[i], conteos[i]);
+        if (huboError) {
+          return (huboError, mensaje);
+        } 
+      }
+      return (false, "");
+    }
+    function loadMesa(bytes32 participante, bytes32[] candidatos, uint[] conteos) public {
+      require(candidatos.length == conteos.length && isValidParticipant(participante));
+      for (uint i=0 ; i<candidatos.length ; i++) {
+        loadVotesForParticipant(participante, candidatos[i], conteos[i]);
+      }
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 }
