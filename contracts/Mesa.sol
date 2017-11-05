@@ -243,6 +243,9 @@ contract Mesa {
       if (! isValidParticipant(participante)) {
         return (true, "Participante no valido");
       }
+      if (! conteoValido(conteos)) {
+        return (true, "Valores en el conteo invalidos");
+      }
       for (uint i=0 ; i<candidatos.length ; i++) {
         bool huboError;
         bytes32 mensaje;
@@ -254,12 +257,24 @@ contract Mesa {
       return (false, "");
     }
     function loadMesa(bytes32 participante, bytes32[] candidatos, uint[] conteos) public {
-      require(candidatos.length == conteos.length && isValidParticipant(participante));
+      require(candidatos.length == conteos.length && isValidParticipant(participante) && conteoValido(conteos));
       for (uint i=0 ; i<candidatos.length ; i++) {
         loadVotesForParticipant(participante, candidatos[i], conteos[i]);
       }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    function conteoValido(uint[] conteos) private returns (bool) {
+      uint total = 0;
+      for (uint i=0 ; i<conteos.length ; i++) {
+        total = total + conteos[i];
+      }
+      if (total == cantidadDePersonas) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 
 }

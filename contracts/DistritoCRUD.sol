@@ -184,26 +184,6 @@ contract DistritoCRUD {
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-  function loadMesaVerify(bytes32 participante, uint distritoId, uint escuelaId, uint mesaId, bytes32[] candidatos, uint[] conteos) public returns (bool, bytes32) {
-    if (! existsDistrito(distritoId)) {
-      return (true, "ID de distrito inexistente");
-    } else {
-      return Distrito(distritoMapping[distritoId].distritoAddress).loadMesaVerify(participante, escuelaId, mesaId, candidatos, conteos);
-    }
-  }
-  function loadMesa(bytes32 participante, uint distritoId, uint escuelaId, uint mesaId, bytes32[] candidatos, uint[] conteos) public {
-    require(existsDistrito(distritoId));
-    Distrito(distritoMapping[distritoId].distritoAddress).loadMesa(participante, escuelaId, mesaId, candidatos, conteos);
-  }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
   ////////////////////////////////////////////////////////////////////
   /*function createDistritoByCSV(uint idDistrito, uint idEscuela, uint idMesa, bytes32[] candidates) public {
     if(!existsDistrito(idDistrito)){

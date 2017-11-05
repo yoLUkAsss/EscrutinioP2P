@@ -282,48 +282,6 @@ contract Election {
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-    function loadMesaVerify(bytes32 participante, uint distritoId, uint escuelaId, uint mesaId, bytes32[] candidatos, uint[] conteos) public returns (bool, bytes32) {
-      if (! created) {
-        return (true, "No existe eleccion creada");
-      } else {
-        return DistritoCRUD(distritoCRUDaddress).loadMesaVerify(participante, distritoId, escuelaId, mesaId, candidatos, conteos);
-      }
-    }
-    function loadMesa(bytes32 participante, uint distritoId, uint escuelaId, uint mesaId, bytes32[] candidatos, uint[] conteos) public {
-      require(created);
-      DistritoCRUD(distritoCRUDaddress).loadMesa(participante, distritoId, escuelaId, mesaId, candidatos, conteos);
-    }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ////////////////////////////////////////////////////////////////////
     /*function createElectionByCSV(bytes32 autoridadElectoral, uint idDistrito, uint idEscuela, uint idMesa) public {
       require(created && autoridadElectoralAsignada == autoridadElectoral);

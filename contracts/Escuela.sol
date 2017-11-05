@@ -157,29 +157,6 @@ contract Escuela {
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-  function loadMesaVerify(bytes32 participante, uint mesaId, bytes32[] candidatos, uint[] conteos) public returns (bool, bytes32) {
-    if (! mesasCreadas) {
-      return (true, "No existen mesas creadas");
-    } 
-    if (! existsMesa(mesaId)) {
-      return (true, "ID de mesa inexistente");
-    } else {
-      return Mesa(mesaMapping[mesaId].mesaAddress).loadMesaVerify(participante, candidatos, conteos);
-    }
-  }
-  function loadMesa(bytes32 participante, uint mesaId, bytes32[] candidatos, uint[] conteos) public {
-    require(existsMesa(mesaId) && mesasCreadas);
-    Mesa(mesaMapping[mesaId].mesaAddress).loadMesa(participante, candidatos, conteos);
-  }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
   /*function createMesaByCSV(uint idMesa, bytes32[] candidates) public {
     require(!existsMesa(idMesa));
     mesaMapping[idMesa] = MesaStruct(idMesa, new Mesa(candidates), mesaIds.length, true);

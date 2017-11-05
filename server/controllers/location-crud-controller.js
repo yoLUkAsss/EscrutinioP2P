@@ -108,7 +108,19 @@ export class LocationController {
    * @param {*} res 
    */
   completeMesa(req, res) {
-    res.status(400).json("Endpoint en proceso");
+    election.deployed()
+    .then( async electionInstance => {
+      let result = await electionInstance.completeMesaVerify.call(req.body.email, req.params.distritoId, req.params.escuelaId, req.params.mesaId, req.body.cantidadDePersonas, fromObject)
+      if (result[0]) {
+        res.status(400).json( web3.toAscii(result[1]) )
+      } else {
+        await electionInstance.completeMesa.sendTransaction(req.body.email, req.params.distritoId, req.params.escuelaId, req.params.mesaId, req.body.cantidadDePersonas, fromObject)
+        res.status(200).json("Numero de personas en la mesa, completo")
+      }
+    })
+    .catch(error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
 
 
@@ -195,24 +207,31 @@ export class LocationController {
   async loadMesa(req, res){
     distritoCRUD.deployed()
     .then( async distritoCRUDInstance => {
+
       let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
       let distritoInstance = await distrito.at(distritoAddress)
+
       let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
       let escuelaInstance = await escuela.at(escuelaAddress)
+
       let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(newMesaAddress)
-      req.body.candidates.map( async candidate => {
-        let canLoad = await mesaInstance.loadVotesForParticipantVerify.call(req.body.email, candidate.name, candidate.counts, fromObject)
-        if (canLoad[0]) {
-          res.status(400).json( web3.toAscii(canLoad[1]) )
-        } 
+
+      let parsedCandidates = []
+      let parsedCountings = []
+      req.body.candidates.map( candidate => {
+        parsedCandidates.push(candidate.name)
+        parsedCountings.push(parseInt(candidate.counts))
       })
-      let promises = req.body.candidates.map( async candidate => {
-        return await mesaInstance.loadVotesForParticipant.sendTransaction(req.body.email, candidate.name, candidate.counts, fromObject)
-      })
-      Promise.all(promises).then(() => {
-        res.status(200).json("Los datos se han cargado correctamente")
-      })
+
+      console.log(JSON.stringify( parsedCountings, undefined, 2))
+      let canLoad = await mesaInstance.loadMesaVerify.call(req.body.email, parsedCandidates, parsedCountings, fromObject)
+      if (canLoad[0]) {
+        res.status(400).json( web3.toAscii(canLoad[1]) )
+      } else {
+        await mesaInstance.loadMesa.sendTransaction(req.body.email, parsedCandidates, parsedCountings, fromObject)
+        res.status(200).json( "Mesa: " + req.params.mesaId + " - Escuela: " + req.params.escuelaId + " - Distrito: " + req.params.distritoId + " cargada correctamente")
+      }
     })
     .catch(error => {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )

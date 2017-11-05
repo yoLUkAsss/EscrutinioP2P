@@ -91,7 +91,7 @@ class LoadMesa extends Component {
       api.loadMesa(currentUser.getEmail(cookie), this.state.candidatos, this.distrito, this.escuela, this.mesa).then(res => {
         utils.showSuccess(this.msg, "Carga de datos correcta")
       }).catch(error => {
-        utils.showError(this.msg, "Fallo en la carga de datos:" + error)
+        utils.showError(this.msg, error.response.data)
       })
     }
 
