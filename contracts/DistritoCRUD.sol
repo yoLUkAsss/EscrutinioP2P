@@ -18,7 +18,15 @@ contract DistritoCRUD {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
+  function createDistritoVerify(uint distritoId) public returns (bool, bytes32) {
+    if (existsDistrito(distritoId)) {
+      return (true, "Distrito ya creado");
+    } else {
+      return (false, "");
+    }
+  }
   function createDistrito(uint distritoId) public {
+    require(! existsDistrito(distritoId));
     distritoMapping[distritoId] = DistritoStruct(distritoId, new Distrito(), distritoIds.length, true);
     distritoIds.push(distritoId);
   }
@@ -55,6 +63,38 @@ contract DistritoCRUD {
     Distrito(distritoMapping[distritoId].distritoAddress).createMesa(escuelaId, candidates);
   }
 ///////////////////////////////////////////////////////////////////////////////////////////////// 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function mesasCreatedVerify (uint distritoId, uint escuelaId) public returns (bool, bytes32) {
+      if (! existsDistrito(distritoId)) {
+        return (true, "ID de distrito inexistente");
+      } else {
+        return Distrito(distritoMapping[distritoId].distritoAddress).mesasCreatedVerify(escuelaId);
+      }
+    }
+    function mesasCreated(uint distritoId, uint escuelaId) public {
+      require(existsDistrito(distritoId));
+      Distrito(distritoMapping[distritoId].distritoAddress).mesasCreated(escuelaId);
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function completeMesaVerify(uint distritoId, uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
+      if (! existsDistrito(distritoId)) {
+        return (true, "ID de distrito inexistente");
+      } else {
+        return Distrito(distritoMapping[distritoId].distritoAddress).completeMesaVerify(escuelaId, mesaId, personas);
+      }
+    }
+    function completeMesa(uint distritoId, uint escuelaId, uint mesaId, uint personas) public {
+      require(existsDistrito(distritoId));
+      Distrito(distritoMapping[distritoId].distritoAddress).completeMesa(escuelaId, mesaId, personas);
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -143,9 +183,6 @@ contract DistritoCRUD {
     Distrito(distritoMapping[distritoId].distritoAddress).setVicepresidenteDeMesa(delegadoEscuela, escuelaId, mesaId, presidenteDeMesaEmail);
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
   ////////////////////////////////////////////////////////////////////
   /*function createDistritoByCSV(uint idDistrito, uint idEscuela, uint idMesa, bytes32[] candidates) public {

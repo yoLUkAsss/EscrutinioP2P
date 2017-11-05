@@ -23,6 +23,8 @@ import SetDelegadoDeEscuelaItem from '../NavBarComponents/SetDelegadoDeEscuelaIt
 import CreateDistritoItem from '../NavBarComponents/CreateDistritoItem.js'
 import CreateEscuelaItem from '../NavBarComponents/CreateEscuelaItem.js'
 
+import CompleteMesaItem from '../NavBarComponents/CompleteMesaItem.js'
+
 import SearchMesaItem from '../NavBarComponents/SearchMesaItem.js'
 import LoadMesaItem from '../NavBarComponents/LoadMesaItem.js'
 
@@ -64,6 +66,7 @@ class FixedNavbarComponent extends Component {
           <CreateElectionItem/>
           <CreateDistritoItem/>
           <CreateEscuelaItem/>
+          <CompleteMesaItem/>
         </Menu>
       </div>
     return (

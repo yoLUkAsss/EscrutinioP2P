@@ -125,3 +125,11 @@ export function setApoderadoDePartido(autoridad, apoderado, partido){
     candidate : partido
   })
 }
+
+
+export function cargarPersonasALaMesa(autoridad, distrito, escuela, mesa, personas) {
+  return axios.post(urlBase + `locations/${distrito}/${escuela}/${mesa}/completemesa`, {
+    email : autoridad,
+    cantidadDePersonas : personas
+  })
+}

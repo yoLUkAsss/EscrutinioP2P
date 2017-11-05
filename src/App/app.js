@@ -12,6 +12,7 @@ import SetPresidenteDeMesa from '../UserActionComponents/SetPresidenteDeMesa.js'
 import SetFiscal from '../UserActionComponents/SetFiscal.js'
 import CreateDistrito from '../UserActionComponents/CreateDistrito.js'
 import CreateEscuela from '../UserActionComponents/CreateEscuela.js'
+import CompleteMesa from '../UserActionComponents/CompleteMesa.js'
 import SearchMesa from '../UserActionComponents/SearchMesa.js'
 import LoadMesa from '../UserActionComponents/LoadMesa.js'
 import SetApoderado from '../UserActionComponents/SetApoderado.js'
@@ -59,6 +60,7 @@ class App extends Component{
           <Route path='/loadmesa' component={LoadMesa}/>
           <Route path='/distrito' component={CreateDistrito}/>
           <Route path='/escuela' component={CreateEscuela}/>
+          <Route path='/completemesa' component={CompleteMesa}/>
           <Route path='/setpresidente' component={SetPresidenteDeMesa}/>
           <Route path='/setfiscal' component={SetFiscal}/>
           <Route path='/setapoderado' component={SetApoderado}/>

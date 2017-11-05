@@ -3,32 +3,28 @@ import { fromObject, distritoCRUD, election, distrito, escuela, mesa, web3 } fro
 export class LocationController {
   /*    returns locationsId : [int]   */
   getLocations(req, res){
-    try{
-      distritoCRUD.deployed().then((distritoCRUDInstance) => {
-        distritoCRUDInstance.getDistritos.call(fromObject).then((result) => {
-          res.status(200).json(result)
-        }).catch(error => {
-          res.status(400).json(error.message)
-        })
-      })
-    } catch(error){
-      res.status(400).json(error.message)
-    }
+    distritoCRUD.deployed()
+    .then( async distritoCRUDInstance => {
+      let result = await distritoCRUDInstance.getDistritos.call(fromObject)
+      res.status(201).json(result)
+    })
+    .catch( error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
+
+
   /*    params: locationId : int  */
   /*    returns locationAddress : string   */
   getLocation(req, res){
-    try{
-      distritoCRUD.deployed().then((distritoCRUDInstance) => {
-        distritoCRUDInstance.getDistrito.call(req.params.locationId, fromObject).then((result) => {
-          res.status(200).json(result)
-        }).catch(error => {
-          res.status(400).json(error.message)
-        })
-      })
-    } catch(error){
-      res.status(400).json(error.message)
-    }
+    distritoCRUD.deployed()
+    .then( async distritoCRUDInstance => {
+      let result = await distritoCRUDInstance.getDistrito.call(req.params.locationId, fromObject)
+      res.status(201).json(result)
+    })
+    .catch( error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
   /*
     agregar un input para el id del distrito en create election
@@ -37,33 +33,38 @@ export class LocationController {
     distritoId : int
     escuelas : int
   */
-  async initDistrito(req, res){
-    try {
-      election.deployed().then(async (electionInstance) => {
-        let existsDistrito = false
-        distritoCRUD.deployed().then(async (distritoCRUDInstance) => {
-          existsDistrito = await distritoCRUDInstance.existsDistrito.call(req.body.distritoId, fromObject)
-        }).catch(error => {
-          res.status(400).json(error.message)
-        })
-        if(existsDistrito) throw new Error("distrito already exists")
+  initDistrito(req, res){
+    election.deployed()
+    .then( async electionInstance => {
+      let result = await electionInstance.createDistritoVerify.call(req.body.email, req.body.distritoId, fromObject)
+      if (result[0]) {
+        res.status(400).json( web3.toAscii(result[1]) )
+      } else {
         await electionInstance.createDistrito.sendTransaction(req.body.email, req.body.distritoId, fromObject)
         let promises = []
         for(let i = 0; i < req.body.escuelas; i++){
-          promises.push(electionInstance.createEscuela.sendTransaction(req.body.email, req.body.distritoId, fromObject))
+          let result2 = await electionInstance.createEscuelaVerify.call(req.body.email, req.body.distritoId, fromObject)
+          if (result2[0]) {
+            res.status(400).json( web3.toAscii(result2[1]) )
+          }
+          await promises.push(electionInstance.createEscuela.sendTransaction(req.body.email, req.body.distritoId, fromObject))
         }
-        Promise.all(promises).then(() => {
+        Promise.all(promises)
+        .then(() => {
           res.status(200).json("distrito inicializado")
-        }).catch(error => {
+        })
+        .catch(error => {
           res.status(400).json(error.message)
         })
-      }).catch(error => {
-        res.status(400).json(error.message)
-      })
-    } catch(error){
-      res.status(400).json(error.message)
-    }
+      }
+    })
+    .catch( error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
+
+
+
   /*
     body:
     email : string,
@@ -72,109 +73,115 @@ export class LocationController {
     mesas : int
   */
   initEscuela(req, res){
-    try {
-      election.deployed().then((electionInstance) => {
-        // await currentInstance.createEscuela.sendTransaction(req.body.autoridadElectoral, req.body.distritoId, fromObject)
-        let promises = []
-        for(let i = 0; i < req.body.mesas; i++){
-          promises.push(electionInstance.createMesa.sendTransaction(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject))
+    election.deployed()
+    .then( async (electionInstance) => {
+      let promises = []
+      for(let i = 0; i < req.body.mesas; i++){
+        let result = await electionInstance.createMesaVerify.call(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
+        if (result[0]) {
+          res.status(400).json( web3.toAscii(result[1]) )
+        } else {
+          await promises.push(electionInstance.createMesa.sendTransaction(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject))
         }
-        Promise.all(promises).then(() => {
-          res.status(200).json("escuela inicializada")
-        }).catch(error => {
-          console.log(error)
-          res.status(400).json(error.message)
-        })
-      }).catch(error => {
-        res.status(400).json(error.message)
+      }
+      Promise.all(promises)
+      .then( async () => {
+        
+        let finalizar = await electionInstance.mesasCreatedVerify.call(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
+        if (finalizar[0]) {
+          res.status(400).json( web3.toAscii(finalizar[1]) )
+        } else {
+          await electionInstance.mesasCreated.sendTransaction(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
+          res.status(200).json( "Mesas creadas correctamente" )
+        }
+
       })
-    } catch(error){
-      res.status(400).json(error.message)
-    }
+    })
+    .catch(error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
+
+  /**
+   * 
+   * @param {*} req
+   * @param {*} res 
+   */
+  completeMesa(req, res) {
+    election.deployed()
+    .then( async electionInstance => {
+      let result = await electionInstance.completeMesaVerify.call(req.body.email, req.params.distritoId, req.params.escuelaId, req.params.mesaId, req.body.cantidadDePersonas, fromObject)
+      if (result[0]) {
+        res.status(400).json( web3.toAscii(result[1]) )
+      } else {
+        await electionInstance.completeMesa.sendTransaction(req.body.email, req.params.distritoId, req.params.escuelaId, req.params.mesaId, req.body.cantidadDePersonas, fromObject)
+        res.status(200).json("Numero de personas en la mesa, completo")
+      }
+    })
+    .catch(error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
+  }
+
+
   //params :- distritoId : int, escuelaId : int, mesaId : int
   //body :- candidate : string
   //return :- candidates : [{name : string, counts : int}]
   async getMesaTotal(req, res){
-    try{
-      distritoCRUD.deployed().then(async distritoCRUDInstance => {
-        let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-        let distritoInstance = await distrito.at(distritoAddress)
-        let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-        let escuelaInstance = await escuela.at(escuelaAddress)
-        let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
-        let mesaInstance = await mesa.at(mesaAddress)
-        let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
-        let promises
-        let candidates
-        promises = candidatesList.map(c => {
-          // return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, web3.toAscii(c), fromObject)
-          return mesaInstance.getTotal.call(c, fromObject)
-        })
-        Promise.all(promises).then((results) => {
-          candidates = results.map(r => { return {"name" : web3.toAscii(r[0]), "counts" : r[1].toNumber()}})
-          res.status(200).json(candidates)
-        }).catch(error => {
-          res.status(400).json(error.message)
-        })
+    distritoCRUD.deployed()
+    .then(async distritoCRUDInstance => {
+      let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
+      let distritoInstance = await distrito.at(distritoAddress)
+      let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
+      let escuelaInstance = await escuela.at(escuelaAddress)
+      let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+      let mesaInstance = await mesa.at(mesaAddress)
+      let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
+      let promises
+      let candidates
+      promises = candidatesList.map(c => {
+        // return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, web3.toAscii(c), fromObject)
+        return mesaInstance.getTotal.call(c, fromObject)
+      })
+      Promise.all(promises).then((results) => {
+        candidates = results.map(r => { return {"name" : web3.toAscii(r[0]), "counts" : r[1].toNumber()}})
+        res.status(200).json(candidates)
       }).catch(error => {
         res.status(400).json(error.message)
       })
-    } catch(error){
-      res.status(400).json(error.message)
-    }
+    })
+    .catch(error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
   async getMesaUser(req, res){
-    try{
-      distritoCRUD.deployed().then(async distritoCRUDInstance => {
-        let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-        let distritoInstance = await distrito.at(distritoAddress)
-        let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-        let escuelaInstance = await escuela.at(escuelaAddress)
-        let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
-        let mesaInstance = await mesa.at(mesaAddress)
-        let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
-        let promises
-        let candidates
-        promises = candidatesList.map(c => {
-          // return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, web3.toAscii(c), fromObject)
-          return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, c, fromObject)
-        })
-        Promise.all(promises).then((results) => {
-          candidates = results.map(r => { return {"name" : web3.toAscii(r[0]), "counts" : r[1].toNumber()}})
-          res.status(200).json(candidates)
-        }).catch(error => {
-          res.status(400).json(error.message)
-        })
+    distritoCRUD.deployed()
+    .then(async distritoCRUDInstance => {
+      let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
+      let distritoInstance = await distrito.at(distritoAddress)
+      let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
+      let escuelaInstance = await escuela.at(escuelaAddress)
+      let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+      let mesaInstance = await mesa.at(mesaAddress)
+      let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
+      let promises
+      let candidates
+      promises = candidatesList.map(c => {
+        // return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, web3.toAscii(c), fromObject)
+        return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, c, fromObject)
+      })
+      Promise.all(promises).then((results) => {
+        candidates = results.map(r => { return {"name" : web3.toAscii(r[0]), "counts" : r[1].toNumber()}})
+        res.status(200).json(candidates)
       }).catch(error => {
         res.status(400).json(error.message)
       })
-    } catch(error){
-      res.status(400).json(error.message)
-    }
+    })
+    .catch(error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
 
-  //params :- distritoId : int, escuelaId : int, mesaId : int
-  //body: email : string
-  async isValidParticipant(req, res){
-    try{
-      distritoCRUD.deployed().then(async distritoCRUDInstance => {
-        let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-        let distritoInstance = await distrito.at(distritoAddress)
-        let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-        let escuelaInstance = await escuela.at(escuelaAddress)
-        let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
-        let mesaInstance = await mesa.at(newMesaAddress)
-        let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
-        let isValidParticipant = await mesaInstance.isValidParticipant.call(req.body.email, fromObject)
-        res.status(200).json(isValidParticipant)
-      }).catch(error => {
-        res.status(400).json(error.message)
-      })
-    } catch(error){
-      res.status(400).json(error.message)
-    }
-  }
   //params :- distritoId : int, escuelaId : int, mesaId : int
   //body: email : string
   async checkMesa(req, res){
@@ -198,62 +205,36 @@ export class LocationController {
   //params :- distritoId : int, escuelaId : int, mesaId : int
   //body: email : string, candidates : [{name : string, counts : int}]
   async loadMesa(req, res){
-    try{
-      distritoCRUD.deployed().then(async distritoCRUDInstance => {
-        let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-        let distritoInstance = await distrito.at(distritoAddress)
-        let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-        let escuelaInstance = await escuela.at(escuelaAddress)
-        let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
-        let mesaInstance = await mesa.at(newMesaAddress)
-        let promises = req.body.candidates.map(candidate => {
-          return mesaInstance.loadVotesForParticipant.sendTransaction(req.body.email, candidate.name, candidate.counts, fromObject)
-        })
-        Promise.all(promises).then(() => {
-          res.status(200).json("Carga de datos correcta")
-        }).catch(error => {
-          res.status(400).json("Fallo en la carga de datos")
-        })
-      }).catch(error => {
-        res.status(400).json("Fallo en la carga de datos")
-      })
-    } catch(error){
-      res.status(400).json(error.message)
-    }
-  }
+    distritoCRUD.deployed()
+    .then( async distritoCRUDInstance => {
 
-  async existsDistrito(req, res){
-    try{
-      let distritoCRUDInstance = await distritoCRUD.deployed()
-      let exists = await distritoCRUDInstance.existsDistrito(req.params.distritoId, fromObject)
-      res.status(200).json(exists)
-    } catch(error){
-      res.status(400).json(error.message)
-    }
-  }
-  async existsEscuela(req, res){
-    try{
-      let distritoCRUDInstance = await distritoCRUD.deployed()
-      let distritoAddress = await distritoCRUDInstance.getDistrito.call(req.params.distritoId, fromObject)
+      let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
       let distritoInstance = await distrito.at(distritoAddress)
-      let exists = await distritoInstance.existsEscuela.call(req.params.escuelaId, fromObject)
-      res.status(200).json(exists)
-    } catch(error){
-      res.status(400).json(error.message)
-    }
-  }
-  async existsMesa(req, res){
-    try{
-      let distritoCRUDInstance = await distritoCRUD.deployed()
-      let distritoAddress = await distritoCRUDInstance.getDistrito.call(req.params.distritoId, fromObject)
-      let distritoInstance = await distrito.at(distritoAddress)
-      let escuelaAddress = await distritoInstance.getEscuela.call(req.params.escuelaId, fromObject)
+
+      let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
       let escuelaInstance = await escuela.at(escuelaAddress)
-      let exists = await escuelaInstance.existsMesa.call(req.params.mesaId, fromObject)
-      res.status(200).json(exists)
-    } catch(error){
-      res.status(400).json(error.message)
-    }
-  }
 
+      let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+      let mesaInstance = await mesa.at(newMesaAddress)
+
+      let parsedCandidates = []
+      let parsedCountings = []
+      req.body.candidates.map( candidate => {
+        parsedCandidates.push(candidate.name)
+        parsedCountings.push(parseInt(candidate.counts))
+      })
+
+      console.log(JSON.stringify( parsedCountings, undefined, 2))
+      let canLoad = await mesaInstance.loadMesaVerify.call(req.body.email, parsedCandidates, parsedCountings, fromObject)
+      if (canLoad[0]) {
+        res.status(400).json( web3.toAscii(canLoad[1]) )
+      } else {
+        await mesaInstance.loadMesa.sendTransaction(req.body.email, parsedCandidates, parsedCountings, fromObject)
+        res.status(200).json( "Mesa: " + req.params.mesaId + " - Escuela: " + req.params.escuelaId + " - Distrito: " + req.params.distritoId + " cargada correctamente")
+      }
+    })
+    .catch(error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
+  }
 }
