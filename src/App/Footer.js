@@ -6,7 +6,7 @@ import { Container, Header, List, Divider, Segment, Grid} from 'semantic-ui-reac
 class Footer extends Component {
   renderContent(){
     return (
-      <Segment inverted vertical style={{ padding: '5em 0em' }}>
+      <Segment className="footer" inverted vertical style={{ padding: '5em 0em' }}>
           <Container>
             <Grid divided inverted stackable>
               <Grid.Row>

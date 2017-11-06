@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Switch, Route } from 'react-router-dom'
-import { Container, Divider} from 'semantic-ui-react'
+import { Container, Segment, Divider, Rail} from 'semantic-ui-react'
 import cookie from 'react-cookies'
 
 import Home from './Home.js'
