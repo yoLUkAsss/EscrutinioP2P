@@ -9,8 +9,12 @@ import { Link, withRouter} from 'react-router-dom'
 /**
  * Navbar Components
  */
-// import LogInItem from '../NavBarComponents/LogInItem.js'
+ import CreateElectionItem from '../NavBarComponents/CreateElectionItem.js'
+import LogInItem from '../NavBarComponents/LogInItem.js'
+import SignUpItem from '../NavBarComponents/SignUpItem.js'
 import LogOutItem from '../NavBarComponents/LogOutItem.js'
+
+
 import * as currentUser from '../utils/user_session.js'
 
 class NavBar extends Component {
@@ -41,9 +45,7 @@ class NavBar extends Component {
         <Menu.Item as={Link} to="/" name='inicio' active={this.state.activeItem === 'inicio'} onClick={this.handleItemClick}>
           Inicio
         </Menu.Item>
-        <Menu.Item as={Link} to="/eleccion" name='eleccion' active={this.state.activeItem === 'eleccion'} onClick={this.handleItemClick}>
-          Eleccion
-        </Menu.Item>
+        <CreateElectionItem activeItem={this.state.activeItem === 'eleccion'} activate={this.handleItemClick.bind(this)}/>
         <Menu.Item as={Link} to="/tareas" name='tareas' active={this.state.activeItem === 'tareas'} onClick={this.handleItemClick}>
           Tareas
         </Menu.Item>
@@ -57,12 +59,8 @@ class NavBar extends Component {
           About
         </Menu.Item>
         <Menu.Menu position='right'>
-          <Menu.Item as={Link} to="/registrar" name='registrar' active={this.state.activeItem === 'registrar'} onClick={this.handleItemClick}>
-            Registrar
-          </Menu.Item>
-          <Menu.Item as={Link} to="/acceder" name='acceder' active={this.state.activeItem === 'acceder'} onClick={this.handleItemClick}>
-            Acceder
-          </Menu.Item>
+          <SignUpItem activeItem={this.state.activeItem === 'registrar'} activate={this.handleItemClick.bind(this)}/>
+          <LogInItem activeItem={this.state.activeItem === 'acceder'} activate={this.handleItemClick.bind(this)}/>
           <LogOutItem/>
         </Menu.Menu>
       </Menu>

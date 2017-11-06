@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import Scrollchor from 'react-scrollchor'
 import { Container, Header, List} from 'semantic-ui-react'
 // import ComponentTitle from '../utils/ComponentTitle.js'
 
@@ -12,11 +12,11 @@ class Home extends Component {
       <Container text>
         <Header as='h3'>Tabla de Contenidos</Header>
         <List ordered link>
-          <List.Item as='a' onClick={this.handleInfoEleccion.bind(this)}>Informacion de la eleccion</List.Item>
-          <List.Item as='a'>Informacion de los distritos</List.Item>
-          <List.Item as='a'>Informacion de las escuelas</List.Item>
-          <List.Item as='a'>Informacion de las mesas</List.Item>
-          <List.Item as='a'>Informacion de los candidatos</List.Item>
+          <List.Item as={Scrollchor} to="#eleccion">Informacion de la eleccion</List.Item>
+          <List.Item as={Scrollchor} to="#distritos">Informacion de los distritos</List.Item>
+          <List.Item as={Scrollchor} to="#escuelas">Informacion de las escuelas</List.Item>
+          <List.Item as={Scrollchor} to="#mesas">Informacion de las mesas</List.Item>
+          <List.Item as={Scrollchor} to="#candidatos">Informacion de los candidatos</List.Item>
         </List>
       </Container>
     )
@@ -26,31 +26,31 @@ class Home extends Component {
       <Container text>
         <List ordered>
           <List.Item>
-            <List.Header as='a'>Informacion de la eleccion</List.Header>
+            <List.Header id="eleccion">Informacion de la eleccion</List.Header>
             <List.Description>
               La eleccion se encuentra creada
             </List.Description>
           </List.Item>
           <List.Item>
-            <List.Header as='a'>Informacion de los distritos</List.Header>
+            <List.Header id="distritos">Informacion de los distritos</List.Header>
             <List.Description>
               Actualmente participan N distritos
             </List.Description>
           </List.Item>
           <List.Item>
-            <List.Header as='a'>Informacion de las escuelas</List.Header>
+            <List.Header id="escuelas">Informacion de las escuelas</List.Header>
             <List.Description>
               Actualmente participan M escuelas
             </List.Description>
           </List.Item>
           <List.Item>
-            <List.Header as='a'>Informacion de las mesas</List.Header>
+            <List.Header id="mesas">Informacion de las mesas</List.Header>
             <List.Description>
               Actualmente participan L mesas
             </List.Description>
           </List.Item>
           <List.Item>
-            <List.Header as='a'>Informacion de los candidatos</List.Header>
+            <List.Header id="candidatos">Informacion de los candidatos</List.Header>
             <List.Description>
               Actualmente participan los siguientes candidatos:
             </List.Description>
