@@ -40,7 +40,7 @@ class SetPresidenteDeMesa extends Component {
         console.log(error)
         utils.showError(this.msg, "Fallo en el seteo del presidente:" + error)
       })
-      this.setState({open : false})
+      this.setState({open : false, email : "", mesa : ""})
     }
     show = () => this.setState({ open: true })
     close = () => this.setState({ open: false })

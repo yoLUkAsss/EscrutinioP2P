@@ -2,7 +2,7 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Header, Button, Form } from 'semantic-ui-react'
+import { Container, Header, Button, Form, Confirm} from 'semantic-ui-react'
 // import Center from 'react-center'
 
 /**
@@ -24,9 +24,13 @@ class SetFiscal extends Component {
         super()
         this.state = {
             email : "",
-            candidato : ""
+            candidato : "",
+            open : false
         }
     }
+
+    show = () => this.setState({ open: true })
+    close = () => this.setState({ open: false })
 
     handleSetApoderado(event) {
       event.preventDefault()
@@ -36,6 +40,7 @@ class SetFiscal extends Component {
         console.log(error)
         utils.showError(this.msg, "Fallo en la carga del apoderado:" + error)
       })
+      this.setState({open : false, email : "", candidato : ""})
     }
 
     handleCandidato = (event) => { this.setState({ candidato : event.target.value }) }
@@ -48,7 +53,6 @@ class SetFiscal extends Component {
                 <Form>
                     <Form.Input
                         required
-                        inline
                         type="email"
                         label='Apoderado'
                         placeholder='Correo del Apoderado'
@@ -57,16 +61,20 @@ class SetFiscal extends Component {
                     />
                     <Form.Input
                         required
-                        inline
                         type="text"
                         label='Candidato'
                         placeholder='Partido Policito asociado'
                         value={this.state.candidato}
                         onChange={this.handleCandidato.bind(this)}
                     />
-                    <Button onClick={this.handleSetApoderado.bind(this)}>
-                        Asignar
-                    </Button>
+                    <Button onClick={this.show.bind(this)}>Asignar</Button>
+                    <Confirm
+                      open={this.state.open}
+                      header='Asignacion de Apoderado de Partido'
+                      content={`Estas seguro de asignar al usuario ${this.state.email} como apoderado del candidato  ${this.state.candidato}`}
+                      onCancel={this.close.bind(this)}
+                      onConfirm={this.handleSetApoderado.bind(this)}
+                    />
                 </Form>
             </Container>
         );
