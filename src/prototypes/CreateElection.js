@@ -72,9 +72,10 @@ class CreateElection extends Component {
 
     render () {
         return (
-            <Center>
-              <div>
-                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          <div>
+            <Grid centered columns={2}>
+              <Grid.Column>
+              <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
                 <Container>
                   <ComponentTitle title='Crear Eleccion con los siguientes candidatos'/>
                   <Form>
@@ -92,8 +93,31 @@ class CreateElection extends Component {
                     </Button>
                   </Form>
                 </Container>
-              </div>
-            </Center>
+              </Grid.Column>
+            </Grid>
+          </div>
+            // <Center>
+            //   <div>
+                // <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+                // <Container>
+                //   <ComponentTitle title='Crear Eleccion con los siguientes candidatos'/>
+                //   <Form>
+                //     <RefactoredDLF
+                //       title='Candidatos'
+                //       type='text'
+                //       placeholder='Nombre de Candidato'
+                //       onChange={this.handleNewCandidates}
+                //       items={this.state.candidatos}
+                //       add={"Agregar Candidato"}
+                //       del={"Eliminar Candidato"}
+                //     />
+                //     <Button onClick={this.handleCreateElection.bind(this)}>
+                //         Crear Eleccion
+                //     </Button>
+                //   </Form>
+                // </Container>
+            //   </div>
+            // </Center>
         );
     }
 }

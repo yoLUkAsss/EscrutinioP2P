@@ -2,7 +2,7 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form, Header } from 'semantic-ui-react'
+import { Grid, Container, Divider, Button, Form, Dimmer, Loader } from 'semantic-ui-react'
 // import Center from 'react-center'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
@@ -51,10 +51,12 @@ class Election extends Component {
     }
     render () {
         return (
-              <Container text>
-                <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                  <Header as='h2'>Crear eleccion</Header>
-                  <Container text>
+          <div>
+            <Grid centered>
+              <Grid.Column stretched>
+              <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+                <Container>
+                  {/* <ComponentTitle title='Crear Eleccion con los siguientes candidatos'/> */}
                   <Form>
                     <RefactoredDLF
                       title='Candidatos'
@@ -65,12 +67,15 @@ class Election extends Component {
                       add={"Agregar Candidato"}
                       del={"Eliminar Candidato"}
                     />
-                    <Button onClick={this.handleCreateElection.bind(this)}>
+                    <Divider hidden />
+                    <Button basic positive floated="left" onClick={this.handleCreateElection.bind(this)}>
                         Crear Eleccion
                     </Button>
                   </Form>
-                  </Container>
-            </Container>
+                </Container>
+              </Grid.Column>
+            </Grid>
+          </div>
         );
     }
 }

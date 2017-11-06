@@ -1,6 +1,6 @@
 // react utilities
 import React, { Component } from 'react';
-import { Button, Header, Container} from 'semantic-ui-react'
+import { Button, Header, Container, Segment, Dimmer, Loader} from 'semantic-ui-react'
 import {withRouter} from 'react-router-dom'
 import AlertContainer from 'react-alert'
 
@@ -48,7 +48,15 @@ class Mesa extends Component {
 
     renderMesa(){
       if(this.state.loading){
-        return (<div>Loading</div>);
+        return (
+          <div>
+            <Segment>
+              <Dimmer inverted blurring active>
+                <Loader size='massive' content='Loading' />
+              </Dimmer>
+            </Segment>
+          </div>
+        );
       } else{
         return (
           <Container text>
