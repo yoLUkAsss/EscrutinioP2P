@@ -154,6 +154,7 @@ export class LocationController {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )
     })
   }
+
   async getMesaUser(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
@@ -164,18 +165,13 @@ export class LocationController {
       let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(mesaAddress)
       let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
-      let promises
-      let candidates
-      promises = candidatesList.map(c => {
-        // return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, web3.toAscii(c), fromObject)
-        return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, c, fromObject)
-      })
-      Promise.all(promises).then((results) => {
-        candidates = results.map(r => { return {"name" : web3.toAscii(r[0]), "counts" : r[1].toNumber()}})
-        res.status(200).json(candidates)
-      }).catch(error => {
-        res.status(400).json(error.message)
-      })
+      let result = await mesaInstance.getCounting(req.body.participant, fromObject)
+      console.log(JSON.stringify(result, undefined, 2))
+      let parsedResult = []
+      for (var index = 0; index < result[0].length; index++) {
+        parsedResult.push( { "name" : web3.toAscii(result[0][index]), "counts" : result[1][index].toNumber() } )
+      }
+      res.status(201).json(parsedResult)
     })
     .catch(error => {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )

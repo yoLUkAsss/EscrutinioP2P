@@ -49,7 +49,7 @@ export function getMesaTotal(distrito, escuela, mesa){
 
 export function getMesaUser(userEmail, distrito, escuela, mesa){
   return axios.post(urlBase + `locations/${distrito}/${escuela}/${mesa}`, {
-    email : userEmail
+    participant : userEmail
   })
 }
 

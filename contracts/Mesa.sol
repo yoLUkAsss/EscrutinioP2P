@@ -92,12 +92,17 @@ contract Mesa {
     function getParticipantList() public constant returns (bytes32[]){
         return participantList;
     }
-
-    function getParticipantVotesForACandidate(bytes32 participant, bytes32 candidate) external constant returns (bytes32, uint) {
-      if(!isValidParticipant(participant) || !isValidCandidate(candidate)) revert();
-      return (candidate, participantMap[participant].votes[candidate]);
+    
+    function getCounting ( bytes32 participant ) public constant returns (bytes32[], uint[]) {
+      require(isValidParticipant(participant));
+      bytes32[] memory resultCandidatos = new bytes32[](candidateList.length);
+      uint[] memory resultConteos = new uint[](candidateList.length);
+      for (uint i=0 ; i<candidateList.length ; i++) {
+        resultCandidatos[i] = candidateList[i];
+        resultConteos[i] = participantMap[participant].votes[candidateList[i]];
+      }
+      return (resultCandidatos, resultConteos);
     }
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +270,7 @@ contract Mesa {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    function conteoValido(uint[] conteos) private returns (bool) {
+    function conteoValido(uint[] conteos) private constant returns (bool) {
       uint total = 0;
       for (uint i=0 ; i<conteos.length ; i++) {
         total = total + conteos[i];
