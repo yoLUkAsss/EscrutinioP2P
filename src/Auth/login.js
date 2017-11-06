@@ -2,14 +2,14 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Button, Container, Form } from 'semantic-ui-react'
-import {withRouter} from 'react-router-dom'
+import { Button, Header, Container, Form , Grid, Segment, Message} from 'semantic-ui-react'
+import {withRouter, Link} from 'react-router-dom'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 
 /**
  * Controller for Component
@@ -47,8 +47,9 @@ class Login extends Component {
         currentUser.setUser(cookie, res.data)
         api.isCreated().then( result => {
           currentUser.setElectionCreated(cookie, result)
-          utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
-          // utils.showSuccess(this.msg, "Inicio de sesion exitoso")
+          // utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
+          utils.showSuccess(this.msg, "Inicio de sesion exitoso")
+          this.setState({email : "", password : ""})
         }).catch(err => {
           currentUser.setElectionCreated(cookie, false)
           utils.showError(this.msg, "problem with election created")
@@ -60,36 +61,78 @@ class Login extends Component {
     }
     render () {
         return (
-          <div>
-              <Container>
-              <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <ComponentTitle title='Iniciar Sesion'/>
-              <Form>
+          <Container>
+          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          <Grid
+            textAlign='center'
+            style={{ height: '100%' }}
+            verticalAlign='middle'
+          >
+            <Grid.Column style={{ maxWidth: 450 }}>
+              <Header as='h2' color='teal' textAlign='center'>
+                Iniciar Sesion en EP2P
+              </Header>
+              <Form size='large'>
+                <Segment stacked>
                   <Form.Input
-                      focus
-                      required
-                      inline
-                      type='email'
-                      label='Email'
-                      placeholder='fiscal@email ex..'
-                      value={this.state.email}
-                      onChange={this.handleEmail.bind(this)}
+                    fluid
+                    icon='user'
+                    iconPosition='left'
+                    placeholder='E-mail'
+                    type='email'
+                    label='Email'
+                    value={this.state.email}
+                    onChange={this.handleEmail.bind(this)}
                   />
                   <Form.Input
-                      required
-                      inline
-                      type='password'
-                      label='Contraseña'
-                      placeholder='Contraseña'
-                      value={this.state.password}
-                      onChange={this.handlePassword.bind(this)}
+                    fluid
+                    icon='lock'
+                    iconPosition='left'
+                    type='password'
+                    label='Contraseña'
+                    placeholder='Contraseña'
+                    value={this.state.password}
+                    onChange={this.handlePassword.bind(this)}
                   />
-                  <Button onClick={this.handleLogin.bind(this)}>Iniciar Sesion</Button>
+                  <Button color='teal' fluid size='large' onClick={this.handleLogin.bind(this)}>Iniciar Sesion</Button>
+                </Segment>
               </Form>
-              </Container>
-          </div>
+              <Message>
+                Nuevo? <Link to={'/registrar'}>Registro</Link>
+              </Message>
+            </Grid.Column>
+          </Grid>
+          </Container>
         );
     }
 }
 
 export default withRouter(Login)
+// <div>
+//     <Container>
+//     <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+//     <ComponentTitle title='Iniciar Sesion'/>
+//     <Form>
+//         <Form.Input
+//             focus
+//             required
+//             inline
+//             type='email'
+//             label='Email'
+//             placeholder='fiscal@email ex..'
+//             value={this.state.email}
+//             onChange={this.handleEmail.bind(this)}
+//         />
+//         <Form.Input
+//             required
+//             inline
+//             type='password'
+//             label='Contraseña'
+//             placeholder='Contraseña'
+//             value={this.state.password}
+//             onChange={this.handlePassword.bind(this)}
+//         />
+//         <Button onClick={this.handleLogin.bind(this)}>Iniciar Sesion</Button>
+//     </Form>
+//     </Container>
+// </div>

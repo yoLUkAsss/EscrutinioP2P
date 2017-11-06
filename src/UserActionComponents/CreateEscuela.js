@@ -2,8 +2,8 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
+import { Container, Header, Button, Form } from 'semantic-ui-react'
+// import Center from 'react-center'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
@@ -11,7 +11,7 @@ import cookie from 'react-cookies'
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
@@ -58,43 +58,39 @@ class CreateEscuela extends Component {
 
     render () {
         return (
-            <Center>
-              <div>
+              <Container text>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
-                  <ComponentTitle title='Crear Mesas para una escuela'/>
-                  <Form>
-                    <Form.Input
-                        required
-                        type='number'
-                        label='distrito id'
-                        placeholder='distrito id'
-                        value={this.state.distritoId}
-                        onChange={this.handleDistritos.bind(this)}
-                    />
-                    <Form.Input
-                        required
-                        type='number'
-                        label='escuela id'
-                        placeholder='escuela id'
-                        value={this.state.escuelaId}
-                        onChange={this.handleEscuelas.bind(this)}
-                    />
-                    <Form.Input
-                        required
-                        type='number'
-                        label='cantidad de mesas'
-                        placeholder='cantidad de mesas'
-                        value={this.state.cantidadMesas}
-                        onChange={this.handleMesas.bind(this)}
-                    />
-                    <Button onClick={this.handleCreateEscuela.bind(this)}>
-                        Crear Mesas
-                    </Button>
-                  </Form>
-                </Container>
-              </div>
-            </Center>
+                <Header as='h3'>Crear Mesas para una escuela</Header>
+                <Form>
+                  <Form.Input
+                      required
+                      type='number'
+                      label='ID del Distrito'
+                      placeholder='ID del Distrito'
+                      value={this.state.distritoId}
+                      onChange={this.handleDistritos.bind(this)}
+                  />
+                  <Form.Input
+                      required
+                      type='number'
+                      label='ID de la Escuela'
+                      placeholder='ID de la Escuela'
+                      value={this.state.escuelaId}
+                      onChange={this.handleEscuelas.bind(this)}
+                  />
+                  <Form.Input
+                      required
+                      type='number'
+                      label='Cantidad de Mesas'
+                      placeholder='Mesas'
+                      value={this.state.cantidadMesas}
+                      onChange={this.handleMesas.bind(this)}
+                  />
+                  <Button onClick={this.handleCreateEscuela.bind(this)}>
+                      Crear Mesas
+                  </Button>
+                </Form>
+              </Container>
         );
     }
 }

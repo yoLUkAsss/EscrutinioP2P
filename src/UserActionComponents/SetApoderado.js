@@ -2,13 +2,13 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
+import { Container, Header, Button, Form, Confirm} from 'semantic-ui-react'
+// import Center from 'react-center'
 
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 
 /**
  * Controller for Component
@@ -24,9 +24,13 @@ class SetFiscal extends Component {
         super()
         this.state = {
             email : "",
-            candidato : ""
+            candidato : "",
+            open : false
         }
     }
+
+    show = () => this.setState({ open: true })
+    close = () => this.setState({ open: false })
 
     handleSetApoderado(event) {
       event.preventDefault()
@@ -36,21 +40,19 @@ class SetFiscal extends Component {
         console.log(error)
         utils.showError(this.msg, "Fallo en la carga del apoderado:" + error)
       })
+      this.setState({open : false, email : "", candidato : ""})
     }
 
     handleCandidato = (event) => { this.setState({ candidato : event.target.value }) }
     handleApoderado = (event) => { this.setState({ email : event.target.value }) }
     render () {
         return (
-            <Center>
-            <div>
+            <Container text>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
-                <ComponentTitle title='Asignar Apoderado de Partido'/>
+                <Header as='h3'>Asignar Apoderado de Partido</Header>
                 <Form>
                     <Form.Input
                         required
-                        inline
                         type="email"
                         label='Apoderado'
                         placeholder='Correo del Apoderado'
@@ -59,20 +61,22 @@ class SetFiscal extends Component {
                     />
                     <Form.Input
                         required
-                        inline
                         type="text"
                         label='Candidato'
                         placeholder='Partido Policito asociado'
                         value={this.state.candidato}
                         onChange={this.handleCandidato.bind(this)}
                     />
-                    <Button onClick={this.handleSetApoderado.bind(this)}>
-                        Asignar
-                    </Button>
+                    <Button onClick={this.show.bind(this)}>Asignar</Button>
+                    <Confirm
+                      open={this.state.open}
+                      header='Asignacion de Apoderado de Partido'
+                      content={`Estas seguro de asignar al usuario ${this.state.email} como apoderado del candidato  ${this.state.candidato}`}
+                      onCancel={this.close.bind(this)}
+                      onConfirm={this.handleSetApoderado.bind(this)}
+                    />
                 </Form>
-                </Container>
-            </div>
-            </Center>
+            </Container>
         );
     }
 }

@@ -2,7 +2,7 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form, Confirm, Header} from 'semantic-ui-react'
+import { Container, Button, Form, Confirm, Header } from 'semantic-ui-react'
 // import Center from 'react-center'
 
 /**
@@ -20,7 +20,7 @@ import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
 import cookie from 'react-cookies'
 
-class SetPresidenteDeMesa extends Component {
+class SetVicepresidenteDeMesa extends Component {
     constructor() {
         super()
         this.state = {
@@ -32,25 +32,25 @@ class SetPresidenteDeMesa extends Component {
         this.escuela = currentUser.getEscuela(cookie)
     }
 
-    handleSetPresidenteDeMesa(event) {
+    handleSetVicepresidenteDeMesa(event) {
       event.preventDefault()
-      api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.state.mesa).then(res => {
-        utils.showSuccess(this.msg, "Seteado presidente de mesa")
+      api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.mesa).then(res => {
+        utils.showSuccess(this.msg, "Seteado vicepresidente de mesa")
       }).catch(error => {
         console.log(error)
-        utils.showError(this.msg, "Fallo en el seteo del presidente:" + error)
+        utils.showError(this.msg, "Fallo en el seteo del vicepresidente:" + error)
       })
       this.setState({open : false, email : "", mesa : ""})
     }
     show = () => this.setState({ open: true })
     close = () => this.setState({ open: false })
-    handlePresidente = (event) => { this.setState({ email : event.target.value }) }
+    handleVicepresidente = (event) => { this.setState({ email : event.target.value }) }
     handleMesa = (event) => { this.setState({ mesa : event.target.value }) }
     render () {
         return (
             <Container text>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h3'>Asignar Presidente de Mesa</Header>
+              <Header as='h3'>Asignar Vicepresidente de Mesa</Header>
               <Form>
                 <Form.Input
                     required
@@ -58,7 +58,7 @@ class SetPresidenteDeMesa extends Component {
                     label='Email'
                     placeholder='Email'
                     value={this.state.email}
-                    onChange={this.handlePresidente.bind(this)}
+                    onChange={this.handleVicepresidente.bind(this)}
                 />
                 <Form.Field
                   control='input'
@@ -73,10 +73,10 @@ class SetPresidenteDeMesa extends Component {
                 <Button onClick={this.show.bind(this)}>Asignar</Button>
                 <Confirm
                   open={this.state.open}
-                  header='Asignacion de Presidente'
-                  content={`Estas seguro de asignar al usuario ${this.state.email} como presidente de la mesa ${this.distrito}${this.escuela}${this.state.mesa}`}
+                  header='Asignacion de Vicepresidente'
+                  content={`Estas seguro de asignar al usuario ${this.state.email} como vicepresidente de la mesa ${this.distrito}${this.escuela}${this.mesa}`}
                   onCancel={this.close.bind(this)}
-                  onConfirm={this.handleSetPresidenteDeMesa.bind(this)}
+                  onConfirm={this.handleSetVicepresidenteDeMesa.bind(this)}
                 />
               </Form>
             </Container>
@@ -84,4 +84,4 @@ class SetPresidenteDeMesa extends Component {
     }
 }
 
-export default SetPresidenteDeMesa
+export default SetVicepresidenteDeMesa

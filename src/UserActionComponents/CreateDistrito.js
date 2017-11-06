@@ -2,8 +2,8 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Form } from 'semantic-ui-react'
-import Center from 'react-center'
+import { Container, Header, Button, Form } from 'semantic-ui-react'
+// import Center from 'react-center'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
@@ -11,7 +11,7 @@ import cookie from 'react-cookies'
 /**
  * Components
  */
-import ComponentTitle from '../utils/ComponentTitle.js'
+// import ComponentTitle from '../utils/ComponentTitle.js'
 /**
  * Controller for Component
  */
@@ -53,25 +53,23 @@ class CreateDistrito extends Component {
     }
     render () {
         return (
-            <Center>
-              <div>
+              <Container text>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Container>
-                  <ComponentTitle title='Crear Distrito'/>
+                  <Header as='h3'>Crear Distrito</Header>
                   <Form>
                     <Form.Input
                       required
                       type='number'
-                      label='id de distrito'
-                      placeholder='id de distrito'
+                      label='ID del Distrito'
+                      placeholder='ID del distrito'
                       value={this.state.distrito}
                       onChange={this.handleDistrito.bind(this)}
                     />
                     <Form.Input
                         required
                         type='number'
-                        label='cantidad de escuelas'
-                        placeholder='cantidad de escuelas'
+                        label='Cantidad de Escuelas'
+                        placeholder='Escuelas'
                         value={this.state.escuelas}
                         onChange={this.handleEscuelas.bind(this)}
                     />
@@ -79,9 +77,7 @@ class CreateDistrito extends Component {
                         Crear Distrito
                     </Button>
                   </Form>
-                </Container>
-              </div>
-            </Center>
+              </Container>
         );
     }
 }

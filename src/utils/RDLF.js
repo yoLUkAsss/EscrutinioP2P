@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Header, List, Button, Form, Input} from 'semantic-ui-react'
+import {Header, List, Button, Form, Input, Icon} from 'semantic-ui-react'
 // RefactoredDLF
 class RDLF extends Component {
 
@@ -42,26 +42,32 @@ class RDLF extends Component {
     return (
       <div>
         <Header as='h3'>{this.state.title}</Header>
-        <List>
-        {this.state.items.map((item, idItem) => (
-          <List.Item key={idItem}>
-            <Form.Field inline>
+
+        <Form>
+          {this.state.items.map((item, idItem) => (
+            <Form.Field inline key={idItem}>
+              <label>Candidato: </label>
               <Input focus
-                type={this.state.type}
-                placeholder={this.state.placeholder}
-                value={item.name}
-                onChange={this.handleChangeItem(idItem)}
-              />
-              <Button onClick={this.handleDeleteItem(idItem)}>
-                {this.state.del}
+                  type={this.state.type}
+                  placeholder={this.state.placeholder}
+                  value={item.name}
+                  onChange={this.handleChangeItem(idItem)}
+                />
+              <Button animated basic onClick={this.handleDeleteItem(idItem)}>
+                <Button.Content visible>
+                  <Icon name='delete'/>
+                </Button.Content>
+                <Button.Content hidden>
+                  <label color="orange">Borrar </label>
+                </Button.Content>
               </Button>
             </Form.Field>
-          </List.Item>
-        ))}
-        </List>
-        <Button onClick={this.handleAddItem}>
-          {this.state.add}
-        </Button>
+          ))}
+
+          <Button basic primary floated="right" onClick={this.handleAddItem}>
+            {this.state.add}
+          </Button>
+        </Form>
       </div>
     );
   }
