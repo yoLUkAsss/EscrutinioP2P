@@ -10,6 +10,7 @@ import AlertContainer from 'react-alert'
 import * as utils from '../utils/utils.js'
 import * as api from '../utils/api-call.js'
 import CustomTable from '../utils/CustomTable.js'
+import LoadingComponent from '../utils/LoadingComponent.js'
 
 // Contracts
 // import DistritoCRUDContract from '../../build/contracts/DistritoCRUD.json'
@@ -49,13 +50,7 @@ class Mesa extends Component {
     renderMesa(){
       if(this.state.loading){
         return (
-          <div>
-            <Segment>
-              <Dimmer inverted blurring active>
-                <Loader size='massive' content='Loading' />
-              </Dimmer>
-            </Segment>
-          </div>
+          <LoadingComponent />
         );
       } else{
         return (
