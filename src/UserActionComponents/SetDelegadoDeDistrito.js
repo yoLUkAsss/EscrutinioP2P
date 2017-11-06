@@ -39,7 +39,7 @@ class SetDelegadoDeDistrito extends Component {
         console.log(error)
         utils.showError(this.msg, "Fallo en la :" + error)
       })
-      this.setState({open : false})
+      this.setState({open : false, correoDelegado : "", distrito : ""})
     }
     handleDelegado = (event) => { this.setState({ correoDelegado : event.target.value }) }
     handleDistrito = (event) => { this.setState({ distrito : event.target.value }) }

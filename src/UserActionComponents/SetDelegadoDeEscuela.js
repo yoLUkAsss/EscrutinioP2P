@@ -37,7 +37,7 @@ class SetDelegadoDeEscuela extends Component {
         console.log(error)
         utils.showError(this.msg, "Fallo en la :" + error)
       })
-      this.setState({open : false})
+      this.setState({open : false, correoDelegado : "", escuela : ""})
     }
     handleDelegadoEscuela = (event) => { this.setState({ correoDelegado : event.target.value }) }
     handleEscuela = (event) => { this.setState({ escuela : event.target.value }) }
