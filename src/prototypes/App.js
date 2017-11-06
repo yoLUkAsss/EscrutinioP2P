@@ -14,6 +14,7 @@ import Login from '../Auth/login.js'
 import Signup from '../Auth/signup.js'
 
 import Navbar from './NavBar.js'
+import Footer from './Footer.js'
 
 import Error404 from '../ErrorComponents/Error404.js'
 
@@ -40,6 +41,7 @@ class App extends Component{
           <Route component={Error404}/>
         </Switch>
       </Container>
+      <Footer/>
     </div>
     )
   }

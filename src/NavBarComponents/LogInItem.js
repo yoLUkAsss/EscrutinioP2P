@@ -15,10 +15,13 @@ import cookie from 'react-cookies'
 import * as currentUser from '../utils/user_session.js'
 
 class LogInItem extends Component {
+  // <Menu.Item header><Link to="/login">Inicio de sesion</Link></Menu.Item>
     render () {
       if(!currentUser.isLogged(cookie)){
         return (
-            <Menu.Item header><Link to="/login">Inicio de sesion</Link></Menu.Item>
+            <Menu.Item as={Link} to="/acceder" name='acceder' active={this.props.activeItem} onClick={this.props.activate}>
+              Acceder
+            </Menu.Item>
         );
       } else{
         return null;
