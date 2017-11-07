@@ -40,7 +40,9 @@ class Election extends Component {
       event.preventDefault()
       api.initElection(currentUser.getEmail(cookie), this.state.candidates.map(x => {return x.name})).then((res) => {
         currentUser.setElectionCreated(cookie, true)
+        currentUser.setCategory(cookie, "0")
         utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
+        this.props.history.push("/")
       }).catch(error => {
         console.log(error)
         utils.showError(this.msg, error.response.data)
