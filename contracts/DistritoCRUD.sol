@@ -3,12 +3,12 @@ pragma solidity ^0.4.11;
 import "./Distrito.sol";
 
 contract DistritoCRUD {
-  
-  
+
+
   uint[] distritoIds;
   mapping (uint => DistritoStruct) distritoMapping;
-  
-  
+
+
   struct DistritoStruct {
     uint id;
     address distritoAddress;
@@ -16,6 +16,7 @@ contract DistritoCRUD {
     bool isDistrito;
   }
 
+  mapping (bytes32 => uint) counting;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
   function createDistrito(uint distritoId) public {
@@ -38,11 +39,11 @@ contract DistritoCRUD {
     require(existsDistrito(distritoId));
     Distrito(distritoMapping[distritoId].distritoAddress).createEscuela();
   }
-/////////////////////////////////////////////////////////////////////////////////////////////////  
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////
   function createMesaVerify(uint distritoId, uint escuelaId, bytes32[] candidates) public returns (bool, bytes32) {
     if (! existsDistrito(distritoId)) {
       return (true, "ID de distrito inexistente");
@@ -50,11 +51,11 @@ contract DistritoCRUD {
       return Distrito(distritoMapping[distritoId].distritoAddress).createMesaVerify(escuelaId, candidates);
     }
   }
-  function createMesa(uint distritoId, uint escuelaId, bytes32[] candidates) public {
+  function createMesa(uint distritoId, uint escuelaId, bytes32[] candidates, address countsAddress) public {
     require(existsDistrito(distritoId));
-    Distrito(distritoMapping[distritoId].distritoAddress).createMesa(escuelaId, candidates);
+    Distrito(distritoMapping[distritoId].distritoAddress).createMesa(escuelaId, candidates, countsAddress);
   }
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -122,7 +123,7 @@ contract DistritoCRUD {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-  function setPresidenteDeMesaVerify(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public returns (bool, bytes32) { 
+  function setPresidenteDeMesaVerify(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public returns (bool, bytes32) {
     if (! existsDistrito(distritoId)) {
       return (true, "ID de distrito inexistente");
     } else {
@@ -144,8 +145,24 @@ contract DistritoCRUD {
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
+  /*function getTotal() public constant returns(bytes32[], uint[]){
+    bytes32[] memory res1 = new bytes32[](candidates.length);
+    uint[] memory res = new uint[](candidates.length);
+    for(uint i=0; i<candidates.length; i++){
+      res1[i] = candidates[i];
+      res2[i] = couts[candidates[i]];
+    }
+    return (res1, res2);
+  }
+  function check(bytes32 presidente, bytes32[] candidatos, uint[] conteos, uint distrito, uint escuela, uint mesa) public {
+    count(candidatos, conteos);
+    Distrito(distritoMapping[distrito].distritoAddress).check(presidente, candidatos, conteos, escuela, mesa);
+  }
+  function count(bytes32[] candidatos, uint[] conteos) internal {
+    for(uint i=0;i<candidatos.length; i++){
+      counts[candidatos[i]] = conteos[i];
+    }
+  }*/
 
   ////////////////////////////////////////////////////////////////////
   /*function createDistritoByCSV(uint idDistrito, uint idEscuela, uint idMesa, bytes32[] candidates) public {

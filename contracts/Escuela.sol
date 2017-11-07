@@ -3,14 +3,14 @@ pragma solidity ^0.4.11;
 import "./Mesa.sol";
 
 contract Escuela {
-  
-  
+
+
   uint lastId;
   uint[] mesaIds;
   bytes32 delegadoDeEscuelaAsignado;
   mapping (uint => MesaStruct) mesaMapping;
-  
-  
+
+
   struct MesaStruct {
     uint id;
     address mesaAddress;
@@ -18,10 +18,10 @@ contract Escuela {
     bool isMesa;
   }
 
-  
-  function createMesa(bytes32[] inputCandidates) public{
+
+  function createMesa(bytes32[] inputCandidates, address countsAddress) public{
     lastId += 1;
-    mesaMapping[lastId] = MesaStruct(lastId, new Mesa(inputCandidates), mesaIds.length, true);
+    mesaMapping[lastId] = MesaStruct(lastId, new Mesa(inputCandidates, countsAddress), mesaIds.length, true);
     mesaIds.push(lastId);
   }
   function existsMesa(uint id) public constant returns(bool){
@@ -102,10 +102,20 @@ contract Escuela {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-  function getCounts(bytes32 candidate) public constant returns(bytes32, uint){
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /*function getCounts(bytes32 candidate) public constant returns(bytes32, uint){
     return (candidate, 0);
   }
-/////////////////////////////////////////////////////////////////////////////////////////////////
+  function check(bytes32 presidente, bytes32[] candidatos, uint[] conteos, uint mesa) public {
+    count(candidatos, conteos);
+    Mesa(mesaMapping[distrito].mesaAddress).check(presidente, candidatos, conteos);
+  }
+  function count(bytes32[] candidatos, uint[] conteos) internal {
+    for(uint i=0;i<candidatos.length; i++){
+      counts[candidatos[i]] = conteos[i];
+    }
+  }*/
 
 
 

@@ -6,6 +6,7 @@ let Escuela = artifacts.require("./Escuela.sol")
 let Election = artifacts.require("./Election.sol")
 let DistritoCRUD = artifacts.require("./DistritoCRUD.sol")
 let Distrito = artifacts.require("./Distrito.sol")
+let Counts = artifacts.require("./Counts.sol")
 
 /**
  * Example of use :
@@ -19,6 +20,8 @@ module.exports = (deployer) => {
   deployer.deploy(UserElectionCRUD).then( () => {
     return deployer.deploy(DistritoCRUD)
   }).then( () => {
-    return deployer.deploy(Election, UserElectionCRUD.address, DistritoCRUD.address)
+    return deployer.deploy(Counts)
+  }).then( () => {
+    return deployer.deploy(Election, UserElectionCRUD.address, DistritoCRUD.address, Counts.address)
   })
 }

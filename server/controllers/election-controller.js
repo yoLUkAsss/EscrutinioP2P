@@ -1,9 +1,8 @@
-import { fromObject, election, web3 } from '../utils/web3-utils.js'
+import { fromObject, counts, election, web3 } from '../utils/web3-utils.js'
 
 export class ElectionController {
   getHome(req, res){
-    console.log(electionInstance)
-    res.json("HOLA HOME")
+    res.status(200).json("HOLA HOME")
   }
   getCandidates(req, res){
     try{
@@ -223,4 +222,27 @@ export class ElectionController {
       res.status(400).json({ message : error.message })
     }
   }
+
+  //returns [{string, int}]
+  getCounts(req, res){
+    try{
+      counts.deployed().then(countsInstance => {
+        countsInstance.getCounts.call(fromObject).then(counts => {
+          res.status(200).json({
+            "candidates" : counts[0].map(x => {return web3.toAscii(x)}),
+            "counts" : counts[1].map(x => {return x.toNumber()})
+          })
+        })
+        .catch(err => {
+          res.status(400).json("error 400")
+        })
+      })
+      .catch(err => {
+        res.status(400).json("error 400")
+      })
+    } catch(error){
+      res.status(400).json("error 400")
+    }
+  }
+
 }

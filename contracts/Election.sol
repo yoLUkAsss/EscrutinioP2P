@@ -2,6 +2,7 @@ pragma solidity ^0.4.11;
 
 import "./UserElectionCRUD.sol";
 import "./DistritoCRUD.sol";
+import "./Counts.sol";
 
 contract Election {
 
@@ -9,17 +10,19 @@ contract Election {
     address owner;
     address distritoCRUDaddress;
     address userCRUDaddress;
+
+    address countsAddress;
+
     mapping (bytes32 => bytes32) apoderados;
     bool public created;
     bytes32 autoridadElectoralAsignada;
     bytes32[] candidates;
 
-
-
-    function Election (address newUserCRUDaddress, address newDistritoCRUDaddress) public {
+    function Election (address newUserCRUDaddress, address newDistritoCRUDaddress, address newCountsAddress) public {
       owner = msg.sender;
       userCRUDaddress = newUserCRUDaddress;
       distritoCRUDaddress = newDistritoCRUDaddress;
+      countsAddress = newCountsAddress;
     }
 
 
@@ -57,6 +60,7 @@ contract Election {
       UserElectionCRUD(userCRUDaddress).setAutoridadElectoral(email);
       autoridadElectoralAsignada = email;
       created = true;
+      Counts(countsAddress).init(candidates);
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,7 +133,7 @@ contract Election {
     }
     function createMesa(bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public {
       require(created && autoridadElectoralAsignada == autoridadElectoral);
-      DistritoCRUD(distritoCRUDaddress).createMesa(distritoId, escuelaId, candidates);
+      DistritoCRUD(distritoCRUDaddress).createMesa(distritoId, escuelaId, candidates, countsAddress);
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -255,8 +259,13 @@ contract Election {
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /*function getTotal() public constant returns(bytes32[], uint[]){
+      return Counts(countsAddress).getCounts();
+    }*/
 
-
+    /*function check(bytes32 presidente, bytes32[] candidatos, uint[] conteos, uint distrito, uint escuela, uint mesa) public {
+      DistritoCRUD(DistritoCRUDaddress).check(presidente, candidatos, conteos, distrito, escuela, mesa);
+    }*/
 
     ////////////////////////////////////////////////////////////////////
     /*function createElectionByCSV(bytes32 autoridadElectoral, uint idDistrito, uint idEscuela, uint idMesa) public {

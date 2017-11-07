@@ -1,10 +1,12 @@
 pragma solidity ^0.4.11;
 
+import "./Counts.sol";
+
 contract Mesa {
 
     enum ParticipantCategory {Fiscal, PresidenteMesa, VicepresidenteMesa}
 
-    
+
     ////////////////////////////////////////
     // Total por candidato
     mapping (bytes32 => uint8) total;
@@ -21,8 +23,8 @@ contract Mesa {
     Datos cargados y validados al sistema
      */
     bool public checked;
-    
-    
+
+    address countsAddress;
     /**
     Conteo de un partipante (fiscal/presidente/vice) para todos los candidatos
      */
@@ -37,7 +39,8 @@ contract Mesa {
     }
 
 
-    function Mesa(bytes32[] inputCandidates) public{
+    function Mesa(bytes32[] inputCandidates, address newCountsAddress) public{
+      countsAddress = newCountsAddress;
       candidateList = inputCandidates;
       for(uint i=0;i<inputCandidates.length;i++){
         candidateMap[inputCandidates[i]] = CandidateData(true, 0);
@@ -171,8 +174,10 @@ contract Mesa {
     function check(bytes32 presi) public {
       require(presidenteDeMesaAsignado == presi);
       checked = true;
+      Counts countsCopy = Counts(countsAddress);
       for (uint8 index = 0 ; index < candidateList.length ; index++) {
         total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
+        countsCopy.setCount(candidateList[index], total[candidateList[index]]);
       }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
