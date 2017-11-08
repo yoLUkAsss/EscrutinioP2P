@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 
-import { Container, Header, List, Divider} from 'semantic-ui-react'
+import { Container, Header, List, Divider, Segment, Card, Icon, Image} from 'semantic-ui-react'
 // import ComponentTitle from '../utils/ComponentTitle.js'
+
+import image from '../images/ethereum-logo.png'
 
 class About extends Component {
   renderContent(){
@@ -17,13 +19,70 @@ class About extends Component {
           Ante cualquier problema, no dudes en contactarnos.
         </p>
         <Divider/>
-        <Header as='h3'>Contacto</Header>
-        <List>
-          <List.Item>Lucas Sandoval</List.Item>
-          <List.Item>Jesus Laime</List.Item>
-          <List.Item>Repositorio</List.Item>
-          <List.Item>WIKI</List.Item>
-        </List>
+
+        <Segment>
+
+        <Card.Group itemsPerRow={2}>
+          <Card color="teal">
+            <Image src={image} />
+            <Card.Content>
+              <Card.Header>
+                Sandoval Lucas
+              </Card.Header>
+              <Card.Meta>
+                <span className='date'>
+                  Ingreso a la UNQ en 2014
+                </span>
+              </Card.Meta>
+              <Card.Description>
+                Software developer, gamer, millenial.
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <a>
+                <Icon name='linkedin' />
+                Linkedin Page
+              </a>
+            </Card.Content>
+          </Card>
+
+          <Card color="teal">
+            <Image src={image} />
+            <Card.Content>
+              <Card.Header>
+                Laime Jesus
+              </Card.Header>
+              <Card.Meta>
+                <span className='date'>
+                  Ingreso a la UNQ en 2014
+                </span>
+              </Card.Meta>
+              <Card.Description>
+                Software developer, gamer, millenial.
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <List>
+                <List.Item>
+                <a><Icon name='linkedin' />Linkedin Page</a>
+                </List.Item>
+                <List.Item>
+                <a><Icon name='facebook' />Facebook Profile</a>
+                </List.Item>
+                <List.Item>
+                <a><Icon name='twitter' />Twitter Account</a>
+                </List.Item>
+                <List.Item>
+                <a><Icon name='call' />+54 9 11 31208500</a>
+                </List.Item>
+              </List>
+            </Card.Content>
+          </Card>
+        </Card.Group>
+
+        </Segment>
+
+
       </Container>
     )
   }
