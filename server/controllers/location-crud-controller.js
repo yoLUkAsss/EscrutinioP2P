@@ -33,35 +33,35 @@ export class LocationController {
     distritoId : int
     escuelas : int
   */
-  initDistrito(req, res){
-    election.deployed()
-    .then( async electionInstance => {
-      let result = await electionInstance.createDistritoVerify.call(req.body.email, req.body.distritoId, fromObject)
-      if (result[0]) {
-        res.status(400).json( web3.toAscii(result[1]) )
-      } else {
-        await electionInstance.createDistrito.sendTransaction(req.body.email, req.body.distritoId, fromObject)
-        let promises = []
-        for(let i = 0; i < req.body.escuelas; i++){
-          let result2 = await electionInstance.createEscuelaVerify.call(req.body.email, req.body.distritoId, fromObject)
-          if (result2[0]) {
-            res.status(400).json( web3.toAscii(result2[1]) )
-          }
-          await promises.push(electionInstance.createEscuela.sendTransaction(req.body.email, req.body.distritoId, fromObject))
-        }
-        Promise.all(promises)
-        .then(() => {
-          res.status(200).json("distrito inicializado")
-        })
-        .catch(error => {
-          res.status(400).json(error.message)
-        })
-      }
-    })
-    .catch( error => {
-      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
-    })
-  }
+  // initDistrito(req, res){
+  //   election.deployed()
+  //   .then( async electionInstance => {
+  //     let result = await electionInstance.createDistritoVerify.call(req.body.email, req.body.distritoId, fromObject)
+  //     if (result[0]) {
+  //       res.status(400).json( web3.toAscii(result[1]) )
+  //     } else {
+  //       await electionInstance.createDistrito.sendTransaction(req.body.email, req.body.distritoId, fromObject)
+  //       let promises = []
+  //       for(let i = 0; i < req.body.escuelas; i++){
+  //         let result2 = await electionInstance.createEscuelaVerify.call(req.body.email, req.body.distritoId, fromObject)
+  //         if (result2[0]) {
+  //           res.status(400).json( web3.toAscii(result2[1]) )
+  //         }
+  //         await promises.push(electionInstance.createEscuela.sendTransaction(req.body.email, req.body.distritoId, fromObject))
+  //       }
+  //       Promise.all(promises)
+  //       .then(() => {
+  //         res.status(200).json("distrito inicializado")
+  //       })
+  //       .catch(error => {
+  //         res.status(400).json(error.message)
+  //       })
+  //     }
+  //   })
+  //   .catch( error => {
+  //     res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+  //   })
+  // }
 
 
 
@@ -72,56 +72,56 @@ export class LocationController {
     escuelaId : int,
     mesas : int
   */
-  initEscuela(req, res){
-    election.deployed()
-    .then( async (electionInstance) => {
-      let promises = []
-      for(let i = 0; i < req.body.mesas; i++){
-        let result = await electionInstance.createMesaVerify.call(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
-        if (result[0]) {
-          res.status(400).json( web3.toAscii(result[1]) )
-        } else {
-          await promises.push(electionInstance.createMesa.sendTransaction(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject))
-        }
-      }
-      Promise.all(promises)
-      .then( async () => {
-        
-        let finalizar = await electionInstance.mesasCreatedVerify.call(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
-        if (finalizar[0]) {
-          res.status(400).json( web3.toAscii(finalizar[1]) )
-        } else {
-          await electionInstance.mesasCreated.sendTransaction(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
-          res.status(200).json( "Mesas creadas correctamente" )
-        }
-
-      })
-    })
-    .catch(error => {
-      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
-    })
-  }
+  // initEscuela(req, res){
+  //   election.deployed()
+  //   .then( async (electionInstance) => {
+  //     let promises = []
+  //     for(let i = 0; i < req.body.mesas; i++){
+  //       let result = await electionInstance.createMesaVerify.call(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
+  //       if (result[0]) {
+  //         res.status(400).json( web3.toAscii(result[1]) )
+  //       } else {
+  //         await promises.push(electionInstance.createMesa.sendTransaction(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject))
+  //       }
+  //     }
+  //     Promise.all(promises)
+  //     .then( async () => {
+  //
+  //       let finalizar = await electionInstance.mesasCreatedVerify.call(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
+  //       if (finalizar[0]) {
+  //         res.status(400).json( web3.toAscii(finalizar[1]) )
+  //       } else {
+  //         await electionInstance.mesasCreated.sendTransaction(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
+  //         res.status(200).json( "Mesas creadas correctamente" )
+  //       }
+  //
+  //     })
+  //   })
+  //   .catch(error => {
+  //     res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+  //   })
+  // }
 
   /**
-   * 
+   *
    * @param {*} req
-   * @param {*} res 
+   * @param {*} res
    */
-  completeMesa(req, res) {
-    election.deployed()
-    .then( async electionInstance => {
-      let result = await electionInstance.completeMesaVerify.call(req.body.email, req.params.distritoId, req.params.escuelaId, req.params.mesaId, req.body.cantidadDePersonas, fromObject)
-      if (result[0]) {
-        res.status(400).json( web3.toAscii(result[1]) )
-      } else {
-        await electionInstance.completeMesa.sendTransaction(req.body.email, req.params.distritoId, req.params.escuelaId, req.params.mesaId, req.body.cantidadDePersonas, fromObject)
-        res.status(200).json("Numero de personas en la mesa, completo")
-      }
-    })
-    .catch(error => {
-      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
-    })
-  }
+  // completeMesa(req, res) {
+  //   election.deployed()
+  //   .then( async electionInstance => {
+  //     let result = await electionInstance.completeMesaVerify.call(req.body.email, req.params.distritoId, req.params.escuelaId, req.params.mesaId, req.body.cantidadDePersonas, fromObject)
+  //     if (result[0]) {
+  //       res.status(400).json( web3.toAscii(result[1]) )
+  //     } else {
+  //       await electionInstance.completeMesa.sendTransaction(req.body.email, req.params.distritoId, req.params.escuelaId, req.params.mesaId, req.body.cantidadDePersonas, fromObject)
+  //       res.status(200).json("Numero de personas en la mesa, completo")
+  //     }
+  //   })
+  //   .catch(error => {
+  //     res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+  //   })
+  // }
 
 
   //params :- distritoId : int, escuelaId : int, mesaId : int

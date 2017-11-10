@@ -3,35 +3,35 @@ pragma solidity ^0.4.11;
 import "./Escuela.sol";
 
 contract Distrito {
-  
-  
+
+
   uint lastEscuelaId;
   uint[] escuelaIds;
   mapping (uint => EscuelaStruct) escuelaMapping;
   bytes32 delegadoDeDistritoAsignado;
-  
-  
+
+
   struct EscuelaStruct {
     uint id;
     address escuelaAddress;
     uint index;
     bool isEscuela;
   }
-  
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-  function createEscuela() public {
-    lastEscuelaId += 1;
-    escuelaMapping[lastEscuelaId] = EscuelaStruct(lastEscuelaId, new Escuela(), escuelaIds.length, true);
-    escuelaIds.push(lastEscuelaId);
+  function createEscuela(uint escuelaId) public {
+    /*lastEscuelaId += 1;*/
+    escuelaMapping[escuelaId] = EscuelaStruct(escuelaId, new Escuela(), escuelaIds.length, true);
+    escuelaIds.push(escuelaId);
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-  function createMesaVerify(uint escuelaId, bytes32[] candidates) public returns (bool, bytes32) {
+  /*function createMesaVerify(uint escuelaId, bytes32[] candidates) public returns (bool, bytes32) {
     if (! existsEscuela(escuelaId)) {
       return (true, "ID de escuela inexistente");
     } else {
@@ -41,13 +41,13 @@ contract Distrito {
   function createMesa(uint escuelaId, bytes32[] candidates) public {
     require(existsEscuela(escuelaId));
     Escuela(escuelaMapping[escuelaId].escuelaAddress).createMesa(candidates);
-  }
+  }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function mesasCreatedVerify(uint escuelaId) public returns (bool, bytes32) {
+    /*function mesasCreatedVerify(uint escuelaId) public returns (bool, bytes32) {
       if (! existsEscuela(escuelaId)) {
         return (true, "ID de escuela inexistente");
       } else {
@@ -57,13 +57,13 @@ contract Distrito {
     function mesasCreated(uint escuelaId) public {
       require(existsEscuela(escuelaId));
       Escuela(escuelaMapping[escuelaId].escuelaAddress).mesasCreated();
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function completeMesaVerify(uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
+    /*function completeMesaVerify(uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
       if (! existsEscuela(escuelaId)) {
         return (true, "ID de escuela inexistente");
       } else {
@@ -73,7 +73,7 @@ contract Distrito {
     function completeMesa(uint escuelaId, uint mesaId, uint personas) public {
       require(existsEscuela(escuelaId));
       Escuela(escuelaMapping[escuelaId].escuelaAddress).completeMesa(mesaId, personas);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -93,7 +93,7 @@ contract Distrito {
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////
   function setFiscalVerify(uint escuelaId, uint mesaId, bytes32 fiscalEmail) public returns (bool, bytes32) {
     if (! existsEscuela(escuelaId)) {
       return (true, "ID de escuela inexistente");
@@ -105,11 +105,11 @@ contract Distrito {
     require(existsEscuela(escuelaId));
     Escuela(escuelaMapping[escuelaId].escuelaAddress).setFiscal(mesaId, fiscalEmail);
   }
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////
   function setPresidenteDeMesaVerify(bytes32 delegadoEscuela, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public returns (bool, bytes32) {
     if (! existsEscuela(escuelaId)) {
       return (true, "ID de escuela inexistente");
@@ -121,16 +121,16 @@ contract Distrito {
     require(existsEscuela(escuelaId));
     Escuela(escuelaMapping[escuelaId].escuelaAddress).setPresidenteDeMesa(delegadoEscuela, mesaId, presidenteDeMesaEmail);
   }
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////
   function setVicepresidenteDeMesa(bytes32 delegadoEscuela, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public {
     require(existsEscuela(escuelaId));
     Escuela(escuelaMapping[escuelaId].escuelaAddress).setVicepresidenteDeMesa(delegadoEscuela, mesaId, presidenteDeMesaEmail);
   }
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -146,12 +146,12 @@ contract Distrito {
     require(delegadoDeDistritoAsignado == "");
     delegadoDeDistritoAsignado = newDelegado;
   }
-/////////////////////////////////////////////////////////////////////////////////////////////////  
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////  
+/////////////////////////////////////////////////////////////////////////////////////////////////
   function setDelegadoDeEscuelaVerify(bytes32 delegadoDistrito, bytes32 delegadoEscuela, uint escuelaId) public returns (bool, bytes32) {
     if (delegadoDeDistritoAsignado != delegadoDistrito) {
       return (true, "Debe ser delegado de distrito");

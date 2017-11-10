@@ -7,6 +7,7 @@ import { Grid, Container, Divider, Button, Form, Dimmer, Loader, Header } from '
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
+// import Files from 'react-files'
 
 // import ReactFileReader from 'react-file-reader';
 
@@ -33,23 +34,49 @@ class Election extends Component {
     constructor() {
         super()
         this.state = {
-            candidates : []
+            candidates : [],
+            dataFile : null
         }
+        this.uploadFile = this.uploadFile.bind(this)
+      }
+    uploadFile(event){
+      event.preventDefault()
+      this.setState({dataFile : event.target.files[0]})
     }
     handleCreateElection(event){
       event.preventDefault()
-      api.initElection(currentUser.getEmail(cookie), this.state.candidates.map(x => {return x.name})).then((res) => {
-        currentUser.setElectionCreated(cookie, true)
-        currentUser.setCategory(cookie, "0")
-        utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
-        this.props.history.push("/")
-      }).catch(error => {
-        console.log(error)
-        utils.showError(this.msg, error.response.data)
-      })
+      if (this.state.dataFile !== null) {
+        let data = new FormData()
+        data.append('file', this.state.dataFile)
+        data.append('email', currentUser.getEmail(cookie))
+        data.append('candidates', this.state.candidates.map((candidate) => {
+          return candidate.name
+        }))
+        api.initElectionByCSV(data).then((res) => {
+          currentUser.setElectionCreated(cookie, true)
+          utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
+        }).catch(error => {
+          console.log(error)
+          utils.showError(this.msg, error.response.data)
+        })
+      } else {
+        utils.showError(this.msg, "Debes agregar informacion de los distritos/escuelas/mesas")
+      }
     }
     handleNewCandidates = (newCandidates) => {
       this.setState({candidates : newCandidates})
+    }
+    renderFileReader = () => {
+      return (
+            <div>
+              <span>
+                <input type="file"
+                name="electionFile"
+                accept="text/csv"
+                onChange={this.uploadFile} />
+              </span>
+            </div>
+             )
     }
     render () {
         return (
@@ -77,6 +104,9 @@ class Election extends Component {
                 </Container>
               </Grid.Column>
             </Grid>
+            {
+              this.renderFileReader()
+            }
           </div>
         );
     }
@@ -84,61 +114,12 @@ class Election extends Component {
 
 export default withRouter(Election)
 
-// this.reader = new FileReader()
-// handleFiles = files => {
-//   this.reader.onload = e => {
-//     this.createElectionByCSV(this.reader.result)
-//   }
-//   this.reader.readAsText(files[0])
-// }
-//ver: https://github.com/adaltas/node-csv
-//distrito,escuela,mesa
-
-// getLines = (csv) => {
-//   return csv.split(/r?\n/)
-// }
-//
-// getLine = (line) => {
-//   return line.split(/;|,/)
-// }
-
-// async createElectionByCSV(file) {
-//   let fromObject
-//   const election = contract(ElectionContract)
-//   election.setProvider(this.state.web3.currentProvider)
-//   this.state.web3.eth.getAccounts((err, accs) => {
-//     fromObject = {from:accs[0], gas : 3000000}
-//   })
-//   try{
-//     let electionInstance = await election.deployed()
-//     let lines = this.getLines(file).filter(x => {return x !== ""})
-//     let ids, idDistrito, idEscuela, idMesa
-//     let promises = lines.map(line => {
-//       ids = this.getLine(line)
-//       idDistrito = ids[0]
-//       idEscuela = ids[1]
-//       idMesa = ids[2]
-//       return electionInstance.createElectionByCSV.sendTransaction(currentUser.getEmail(cookie), idDistrito, idEscuela , idMesa, fromObject)
-//     })
-//     Promise.all(promises).then(() => {
-//       console.log("working correctly")
-//       utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
-//     }).catch(err => {
-//       console.log("some thing failed")
-//       // throw new Error("failed create distrito/escuela/mesa")
-//     })
-//   } catch(error){
-//     console.log(error)
-//     utils.showError(this.msg, "Fallo en la creacion de la eleccion")
-//   }
-// }
-// renderFileReader = () => {
-//   return (
-//         <div>
-//           <Header as='h3'>Cargar datos en csv: distrito,escuela,mesa</Header>
-//           <ReactFileReader handleFiles={this.handleFiles} fileTypes={'.csv'}>
-//             <button className='btn'>Upload</button>
-//           </ReactFileReader>
-//         </div>
-//          )
-// }
+// api.initElection(currentUser.getEmail(cookie), this.state.candidates.map(x => {return x.name})).then((res) => {
+//   currentUser.setElectionCreated(cookie, true)
+//   currentUser.setCategory(cookie, "0")
+//   utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
+//   this.props.history.push("/")
+// }).catch(error => {
+//   console.log(error)
+//   utils.showError(this.msg, error.response.data)
+// })

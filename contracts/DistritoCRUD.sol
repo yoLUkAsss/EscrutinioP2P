@@ -3,12 +3,12 @@ pragma solidity ^0.4.11;
 import "./Distrito.sol";
 
 contract DistritoCRUD {
-  
-  
+
+
   uint[] distritoIds;
   mapping (uint => DistritoStruct) distritoMapping;
-  
-  
+
+
   struct DistritoStruct {
     uint id;
     address distritoAddress;
@@ -35,7 +35,7 @@ contract DistritoCRUD {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-  function createEscuelaVerify(uint distritoId) public returns (bool, bytes32) {
+  /*function createEscuelaVerify(uint distritoId) public returns (bool, bytes32) {
     if (! existsDistrito(distritoId)) {
       return (true, "ID de distrito inexistente");
     } else {
@@ -45,13 +45,13 @@ contract DistritoCRUD {
   function createEscuela(uint distritoId) public {
     require(existsDistrito(distritoId));
     Distrito(distritoMapping[distritoId].distritoAddress).createEscuela();
-  }
-/////////////////////////////////////////////////////////////////////////////////////////////////  
+  }*/
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////// 
-  function createMesaVerify(uint distritoId, uint escuelaId, bytes32[] candidates) public returns (bool, bytes32) {
+/////////////////////////////////////////////////////////////////////////////////////////////////
+  /*function createMesaVerify(uint distritoId, uint escuelaId, bytes32[] candidates) public returns (bool, bytes32) {
     if (! existsDistrito(distritoId)) {
       return (true, "ID de distrito inexistente");
     } else {
@@ -61,13 +61,13 @@ contract DistritoCRUD {
   function createMesa(uint distritoId, uint escuelaId, bytes32[] candidates) public {
     require(existsDistrito(distritoId));
     Distrito(distritoMapping[distritoId].distritoAddress).createMesa(escuelaId, candidates);
-  }
-///////////////////////////////////////////////////////////////////////////////////////////////// 
+  }*/
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function mesasCreatedVerify (uint distritoId, uint escuelaId) public returns (bool, bytes32) {
+    /*function mesasCreatedVerify (uint distritoId, uint escuelaId) public returns (bool, bytes32) {
       if (! existsDistrito(distritoId)) {
         return (true, "ID de distrito inexistente");
       } else {
@@ -77,13 +77,13 @@ contract DistritoCRUD {
     function mesasCreated(uint distritoId, uint escuelaId) public {
       require(existsDistrito(distritoId));
       Distrito(distritoMapping[distritoId].distritoAddress).mesasCreated(escuelaId);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function completeMesaVerify(uint distritoId, uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
+    /*function completeMesaVerify(uint distritoId, uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
       if (! existsDistrito(distritoId)) {
         return (true, "ID de distrito inexistente");
       } else {
@@ -93,7 +93,7 @@ contract DistritoCRUD {
     function completeMesa(uint distritoId, uint escuelaId, uint mesaId, uint personas) public {
       require(existsDistrito(distritoId));
       Distrito(distritoMapping[distritoId].distritoAddress).completeMesa(escuelaId, mesaId, personas);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -162,7 +162,7 @@ contract DistritoCRUD {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-  function setPresidenteDeMesaVerify(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public returns (bool, bytes32) { 
+  function setPresidenteDeMesaVerify(bytes32 delegadoEscuela, uint distritoId, uint escuelaId, uint mesaId, bytes32 presidenteDeMesaEmail) public returns (bool, bytes32) {
     if (! existsDistrito(distritoId)) {
       return (true, "ID de distrito inexistente");
     } else {

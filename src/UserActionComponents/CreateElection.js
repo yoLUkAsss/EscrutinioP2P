@@ -8,6 +8,7 @@ import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
 
+import Files from 'react-files'
 // import ReactFileReader from 'react-file-reader';
 
 /**
@@ -33,21 +34,66 @@ class CreateElection extends Component {
     constructor() {
         super()
         this.state = {
-            candidates : []
+            candidates : [],
+            dataFile : null
         }
+        this.onFilesChange = this.onFilesChange.bind(this)
+        this.onFilesError = this.onFilesError.bind(this)
+      }
+    onFilesChange(files) {
+      console.log(files)
     }
+    onFilesError(error, file) {
+      console.log('error code ' + error.code + ': ' + error.message)
+    }
+
     handleCreateElection(event){
       event.preventDefault()
-      api.initElection(currentUser.getEmail(cookie), this.state.candidates.map(x => {return x.name})).then((res) => {
-        currentUser.setElectionCreated(cookie, true)
-        utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
-      }).catch(error => {
-        console.log(error)
-        utils.showError(this.msg, error.response.data)
-      })
+      if (this.state.dataFile) {
+        // let data = new FormData();
+        // data.append('file', this.data);
+        // axios.post('/files', data)
+        api.initElectionByCSV(currentUser.getEmail(cookie),
+        this.state.candidates.map(x => {return x.name}),
+        this.state.dataFile).then((res) => {
+          currentUser.setElectionCreated(cookie, true)
+          utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
+        }).catch(error => {
+          console.log(error)
+          utils.showError(this.msg, error.response.data)
+        })
+      } else {
+        utils.showError(this.msg, "Debes agregar informacion de los distritos/escuelas/mesas")
+      }
+      // api.initElection(currentUser.getEmail(cookie), this.state.candidates.map(x => {return x.name})).then((res) => {
+      //   currentUser.setElectionCreated(cookie, true)
+      //   utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
+      // }).catch(error => {
+      //   console.log(error)
+      //   utils.showError(this.msg, error.response.data)
+      // })
     }
     handleNewCandidates = (newCandidates) => {
       this.setState({candidates : newCandidates})
+    }
+    renderFileReader = () => {
+      return (
+            <div>
+              <Files
+                 className='files-dropzone'
+                 onChange={this.onFilesChange}
+                 onError={this.onFilesError}
+                 accepts={['image/png', 'text/plain', 'audio/*']}
+                 multiple
+                 maxFiles={3}
+                 maxFileSize={10000000}
+                 minFileSize={0}
+                 clickable
+               >
+                 Drop files here or click to upload
+               </Files>
+             </div>
+             )
     }
     render () {
         return (
@@ -71,6 +117,9 @@ class CreateElection extends Component {
                     </Button>
                   </Form>
                 </Container>
+                {
+                  this.renderFileReader()
+                }
               </div>
             </Center>
         );
@@ -79,13 +128,6 @@ class CreateElection extends Component {
 
 export default withRouter(CreateElection)
 
-// this.reader = new FileReader()
-// handleFiles = files => {
-//   this.reader.onload = e => {
-//     this.createElectionByCSV(this.reader.result)
-//   }
-//   this.reader.readAsText(files[0])
-// }
 //ver: https://github.com/adaltas/node-csv
 //distrito,escuela,mesa
 
@@ -126,14 +168,4 @@ export default withRouter(CreateElection)
 //     console.log(error)
 //     utils.showError(this.msg, "Fallo en la creacion de la eleccion")
 //   }
-// }
-// renderFileReader = () => {
-//   return (
-//         <div>
-//           <Header as='h3'>Cargar datos en csv: distrito,escuela,mesa</Header>
-//           <ReactFileReader handleFiles={this.handleFiles} fileTypes={'.csv'}>
-//             <button className='btn'>Upload</button>
-//           </ReactFileReader>
-//         </div>
-//          )
 // }

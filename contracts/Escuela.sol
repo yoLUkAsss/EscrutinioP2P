@@ -3,15 +3,15 @@ pragma solidity ^0.4.11;
 import "./Mesa.sol";
 
 contract Escuela {
-  
-  
+
+
   uint lastId;
   uint[] mesaIds;
   bytes32 delegadoDeEscuelaAsignado;
   bool mesasCreadas;
   mapping (uint => MesaStruct) mesaMapping;
-  
-  
+
+
   struct MesaStruct {
     uint id;
     address mesaAddress;
@@ -29,11 +29,11 @@ contract Escuela {
       return (false, "");
     }
   }
-  function createMesa(bytes32[] inputCandidates) public{
+  function createMesa(uint mesaId, bytes32[] inputCandidates, uint personas) public{
     require(! mesasCreadas);
-    lastId += 1;
-    mesaMapping[lastId] = MesaStruct(lastId, new Mesa(inputCandidates), mesaIds.length, true);
-    mesaIds.push(lastId);
+    /*lastId += 1;*/
+    mesaMapping[mesaId] = MesaStruct(mesaId, new Mesa(inputCandidates, personas), mesaIds.length, true);
+    mesaIds.push(mesaId);
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -56,10 +56,10 @@ contract Escuela {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function completeMesaVerify(uint mesaId, uint personas) public returns (bool, bytes32) {
+    /*function completeMesaVerify(uint mesaId, uint personas) public returns (bool, bytes32) {
       if (! mesasCreadas) {
         return (true, "No existen mesas creadas");
-      } 
+      }
       if (! existsMesa(mesaId)) {
         return (true, "ID de mesa inexistente");
       } else {
@@ -69,11 +69,11 @@ contract Escuela {
     function completeMesa(uint mesaId, uint personas) public {
       require (mesasCreadas && existsMesa(mesaId));
       Mesa(mesaMapping[mesaId].mesaAddress).completeMesa(personas);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-  
+
   function existsMesa(uint id) public constant returns(bool){
     return mesaIds.length != 0 && mesaMapping[id].isMesa;
   }
@@ -152,9 +152,9 @@ contract Escuela {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-  function getCounts(bytes32 candidate) public constant returns(bytes32, uint){
+  /*function getCounts(bytes32 candidate) public constant returns(bytes32, uint){
     return (candidate, 0);
-  }
+  }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
   /*function createMesaByCSV(uint idMesa, bytes32[] candidates) public {

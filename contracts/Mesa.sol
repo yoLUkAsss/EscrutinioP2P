@@ -4,7 +4,7 @@ contract Mesa {
 
     enum ParticipantCategory {Fiscal, PresidenteMesa, VicepresidenteMesa}
 
-    
+
     ////////////////////////////////////////
     // Total por candidato
     mapping (bytes32 => uint) total;
@@ -23,8 +23,8 @@ contract Mesa {
     bool public checked;
 
     uint cantidadDePersonas;
-    
-    
+
+
     /**
     Conteo de un partipante (fiscal/presidente/vice) para todos los candidatos
      */
@@ -41,12 +41,12 @@ contract Mesa {
     }
 
 
-    function Mesa(bytes32[] inputCandidates) public{
+    function Mesa(bytes32[] inputCandidates, uint newCantidadDePersonas) public{
       candidateList = inputCandidates;
       for(uint i=0;i<inputCandidates.length;i++){
         candidateMap[inputCandidates[i]] = CandidateData(true, 0);
       }
-      cantidadDePersonas = 0;
+      cantidadDePersonas = newCantidadDePersonas;
     }
 
 
@@ -70,7 +70,7 @@ contract Mesa {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function completeMesaVerify(uint personas) public returns (bool, bytes32) {
+    /*function completeMesaVerify(uint personas) public returns (bool, bytes32) {
       if (cantidadDePersonas != 0){
         return (true, "Total de personas ya cargadas");
       } else {
@@ -80,7 +80,7 @@ contract Mesa {
     function completeMesa(uint personas) public {
       require(cantidadDePersonas == 0);
       cantidadDePersonas = personas;
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -92,7 +92,7 @@ contract Mesa {
     function getParticipantList() public constant returns (bytes32[]){
         return participantList;
     }
-    
+
     function getCounting ( bytes32 participant ) public constant returns (bytes32[], uint[]) {
       require(isValidParticipant(participant));
       bytes32[] memory resultCandidatos = new bytes32[](candidateList.length);
@@ -112,7 +112,7 @@ contract Mesa {
       }
       if (! isValidParticipant(participant)) {
         return (true, "Participante no valido");
-      } 
+      }
       if (cantidadDePersonas == 0) {
         return (true, "Falta asignar total de personas");
       } else {
@@ -213,7 +213,7 @@ contract Mesa {
     function checkFiscalVerify(bytes32 participant) public returns (bool, bytes32) {
       if (! isValidParticipant(participant)) {
         return (true, "Debe ser fiscal en la mesa");
-      } 
+      }
       if (participanteValidoConteo[participant] == true) {
         return (true, "Planilla ya validada");
       } else {
@@ -257,7 +257,7 @@ contract Mesa {
         (huboError, mensaje) = loadVotesForParticipantVerify(participante, candidatos[i], conteos[i]);
         if (huboError) {
           return (huboError, mensaje);
-        } 
+        }
       }
       return (false, "");
     }
@@ -271,11 +271,11 @@ contract Mesa {
 
 
     function conteoValido(uint[] conteos) private constant returns (bool) {
-      uint total = 0;
+      uint tmp = 0;
       for (uint i=0 ; i<conteos.length ; i++) {
-        total = total + conteos[i];
+        tmp = tmp + conteos[i];
       }
-      if (total == cantidadDePersonas) {
+      if (tmp == cantidadDePersonas) {
         return true;
       } else {
         return false;

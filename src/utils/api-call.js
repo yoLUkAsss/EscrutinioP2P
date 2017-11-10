@@ -133,3 +133,11 @@ export function cargarPersonasALaMesa(autoridad, distrito, escuela, mesa, person
     cantidadDePersonas : personas
   })
 }
+
+export function initElectionByCSV(data){
+  return axios.post(urlBase + 'election/initbycsv', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+    }
+  })
+}

@@ -4,6 +4,7 @@ import logger from 'morgan'
 import serverConfig from './server/config'
 import bodyParser from 'body-parser'
 import routes from './server/routes/index-route.js'
+// const fileUpload = require('express-fileupload')
 const app = express()
 
 // Console the logger
@@ -15,6 +16,7 @@ if (serverConfig.env === 'development') {
 app.use(express.static(__dirname + '/dist'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+// app.use(fileUpload())
 
 // Route api
 app.use('/api', routes)

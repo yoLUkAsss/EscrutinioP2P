@@ -48,9 +48,9 @@ contract Election {
     function createElection(bytes32 email, bytes32[] newCandidates) external {
       require(!created && autoridadElectoralAsignada == "");
       candidates = newCandidates;
-      candidates.push("votos en blanco");
+      /*candidates.push("votos en blanco");
       candidates.push("votos impugnados");
-      candidates.push("votos nulos");
+      candidates.push("votos nulos");*/
       for (uint8 index = 0; index<candidates.length; index++ ) {
           apoderados[candidates[index]] = "";
       }
@@ -60,7 +60,9 @@ contract Election {
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+    function verifyAutoridadElectoral(bytes32 email) public returns(bool){
+      return autoridadElectoralAsignada == email;
+    }
 
     function getCandidates() public constant returns(bytes32[]) {
       return candidates;
@@ -77,7 +79,7 @@ contract Election {
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function createDistritoVerify(bytes32 autoridadElectoral, uint distritoId) public returns (bool, bytes32) {
+    /*function createDistritoVerify(bytes32 autoridadElectoral, uint distritoId) public returns (bool, bytes32) {
       if (! created) {
         return (true, "No existe eleccion creada");
       }
@@ -90,14 +92,14 @@ contract Election {
     function createDistrito(bytes32 autoridadElectoral, uint distritoId) public {
       require(created && autoridadElectoralAsignada == autoridadElectoral);
       DistritoCRUD(distritoCRUDaddress).createDistrito(distritoId);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function createEscuelaVerify(bytes32 autoridadElectoral, uint distritoId) public returns (bool, bytes32) {
+    /*function createEscuelaVerify(bytes32 autoridadElectoral, uint distritoId) public returns (bool, bytes32) {
       if (! created) {
         return (true, "No existe eleccion creada");
       }
@@ -110,14 +112,14 @@ contract Election {
     function createEscuela(bytes32 autoridadElectoral, uint distritoId) public {
       require(created && autoridadElectoralAsignada == autoridadElectoral);
       DistritoCRUD(distritoCRUDaddress).createEscuela(distritoId);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function createMesaVerify(bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public returns (bool, bytes32) {
+    /*function createMesaVerify(bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public returns (bool, bytes32) {
       if (! created) {
         return (true, "No existe eleccion creada");
       }
@@ -130,13 +132,13 @@ contract Election {
     function createMesa(bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public {
       require(created && autoridadElectoralAsignada == autoridadElectoral);
       DistritoCRUD(distritoCRUDaddress).createMesa(distritoId, escuelaId, candidates);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function mesasCreatedVerify (bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public returns (bool, bytes32) {
+    /*function mesasCreatedVerify (bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public returns (bool, bytes32) {
       if (! created) {
         return (true, "No existe eleccion creada");
       }
@@ -149,13 +151,13 @@ contract Election {
     function mesasCreated(bytes32 autoridadElectoral, uint distritoId, uint escuelaId) public {
       require(created && autoridadElectoralAsignada == autoridadElectoral);
       DistritoCRUD(distritoCRUDaddress).mesasCreated(distritoId, escuelaId);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function completeMesaVerify (bytes32 autoridadElectoral, uint distritoId, uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
+    /*function completeMesaVerify (bytes32 autoridadElectoral, uint distritoId, uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
       if (! created) {
         return (true, "No existe eleccion creada");
       }
@@ -168,7 +170,7 @@ contract Election {
     function completeMesa (bytes32 autoridadElectoral, uint distritoId, uint escuelaId, uint mesaId, uint personas) public {
       require(created && autoridadElectoralAsignada == autoridadElectoral);
       DistritoCRUD(distritoCRUDaddress).completeMesa(distritoId, escuelaId, mesaId, personas);
-    }
+    }*/
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
