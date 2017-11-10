@@ -37,10 +37,12 @@ class CreateEscuela extends Component {
     }
     handleCreateEscuela(event) {
       event.preventDefault()
-      api.initEscuela(currentUser.getEmail(cookie), parseInt(this.state.distritoId, 10), parseInt(this.state.escuelaId, 10), parseInt(this.state.cantidadMesas, 10)).then((res) => {
-        utils.showSuccess(this.msg, "Escuela creada correctamente")
-      }).catch(err => {
-        utils.showError(this.msg, "Fallo la creacion de la escuela")
+      api.initEscuela(currentUser.getEmail(cookie), parseInt(this.state.distritoId, 10), parseInt(this.state.escuelaId, 10), parseInt(this.state.cantidadMesas, 10))
+      .then(res => {
+        utils.showSuccess(this.msg, res.data)
+      })
+      .catch(error => {
+        utils.showError(this.msg, error.response.data)
       })
     }
 

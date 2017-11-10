@@ -39,9 +39,9 @@ class CreateDistrito extends Component {
       api.initDistrito(currentUser.getEmail(cookie), parseInt(this.state.distrito, 10), parseInt(this.state.escuelas, 10)).then((res) => {
         console.log(res)
         utils.showSuccess(this.msg, "Distrito creado correctamente")
-      }).catch(err => {
-        console.log(err)
-        utils.showError(this.msg, "Fallo la creacion del distrito")
+      }).catch(error => {
+        console.log(error)
+        utils.showError(this.msg, error.response.data)
       })
     }
 

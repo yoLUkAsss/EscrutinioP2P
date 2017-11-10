@@ -1,5 +1,4 @@
 //var Contract = artifacts.require("./path/to/Contract.sol");
-let SimpleStorage = artifacts.require("./SimpleStorage.sol")
 let UserCRUD = artifacts.require("./UserCRUD.sol")
 let UserElectionCRUD = artifacts.require("./UserElectionCRUD.sol")
 let Escuela = artifacts.require("./Escuela.sol")
@@ -15,7 +14,6 @@ let Counts = artifacts.require("./Counts.sol")
  *
  */
 module.exports = (deployer) => {
-  deployer.deploy(SimpleStorage)
   deployer.deploy([UserCRUD, Escuela, Distrito])
   deployer.deploy(UserElectionCRUD).then( () => {
     return deployer.deploy(DistritoCRUD)

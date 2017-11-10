@@ -11,6 +11,7 @@ import AlertContainer from 'react-alert'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
+import LoadingComponent from '../utils/LoadingComponent.js'
 // import CustomTable from '../utils/CustomTable.js'
 
 // Contracts
@@ -91,7 +92,7 @@ class LoadMesa extends Component {
       api.loadMesa(currentUser.getEmail(cookie), this.state.candidatos, this.distrito, this.escuela, this.mesa).then(res => {
         utils.showSuccess(this.msg, "Carga de datos correcta")
       }).catch(error => {
-        utils.showError(this.msg, "Fallo en la carga de datos:" + error)
+        utils.showError(this.msg, error.response.data)
       })
     }
 
@@ -135,9 +136,15 @@ class LoadMesa extends Component {
       )
     }
 
+    renderLoadingMesa() {
+      return (
+        <LoadingComponent/>
+      )
+    }
+
     render () {
       if(this.state.loading){
-        return (<div>Loading...</div>);
+        return this.renderLoadingMesa();
       } else if(this.state.isMesaInvalid){
         return this.renderInvalidMesa();
       } else{

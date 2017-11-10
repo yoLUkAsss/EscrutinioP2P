@@ -18,7 +18,11 @@ class CreateElectionItem extends Component {
   // <Menu.Item header><Link to="/election">Crear eleccion</Link></Menu.Item>
   //<Menu.Item as={Link} to="/election" name='registrar' active={this.props.activeItem} onClick={this.props.activate}>Crear eleccion</Menu.Item>
     render () {
+<<<<<<< HEAD
       if(currentUser.isLogged(cookie) && currentUser.isElectionCreated(cookie) !== true){
+=======
+      if(currentUser.isLogged(cookie) && (currentUser.isElectionCreated(cookie) || currentUser.isElectionCreated(cookie) !== true){
+>>>>>>> develop
         return (
             <Menu.Item as={Link} to="/eleccion" name='eleccion' active={this.props.activeItem} onClick={this.props.activate}>
               Eleccion

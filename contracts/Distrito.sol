@@ -19,11 +19,14 @@ contract Distrito {
   }
 
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
   function createEscuela() public {
     lastEscuelaId += 1;
     escuelaMapping[lastEscuelaId] = EscuelaStruct(lastEscuelaId, new Escuela(), escuelaIds.length, true);
     escuelaIds.push(lastEscuelaId);
   }
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -32,7 +35,7 @@ contract Distrito {
     if (! existsEscuela(escuelaId)) {
       return (true, "ID de escuela inexistente");
     } else {
-      return (false, "");
+      return Escuela(escuelaMapping[escuelaId].escuelaAddress).createMesaVerify(candidates);
     }
   }
   function createMesa(uint escuelaId, bytes32[] candidates, address countsAddress) public {
@@ -40,6 +43,41 @@ contract Distrito {
     Escuela(escuelaMapping[escuelaId].escuelaAddress).createMesa(candidates, countsAddress);
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function mesasCreatedVerify(uint escuelaId) public returns (bool, bytes32) {
+      if (! existsEscuela(escuelaId)) {
+        return (true, "ID de escuela inexistente");
+      } else {
+        return Escuela(escuelaMapping[escuelaId].escuelaAddress).mesasCreatedVerify();
+      }
+    }
+    function mesasCreated(uint escuelaId) public {
+      require(existsEscuela(escuelaId));
+      Escuela(escuelaMapping[escuelaId].escuelaAddress).mesasCreated();
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    function completeMesaVerify(uint escuelaId, uint mesaId, uint personas) public returns (bool, bytes32) {
+      if (! existsEscuela(escuelaId)) {
+        return (true, "ID de escuela inexistente");
+      } else {
+        return Escuela(escuelaMapping[escuelaId].escuelaAddress).completeMesaVerify(mesaId, personas);
+      }
+    }
+    function completeMesa(uint escuelaId, uint mesaId, uint personas) public {
+      require(existsEscuela(escuelaId));
+      Escuela(escuelaMapping[escuelaId].escuelaAddress).completeMesa(mesaId, personas);
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
   //////////////////////////////////////////////////
   function getEscuela(uint id) public constant returns(address){
@@ -145,7 +183,6 @@ contract Distrito {
       counts[candidatos[i]] = conteos[i];
     }
   }*/
-
 
   ////////////////////////////////////////////////////////////////////
   /*function createEscuelaByCSV(uint idEscuela, uint idMesa, bytes32[] candidates) public {
