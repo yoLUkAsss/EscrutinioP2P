@@ -94,7 +94,7 @@ contract Mesa {
         return participantList;
     }
 
-    function getCounting ( bytes32 participant ) public constant returns (bytes32[], uint[]) {
+    function getCounting ( bytes32 participant ) public constant returns (bytes32, bytes32[], uint[]) {
       require(isValidParticipant(participant));
       bytes32[] memory resultCandidatos = new bytes32[](candidateList.length);
       uint[] memory resultConteos = new uint[](candidateList.length);
@@ -102,7 +102,7 @@ contract Mesa {
         resultCandidatos[i] = candidateList[i];
         resultConteos[i] = participantMap[participant].votes[candidateList[i]];
       }
-      return (resultCandidatos, resultConteos);
+      return (participant, resultCandidatos, resultConteos);
     }
 
 

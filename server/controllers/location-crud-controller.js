@@ -154,7 +154,45 @@ export class LocationController {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )
     })
   }
-  //agregar buscar informacion de los otros participantes
+  async getMesaParticipants(req, res){
+    distritoCRUD.deployed()
+    .then(async distritoCRUDInstance => {
+      let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
+      let distritoInstance = await distrito.at(distritoAddress)
+      let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
+      let escuelaInstance = await escuela.at(escuelaAddress)
+      let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+      let mesaInstance = await mesa.at(mesaAddress)
+      let participantList = await mesaInstance.getParticipantList.call(fromObject)
+      let promises = participantList.map(p => {
+        return mesaInstance.getCounting.call(p, fromObject)
+      })
+      Promise.all(promises).then(results => {
+        console.log(JSON.stringify(results, undefined, 2))
+        let response = []
+        results.forEach(r => {
+          let participant = {}
+          let candidates = []
+          for(let index = 0; index < r[1].length; index++){
+            candidates.push({"name" : web3.toAscii(r[1][index]), "counts" : r[2][index].toNumber()})
+          }
+          participant.name = web3.toAscii(r[0])
+          participant.candidates = candidates
+          response.push(participant)
+        })
+        console.log(response)
+        res.status(200).json(response)
+      }).catch(error => {
+        console.log(error)
+        res.status(400).json("error")
+      })
+    })
+    .catch(error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
+  }
+  //req.body : email,
+  //req.params : distritoId, escuelaId, mesaId
   async getMesaUser(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
@@ -164,23 +202,10 @@ export class LocationController {
       let escuelaInstance = await escuela.at(escuelaAddress)
       let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(mesaAddress)
-      let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
-      let result = await mesaInstance.getCounting(req.body.participant, fromObject)
-      let participantList = await mesaInstance.getParticipantList.call(fromObject)
-      let promises = []
-      participantList.forEach(p => {
-        promises.push(mesaInstance.getCounting.call(p, fromObject)
-      })
-      let response = []
-      Promise.all(promises).then(res => {
-        response = res.map(r => {
-          "name" : web3.toAscii(r[0]
-        })
-      })
-      console.log(JSON.stringify(result, undefined, 2))
+      let result = await mesaInstance.getCounting(req.query.email, fromObject)
       let parsedResult = []
-      for (var index = 0; index < result[0].length; index++) {
-        parsedResult.push( { "name" : web3.toAscii(result[0][index]), "counts" : result[1][index].toNumber() } )
+      for (var index = 0; index < result[1].length; index++) {
+        parsedResult.push({"name" : web3.toAscii(result[1][index]), "counts" : result[2][index].toNumber()})
       }
       res.status(201).json(parsedResult)
     })
@@ -188,6 +213,7 @@ export class LocationController {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )
     })
   }
+
 
   //params :- distritoId : int, escuelaId : int, mesaId : int
   //body: email : string

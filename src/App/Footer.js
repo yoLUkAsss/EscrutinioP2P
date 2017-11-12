@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Container, Header, List, Divider, Segment, Grid, Image} from 'semantic-ui-react'
+import { Container, Header, List, Segment, Grid} from 'semantic-ui-react'
 // import ComponentTitle from '../utils/ComponentTitle.js'
 
 class Footer extends Component {
@@ -11,11 +11,11 @@ class Footer extends Component {
             <Grid divided inverted stackable>
               <Grid.Row>
 
-                
+
                 <Grid.Column width={5}>
                   <Header inverted as='h4' content='Links Utiles' />
                   <List animated link inverted>
-                    
+
                     <List.Item as='a' href="//github.com/yoLUkAsss/DEscrutinio" >
                       <List.Icon name='github' />
                       <List.Content> Repositorio </List.Content>
@@ -52,7 +52,7 @@ class Footer extends Component {
                       <List.Content> Laime Jesus: TODO </List.Content>
                     </List.Item>
                   </List>
-                  
+
                 </Grid.Column>
                 {/* <Grid.Column width={7}>
                   <Header as='h4' inverted>Footer Header</Header>

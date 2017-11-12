@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Container, Divider, Button, Form, Dimmer, Loader, Header } from 'semantic-ui-react'
+import { Grid, Container, Divider, Button, Form, Header } from 'semantic-ui-react'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'

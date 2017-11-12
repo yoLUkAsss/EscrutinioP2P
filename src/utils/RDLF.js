@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Header, List, Button, Form, Input, Icon} from 'semantic-ui-react'
+import {Header, Button, Form, Input, Icon} from 'semantic-ui-react'
 // RefactoredDLF
 class RDLF extends Component {
 
