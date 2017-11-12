@@ -19,7 +19,8 @@ contract('Escuela', function(accounts) {
 
   it("create an Mesa Contract should add a new mesa into Escuela.", async () => {
     let escuelaInstance = await Escuela.deployed()
-    await escuelaInstance.createMesa([], fromObject)
+    let zero = "0x0000000000000000000000000000000000000000"
+    await escuelaInstance.createMesa([], zero, fromObject)
     let mesas = await escuelaInstance.getMesas.call(fromObject)
     let mesaId = mesas[mesas.length - 1].toNumber()
     let exists = await escuelaInstance.existsMesa.call(mesaId)
@@ -29,11 +30,11 @@ contract('Escuela', function(accounts) {
 
   it("get an existent Mesa should returns its address.", async () => {
     let escuelaInstance = await Escuela.deployed()
-    await escuelaInstance.createMesa([], fromObject)
+    let zero = "0x0000000000000000000000000000000000000000"
+    await escuelaInstance.createMesa([], zero, fromObject)
     let mesas = await escuelaInstance.getMesas.call(fromObject)
     let mesaId = mesas[mesas.length - 1].toNumber()
     let mesa = await escuelaInstance.getMesa.call(mesaId, fromObject)
-    let zero = "0x0000000000000000000000000000000000000000"
     assert.ok(mesa !== zero, "has address")
     // await escuelaInstance.deleteMesa(mesaId, fromObject)
   })
