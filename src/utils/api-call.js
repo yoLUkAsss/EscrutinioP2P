@@ -133,3 +133,7 @@ export function cargarPersonasALaMesa(autoridad, distrito, escuela, mesa, person
     cantidadDePersonas : personas
   })
 }
+
+export function getTotal(){
+  return axios.get(urlBase + 'election/total')
+}

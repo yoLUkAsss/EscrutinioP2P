@@ -120,6 +120,10 @@ class LoadMesa extends Component {
                   </Button>
               </Form>
               {this.renderCanCheck()}
+              <Divider/>
+              {
+                this.renderParticipants()
+              }
           </Container>
         )
     }
@@ -133,6 +137,12 @@ class LoadMesa extends Component {
           }}> Volver a las mesas
           </Button>
         </Container>
+      )
+    }
+    //agregar renderizar las otras tablas debajo del cargar mesa
+    renderParticipants(){
+      return (
+
       )
     }
 

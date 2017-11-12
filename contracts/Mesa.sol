@@ -274,11 +274,11 @@ contract Mesa {
 
 
     function conteoValido(uint[] conteos) private constant returns (bool) {
-      uint total = 0;
+      uint resultados = 0;
       for (uint i=0 ; i<conteos.length ; i++) {
-        total = total + conteos[i];
+        resultados = resultados + conteos[i];
       }
-      if (total == cantidadDePersonas) {
+      if (resultados == cantidadDePersonas) {
         return true;
       } else {
         return false;

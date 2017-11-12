@@ -1,22 +1,13 @@
 // react utilities
 import React, { Component } from 'react';
-import { Button, Header, Container, Segment, Dimmer, Loader} from 'semantic-ui-react'
+import { Button, Header, Container} from 'semantic-ui-react'
 import {withRouter} from 'react-router-dom'
 import AlertContainer from 'react-alert'
 
-// Utils
-// import contract from 'truffle-contract'
-// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as api from '../utils/api-call.js'
 import CustomTable from '../utils/CustomTable.js'
 import LoadingComponent from '../utils/LoadingComponent.js'
-
-// Contracts
-// import DistritoCRUDContract from '../../build/contracts/DistritoCRUD.json'
-// import DistritoContract from '../../build/contracts/Distrito.json'
-// import EscuelaContract from '../../build/contracts/Escuela.json'
-// import MesaContract from '../../build/contracts/Mesa.json'
 
 //ver si se puede usar RefactoredDLF
 /**
@@ -43,6 +34,7 @@ class Mesa extends Component {
         this.setState({isMesaInvalid : true, loading : false})
       })
     }
+    //cambiarlo, setearle los props de los parametros en el componentWillMount como parte de la mesa
     getMesaId = () => {
     return `${this.props.match.params.distritoId}${this.props.match.params.escuelaId}${this.props.match.params.mesaId}`
     }

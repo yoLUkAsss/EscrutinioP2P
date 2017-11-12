@@ -224,7 +224,7 @@ export class ElectionController {
   }
 
   //returns [{string, int}]
-  getCounts(req, res){
+  getTotal(req, res){
     try{
       counts.deployed().then(countsInstance => {
         countsInstance.getCounts.call(fromObject).then(counts => {

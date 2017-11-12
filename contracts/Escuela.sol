@@ -27,7 +27,7 @@ contract Escuela {
       return (false, "");
     }
   }
-  function createMesa(bytes32[] inputCandidates) public{
+  function createMesa(bytes32[] inputCandidates, address countsAddress) public{
     require(! mesasCreadas);
     lastId += 1;
     mesaMapping[lastId] = MesaStruct(lastId, new Mesa(inputCandidates, countsAddress), mesaIds.length, true);

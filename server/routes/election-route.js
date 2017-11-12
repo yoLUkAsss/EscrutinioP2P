@@ -9,7 +9,7 @@ router.route('/').get(ElectionCtrl.getHome)
 router.route('/candidates').get(ElectionCtrl.getCandidates)
 router.route('/initialized').get(ElectionCtrl.getInitializedElection)
 
-router.route('/counts').get(ElectionCtrl.getCounts)
+router.route('/total').get(ElectionCtrl.getTotal)
 
 router.route('/initelection').post(ElectionCtrl.initElection)
 

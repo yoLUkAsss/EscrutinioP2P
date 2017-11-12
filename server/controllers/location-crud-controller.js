@@ -86,7 +86,7 @@ export class LocationController {
       }
       Promise.all(promises)
       .then( async () => {
-        
+
         let finalizar = await electionInstance.mesasCreatedVerify.call(req.body.email, req.body.distritoId, req.body.escuelaId, fromObject)
         if (finalizar[0]) {
           res.status(400).json( web3.toAscii(finalizar[1]) )
@@ -103,9 +103,9 @@ export class LocationController {
   }
 
   /**
-   * 
+   *
    * @param {*} req
-   * @param {*} res 
+   * @param {*} res
    */
   completeMesa(req, res) {
     election.deployed()
@@ -154,7 +154,7 @@ export class LocationController {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )
     })
   }
-
+  //agregar buscar informacion de los otros participantes
   async getMesaUser(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
@@ -166,6 +166,17 @@ export class LocationController {
       let mesaInstance = await mesa.at(mesaAddress)
       let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
       let result = await mesaInstance.getCounting(req.body.participant, fromObject)
+      let participantList = await mesaInstance.getParticipantList.call(fromObject)
+      let promises = []
+      participantList.forEach(p => {
+        promises.push(mesaInstance.getCounting.call(p, fromObject)
+      })
+      let response = []
+      Promise.all(promises).then(res => {
+        response = res.map(r => {
+          "name" : web3.toAscii(r[0]
+        })
+      })
       console.log(JSON.stringify(result, undefined, 2))
       let parsedResult = []
       for (var index = 0; index < result[0].length; index++) {
