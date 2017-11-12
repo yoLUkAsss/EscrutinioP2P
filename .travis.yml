@@ -11,7 +11,7 @@ install:
   - npm install -g ethereumjs-testrpc
 
 before_script:
-  - testrpc --l 5000000 > testrpc.log &
+  - testrpc --l 50000000 > testrpc.log &
 
 script:
   - truffle test
