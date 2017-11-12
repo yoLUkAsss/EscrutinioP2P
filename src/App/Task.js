@@ -16,6 +16,7 @@ import SetDelegadoDeEscuela from '../UserActionComponents/SetDelegadoDeEscuela.j
 import SetPresidenteDeMesa from '../UserActionComponents/SetPresidenteDeMesa.js'
 import SetVicepresidenteDeMesa from '../UserActionComponents/SetVicepresidenteDeMesa.js'
 import SetFiscal from '../UserActionComponents/SetFiscal.js'
+import CompleteMesa from '../UserActionComponents/CompleteMesa.js'
 import LoadMesa from '../UserActionComponents/LoadMesa.js'
 import Error404 from '../ErrorComponents/Error404.js'
 
@@ -57,6 +58,7 @@ class Task extends Component {
               <Route path={`${this.props.match.url}/setdelegadoescuela`} component={SetDelegadoDeEscuela}/>
               <Route path={`${this.props.match.url}/setpresidentemesa`} component={SetPresidenteDeMesa}/>
               <Route path={`${this.props.match.url}/setvicepresidentemesa`} component={SetVicepresidenteDeMesa}/>
+              <Route path={`${this.props.match.url}/completemesa`} component={CompleteMesa}/>
               <Route path={`${this.props.match.url}/loadmesa`} component={LoadMesa}/>
               <Route component={Error404}/>
             </Switch>

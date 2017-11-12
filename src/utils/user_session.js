@@ -134,7 +134,8 @@ export function getTasks(cookie){
             {name: "Asignar apoderado de partido", url: "/setapoderado"},
             {name: "Asignar delegado de distrito", url: "/setdelegadodistrito"},
             {name: "Crear distrito", url: "/distrito"},
-            {name : "Crear escuela", url:"/escuela"}
+            {name: "Crear escuela", url: "/escuela"},
+            {name: "Completar datos de una mesa", url: "/completemesa"}
           ]
       }
     case "1":
