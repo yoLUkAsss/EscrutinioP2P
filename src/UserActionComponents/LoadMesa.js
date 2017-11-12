@@ -23,7 +23,8 @@ class LoadMesa extends Component {
         this.state = {
           participants : [],
           isMesaInvalid : false,
-          loading : true
+          loading : true,
+          candidates : []
         }
         this.distrito = currentUser.getUser(cookie).distrito
         this.escuela = currentUser.getUser(cookie).escuela
@@ -35,8 +36,16 @@ class LoadMesa extends Component {
         console.log("buscando la mesa")
         api.getMesaParticipants(this.distrito, this.escuela, this.mesa).then((res) => {
           console.log(res.data)
-          // this.setState({candidatos : res.data, loading : false})
-          this.setState({participants : res.data, loading : false})
+          let candidates2load = []
+          let newparticipants = []
+          res.data.forEach(x => {
+            if(x.name === currentUser.getEmail(cookie)){
+              candidates2load = x.candidates
+            } else {
+              newparticipants.push(x)
+            }
+          })
+          this.setState({participants : newparticipants, loading : false, candidates : candidates2load})
         }).catch(error => {
           this.setState({isMesaInvalid : true, loading : false})
         })
@@ -72,16 +81,16 @@ class LoadMesa extends Component {
     //Manejan los cambios en los conteos
     handleCandidatoCountsChange = (idx) => (evt) => {
       evt.preventDefault()
-      const newCandidatos = this.state.candidatos.map((candidato, pidx) => {
+      const newCandidatos = this.state.candidates.map((candidato, pidx) => {
         if (idx !== pidx) return candidato
         return { ...candidato, counts: evt.target.value }
       })
-      this.setState({ candidatos: newCandidatos})
+      this.setState({ candidates: newCandidatos})
     }
     //carga los datos de un participante
     handleLoadMesa = (event) => {
       event.preventDefault()
-      api.loadMesa(currentUser.getEmail(cookie), this.state.candidatos, this.distrito, this.escuela, this.mesa).then(res => {
+      api.loadMesa(currentUser.getEmail(cookie), this.state.candidates, this.distrito, this.escuela, this.mesa).then(res => {
         utils.showSuccess(this.msg, "Carga de datos correcta")
       }).catch(error => {
         utils.showError(this.msg, error.response.data)
@@ -93,6 +102,7 @@ class LoadMesa extends Component {
           <Container text>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
             <Header as='h3'>Cargar Mesa: {this.getMesaId()}</Header>
+              {this.renderLoadUser()}
               {this.renderCanCheck()}
               <Divider/>
               {
@@ -122,7 +132,7 @@ class LoadMesa extends Component {
               return (
                 <div>
                   <Header as='h2'>{x.name}</Header>
-                  {x.name === currentUser.getEmail(cookie) ? this.renderLoadUser(x.name, x.candidates) : <CustomTable key={idX} itemsHeader={["Candidato","Conteo"]} itemsBody={x.candidates}/>}
+                  <CustomTable key={idX} itemsHeader={["Candidato","Conteo"]} itemsBody={x.candidates}/>
                   <Divider/>
                 </div>
               )
@@ -132,17 +142,17 @@ class LoadMesa extends Component {
       )
     }
 
-    renderLoadUser(participante, candidatos){
+    renderLoadUser(){
       return (
         <Form>
           {
-            candidatos.map((candidato, idx) => (
+            this.state.candidates.map((candidate, idx) => (
             <Form.Input
               type='number'
               key={idx}
-              label={`Candidato: ${candidato.name}`}
+              label={`Candidato: ${candidate.name}`}
               placeholder={`Candidato: ${idx + 1}`}
-              value={candidato.counts}
+              value={candidate.counts}
               onChange={this.handleCandidatoCountsChange(idx)}
             />
             ))
