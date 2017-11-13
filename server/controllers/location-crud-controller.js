@@ -128,19 +128,13 @@ export class LocationController {
   //body :- candidate : string
   //return :- candidates : [{name : string, counts : int}]
   async getMesaTotal(req, res){
-    distritoCRUD.deployed()
-    .then(async distritoCRUDInstance => {
-      let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-      let distritoInstance = await distrito.at(distritoAddress)
-      let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-      let escuelaInstance = await escuela.at(escuelaAddress)
-      let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+    election.deployed().then(async electionInstance => {
+      let mesaAddress = await electionInstance.getMesa(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(mesaAddress)
       let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
       let promises
       let candidates
       promises = candidatesList.map(c => {
-        // return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, web3.toAscii(c), fromObject)
         return mesaInstance.getTotal.call(c, fromObject)
       })
       Promise.all(promises).then((results) => {
@@ -149,19 +143,44 @@ export class LocationController {
       }).catch(error => {
         res.status(400).json(error.message)
       })
-    })
-    .catch(error => {
+    }).catch(error => {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )
     })
+    // distritoCRUD.deployed()
+    // .then(async distritoCRUDInstance => {
+    //   let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
+    //   let distritoInstance = await distrito.at(distritoAddress)
+    //   let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
+    //   let escuelaInstance = await escuela.at(escuelaAddress)
+    //   let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+    //   let mesaInstance = await mesa.at(mesaAddress)
+    //   let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
+    //   let promises
+    //   let candidates
+    //   promises = candidatesList.map(c => {
+    //     // return mesaInstance.getParticipantVotesForACandidate.call(req.body.email, web3.toAscii(c), fromObject)
+    //     return mesaInstance.getTotal.call(c, fromObject)
+    //   })
+    //   Promise.all(promises).then((results) => {
+    //     candidates = results.map(r => { return {"name" : web3.toAscii(r[0]), "counts" : r[1].toNumber()}})
+    //     res.status(200).json(candidates)
+    //   }).catch(error => {
+    //     res.status(400).json(error.message)
+    //   })
+    // })
+    // .catch(error => {
+    //   res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    // })
   }
   async getMesaParticipants(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
-      let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-      let distritoInstance = await distrito.at(distritoAddress)
-      let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-      let escuelaInstance = await escuela.at(escuelaAddress)
-      let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+      let mesaAddress = await distritoCRUDInstance.getMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
+      // let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
+      // let distritoInstance = await distrito.at(distritoAddress)
+      // let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
+      // let escuelaInstance = await escuela.at(escuelaAddress)
+      // let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(mesaAddress)
       let participantList = await mesaInstance.getParticipantList.call(fromObject)
       let promises = participantList.map(p => {
@@ -193,11 +212,12 @@ export class LocationController {
   async getMesaUser(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
-      let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-      let distritoInstance = await distrito.at(distritoAddress)
-      let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-      let escuelaInstance = await escuela.at(escuelaAddress)
-      let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+      let mesaAddress = await distritoCRUDInstance.getMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
+      // let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
+      // let distritoInstance = await distrito.at(distritoAddress)
+      // let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
+      // let escuelaInstance = await escuela.at(escuelaAddress)
+      // let mesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(mesaAddress)
       let result = await mesaInstance.getCounting(req.query.email, fromObject)
       let parsedResult = []
@@ -217,12 +237,13 @@ export class LocationController {
   async checkMesa(req, res){
     try{
       distritoCRUD.deployed().then(async distritoCRUDInstance => {
-        let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-        let distritoInstance = await distrito.at(distritoAddress)
-        let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-        let escuelaInstance = await escuela.at(escuelaAddress)
-        let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
-        let mesaInstance = await mesa.at(newMesaAddress)
+        let mesaAddress = await distritoCRUDInstance.getMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
+        // let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
+        // let distritoInstance = await distrito.at(distritoAddress)
+        // let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
+        // let escuelaInstance = await escuela.at(escuelaAddress)
+        // let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+        let mesaInstance = await mesa.at(mesaAddress)
         await mesaInstance.check.sendTransaction(req.body.email, fromObject)
         res.status(200).json("checked correctly")
       }).catch(error => {
@@ -238,14 +259,16 @@ export class LocationController {
     distritoCRUD.deployed()
     .then( async distritoCRUDInstance => {
 
-      let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
-      let distritoInstance = await distrito.at(distritoAddress)
+      let mesaAddress = await distritoCRUDInstance.getMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
 
-      let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
-      let escuelaInstance = await escuela.at(escuelaAddress)
-
-      let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
-      let mesaInstance = await mesa.at(newMesaAddress)
+      // let distritoAddress = await distritoCRUDInstance.getDistrito.call(parseInt(req.params.distritoId), fromObject)
+      // let distritoInstance = await distrito.at(distritoAddress)
+      //
+      // let escuelaAddress = await distritoInstance.getEscuela.call(parseInt(req.params.escuelaId), fromObject)
+      // let escuelaInstance = await escuela.at(escuelaAddress)
+      //
+      // let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
+      let mesaInstance = await mesa.at(mesaAddress)
 
       let parsedCandidates = []
       let parsedCountings = []

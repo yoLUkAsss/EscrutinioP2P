@@ -110,6 +110,16 @@ contract DistritoCRUD {
   function getDistritos() public constant returns(uint[]){
     return distritoIds;
   }
+
+  function getEscuela(uint distritoId, uint escuelaId) public constant returns(address){
+    require(existsDistrito(distritoId));
+    return Distrito(distritoMapping[distritoId].distritoAddress).getEscuela(escuelaId);
+  }
+  function getMesa(uint distritoId, uint escuelaId, uint mesaId) constant public returns(address){
+    require(existsDistrito(distritoId));
+    return Distrito(distritoMapping[distritoId].distritoAddress).getMesa(escuelaId, mesaId);
+  }
+
   ///////////////////////////////////////////////
 
 

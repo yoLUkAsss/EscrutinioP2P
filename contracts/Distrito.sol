@@ -90,7 +90,10 @@ contract Distrito {
   function getEscuelas() public constant returns(uint[]){
     return escuelaIds;
   }
-
+  function getMesa(uint escuelaId, uint mesaId) constant public returns(address){
+    require(existsEscuela(escuelaId));
+    return Escuela(escuelaMapping[escuelaId].escuelaAddress).getMesa(mesaId);
+  }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
