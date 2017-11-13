@@ -1,7 +1,6 @@
 let Escuela = artifacts.require("./Escuela.sol")
 
 let getId = (idTx) => {
-  // console.log(idTx.logs[0].args)
   return idTx.logs[0].args.mesaId.toNumber()
 }
 

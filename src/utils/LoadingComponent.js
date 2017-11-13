@@ -9,7 +9,7 @@ class LoadingComponent extends Component{
     return (
         <div>
             <Segment>
-                <Dimmer inverted active>
+                <Dimmer inverted active={this.props.active}>
                     <Loader size='massive' content='Loading' />
                 </Dimmer>
             </Segment>

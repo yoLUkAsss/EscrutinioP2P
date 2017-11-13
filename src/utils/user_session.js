@@ -5,6 +5,7 @@ export function clean(cookie){
   cookie.remove("current_user_distrito")
   cookie.remove("current_user_escuela")
   cookie.remove("current_user_mesa")
+  cookie.remove("current_user_election_created")
 }
 //////////////////////////////////////////////////////////////
 //      GETTERS
@@ -40,6 +41,10 @@ export function getMesa(cookie){
 export function isLogged(cookie){
   return cookie.load("current_user_address") !== undefined
 }
+//modify can create eleccon
+export function canCreateElection(cookie){
+  return isLogged(cookie) && isElectionCreated(cookie)
+}
 export function isAutoridadElectoral(cookie){
   return cookie.load("current_user_category") === '0'
 }
@@ -68,7 +73,7 @@ export function setElectionCreated(cookie, value){
 }
 
 export function isElectionCreated(cookie){
-  return cookie.load("current_user_election_created") === true
+  return cookie.load("current_user_election_created")
 }
 
 export function canLoadMesaUser(cookie){
@@ -148,7 +153,7 @@ export function getTasks(cookie){
       return {
           name : "Tareas del Delegado de escuela",
           role : "Delegado de escuela",
-          all : [{name: "Asignar presidente de mesa", url: "/asignarpresidentemesa"},
+          all : [{name: "Asignar presidente de mesa", url: "/asignarpresidente"},
                 {name: "Asignar vicepresidente de mesa", url: "/asignarvicepresidente"}]
       }
     case "3":

@@ -9,7 +9,6 @@ let cleanDB = (userDB, fromObj) => {
 }
 
 let getId = (idTx) => {
-  // console.log(idTx.logs[0].args)
   return idTx.logs[0].args.userId.toNumber()
 }
 
