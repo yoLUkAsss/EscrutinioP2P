@@ -36,12 +36,8 @@ class SetDelegadoDeDistrito extends Component {
       api.setDelegadoDeDistrito(currentUser.getEmail(cookie), this.state.correoDelegado, this.state.distrito).then(res => {
         utils.showSuccess(this.msg, "Delegado de Distrito Asignado Correctamente")
       }).catch(error => {
-<<<<<<< HEAD
         console.log(error)
         utils.showError(this.msg, error.response.data)
-=======
-        utils.showError(this.msg, "Fallo en la :" + error)
->>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
       })
       this.setState({open : false, correoDelegado : "", distrito : ""})
     }
