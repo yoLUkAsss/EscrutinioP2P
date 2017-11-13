@@ -39,6 +39,10 @@ class NavBar extends Component {
     return currentUser.getTasks(cookie).all
   }
 
+  getCanCreate(){
+    return currentUser.canCreateElection(cookie)
+  }
+
   handleItemClick = (e, {name}) => {
     this.setState({activeItem : name})
   }
@@ -49,7 +53,7 @@ class NavBar extends Component {
         <Menu.Item as={Link} to="/" name='inicio' active={this.state.activeItem === 'inicio'} onClick={this.handleItemClick}>
           Inicio
         </Menu.Item>
-        <CreateElectionItem activeItem={this.state.activeItem === 'eleccion'} activate={this.handleItemClick.bind(this)}/>
+        <CreateElectionItem activeItem={this.state.activeItem === 'eleccion'} activate={this.handleItemClick.bind(this)} canCreate={this.getCanCreate()}/>
 
         <TaskItem activeItem={this.state.activeItem} activate={this.handleItemClick.bind(this)} tasks={this.getTasks()}/>
 

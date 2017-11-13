@@ -22,7 +22,6 @@ class Election extends Component {
         currentUser.setCategory(cookie, "0")
         utils.showSuccess(this.msg, "Eleccion creada, eres la Autoridad Electoral para esta eleccion", () => {this.props.history.push("/")})
       }).catch(error => {
-        console.log(error)
         utils.showError(this.msg, error.response.data)
       })
     }

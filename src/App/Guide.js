@@ -3,9 +3,8 @@ import Scrollchor from 'react-scrollchor'
 import { Container, Header, Divider, List, Segment} from 'semantic-ui-react'
 
 class Guide extends Component {
-  handleInfoEleccion(event){
-    console.log(event)
-  }
+  // handleInfoEleccion(event){
+  // }
   renderContentsTable(){
     return (
       <Container text>
