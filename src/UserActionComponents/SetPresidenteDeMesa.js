@@ -37,7 +37,6 @@ class SetPresidenteDeMesa extends Component {
       api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.state.mesa).then(res => {
         utils.showSuccess(this.msg, "Seteado presidente de mesa")
       }).catch(error => {
-        console.log(error)
         utils.showError(this.msg, "Fallo en el seteo del presidente:" + error)
       })
       this.setState({open : false, email : "", mesa : ""})

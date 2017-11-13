@@ -34,10 +34,9 @@ class SetVicepresidenteDeMesa extends Component {
 
     handleSetVicepresidenteDeMesa(event) {
       event.preventDefault()
-      api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.mesa).then(res => {
+      api.setVicepresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.state.mesa).then(res => {
         utils.showSuccess(this.msg, "Seteado vicepresidente de mesa")
       }).catch(error => {
-        console.log(error)
         utils.showError(this.msg, "Fallo en el seteo del vicepresidente:" + error)
       })
       this.setState({open : false, email : "", mesa : ""})
@@ -74,7 +73,7 @@ class SetVicepresidenteDeMesa extends Component {
                 <Confirm
                   open={this.state.open}
                   header='Asignacion de Vicepresidente'
-                  content={`Estas seguro de asignar al usuario ${this.state.email} como vicepresidente de la mesa ${this.distrito}${this.escuela}${this.mesa}`}
+                  content={`Estas seguro de asignar al usuario ${this.state.email} como vicepresidente de la mesa ${this.distrito}${this.escuela}${this.state.mesa}`}
                   onCancel={this.close.bind(this)}
                   onConfirm={this.handleSetVicepresidenteDeMesa.bind(this)}
                 />
