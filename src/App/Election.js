@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Container, Divider, Button, Form, Header } from 'semantic-ui-react'
+import { Grid, Container, Button, Form, Header } from 'semantic-ui-react'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
@@ -47,7 +47,6 @@ class Election extends Component {
                       add={"Agregar Candidato"}
                       del={"Eliminar Candidato"}
                     />
-                    <Divider hidden />
                     <Button basic positive floated="left" onClick={this.handleCreateElection.bind(this)}>
                         Crear Eleccion
                     </Button>
@@ -61,3 +60,4 @@ class Election extends Component {
 }
 
 export default withRouter(Election)
+// <Divider hidden />

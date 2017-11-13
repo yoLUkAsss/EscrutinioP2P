@@ -131,49 +131,49 @@ export function getTasks(cookie){
           name : "Tareas de la Autoridad electoral",
           role : "Autoridad Electoral",
           all : [
-            {name: "Asignar apoderado de partido", url: "/setapoderado"},
-            {name: "Asignar delegado de distrito", url: "/setdelegadodistrito"},
+            {name: "Asignar apoderado de partido", url: "/asignarapoderado"},
+            {name: "Asignar delegado de distrito", url: "/asignardelegadodistrito"},
             {name: "Crear distrito", url: "/distrito"},
             {name: "Crear escuela", url: "/escuela"},
-            {name: "Completar datos de una mesa", url: "/completemesa"}
+            {name: "Completar datos de una mesa", url: "/completarmesa"}
           ]
       }
     case "1":
       return {
           name : "Tareas del Delegado de distrito",
           role : "Delegado de distrito",
-          all : [{name: "Asignar delegado de escuela", url: "/setdelegadoescuela"}]
+          all : [{name: "Asignar delegado de escuela", url: "/asignardelegadoescuela"}]
       }
     case "2":
       return {
           name : "Tareas del Delegado de escuela",
           role : "Delegado de escuela",
-          all : [{name: "Asignar presidente de mesa", url: "/setpresidentemesa"},
-                {name: "Asignar vicepresidente de mesa", url: "/setvicepresidentemesa"}]
+          all : [{name: "Asignar presidente de mesa", url: "/asignarpresidentemesa"},
+                {name: "Asignar vicepresidente de mesa", url: "/asignarvicepresidente"}]
       }
     case "3":
       return {
         name : "Tareas del Apoderado de partido",
         role : "Apoderado de partido",
-        all : [{name: "Asignar fiscal de mesa", url: "/setfiscalmesa"}]
+        all : [{name: "Asignar fiscal de mesa", url: "/asignarfiscal"}]
       }
     case "4":
       return {
         name : "Tareas del Presidente de mesa",
         role : "Presidente de mesa",
-        all : [{name: "Registrar votos", url: "/loadmesa"}]
+        all : [{name: "Registrar votos", url: "/cargar"}]
       }
     case "5":
       return {
         name : "Tareas del Vicepresidente de mesa",
         role : "Vicepresidente de mesa",
-        all : [{name: "Registrar votos", url: "/loadmesa"}]
+        all : [{name: "Registrar votos", url: "/cargar"}]
       }
     case "6":
       return {
         name : "Tareas del Fiscal de mesa",
         role : "Fiscal de mesa",
-        all : [{name: "Registrar votos", url: "/loadmesa"}]
+        all : [{name: "Registrar votos", url: "/cargar"}]
       }
     default:
       return {

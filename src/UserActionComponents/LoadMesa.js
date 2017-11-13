@@ -123,7 +123,6 @@ class LoadMesa extends Component {
         </Container>
       )
     }
-    //agregar renderizar las otras tablas debajo del cargar mesa
     renderParticipants(){
       return (
         <Container text>
@@ -141,7 +140,6 @@ class LoadMesa extends Component {
         </Container>
       )
     }
-
     renderLoadUser(){
       return (
         <Form>
@@ -164,15 +162,9 @@ class LoadMesa extends Component {
       )
     }
 
-    renderLoadingMesa() {
-      return (
-        <LoadingComponent/>
-      )
-    }
-
     render () {
       if(this.state.loading){
-        return this.renderLoadingMesa();
+        return (<LoadingComponent/>);
       } else if(this.state.isMesaInvalid){
         return this.renderInvalidMesa();
       } else{
@@ -183,27 +175,3 @@ class LoadMesa extends Component {
 }
 
 export default withRouter(LoadMesa)
-
-// this.state.participants.map(x => {
-//   return (
-//     x === currentUser.getEmail(cookie) <div><p>Hola</p></div> : <CustomTable itemsHeader={["Candidato","Conteo"]} itemsBody={x.candidates}/>
-//   )
-
-// <Form>
-//     <Header as='h3'>Candidatos</Header>
-//     {
-//       this.state.candidatos.map((candidato, idx) => (
-//         <Form.Input
-//           type='number'
-//           key={idx}
-//           label={`Candidato: ${candidato.name}`}
-//           placeholder={`Candidato: ${idx + 1}`}
-//           value={candidato.counts}
-//           onChange={this.handleCandidatoCountsChange(idx)}
-//         />
-//       ))
-//     }
-//     <Button onClick={this.handleLoadMesa.bind(this)}>
-//       Cargar Mesa
-//     </Button>
-// </Form>

@@ -34,8 +34,8 @@ class LogOutItem extends Component {
       event.preventDefault()
       api.logout(currentUser.getAddress(cookie)).then((res) => {
         currentUser.clean(cookie)
-        utils.showSuccess(this.msg, "Cierre de sesion exitoso", () => {this.props.history.push("/")})
-        // utils.showSuccess(this.msg, "Cierre de sesion exitoso")
+        // utils.showSuccess(this.msg, "Cierre de sesion exitoso", () => {this.props.history.push("/")})
+        utils.showSuccess(this.msg, "Cierre de sesion exitoso")
       }).catch((err) => {
         // console.log(JSON.stringify(err, undefined, 2))
         utils.showError(this.msg, "Fallo en el cierre de session")
