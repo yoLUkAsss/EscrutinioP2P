@@ -37,7 +37,7 @@ class SetDelegadoDeDistrito extends Component {
         utils.showSuccess(this.msg, "Delegado de Distrito Asignado Correctamente")
       }).catch(error => {
         console.log(error)
-        utils.showError(this.msg, "Fallo en la :" + error)
+        utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, correoDelegado : "", distrito : ""})
     }

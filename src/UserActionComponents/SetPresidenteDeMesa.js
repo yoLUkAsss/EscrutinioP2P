@@ -38,7 +38,7 @@ class SetPresidenteDeMesa extends Component {
         utils.showSuccess(this.msg, "Seteado presidente de mesa")
       }).catch(error => {
         console.log(error)
-        utils.showError(this.msg, "Fallo en el seteo del presidente:" + error)
+        utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, email : "", mesa : ""})
     }
