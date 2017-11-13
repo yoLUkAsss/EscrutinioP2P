@@ -57,20 +57,12 @@ class LoadMesa extends Component {
       event.preventDefault()
       this.setState({ loading: true })
       api.checkMesa(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
-<<<<<<< HEAD
         console.log(res)
         this.setState({ loading: false })
-=======
->>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
         utils.showSuccess(this.msg, "Validacion de votos correcto")
         this.setState({loadingCM : false})
       }).catch(error => {
-<<<<<<< HEAD
         utils.showError(this.msg, error.response.data)
-=======
-        this.setState({loadingCM : false})
-        utils.showError(this.msg, "Fallo en la validacion de votos")
->>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
       })
       this.setState({loadingCM : true})
     }
@@ -103,11 +95,7 @@ class LoadMesa extends Component {
       event.preventDefault()
       this.setState({ loading: true })
       api.loadMesa(currentUser.getEmail(cookie), this.state.candidates, this.distrito, this.escuela, this.mesa).then(res => {
-<<<<<<< HEAD
         this.setState({ loading : false })
-=======
-        this.setState({loadingCM : false})
->>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
         utils.showSuccess(this.msg, "Carga de datos correcta")
       }).catch(error => {
         this.setState({loadingCM : false})

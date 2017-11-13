@@ -37,12 +37,8 @@ class SetFiscal extends Component {
       api.setApoderadoDePartido(currentUser.getEmail(cookie), this.state.email, this.state.candidato).then(res => {
         utils.showSuccess(this.msg, "Apoderado del partido " + this.state.candidato + " configurado correctamente")
       }).catch(error => {
-<<<<<<< HEAD
         console.log(error)
         utils.showError(this.msg, error.response.data)
-=======
-        utils.showError(this.msg, "Fallo en la carga del apoderado:" + error)
->>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
       })
       this.setState({open : false, email : "", candidato : ""})
     }

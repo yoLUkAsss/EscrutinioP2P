@@ -37,12 +37,8 @@ class SetFiscal extends Component {
       api.setFiscal(currentUser.getEmail(cookie), this.state.candidato, this.state.email, this.state.distrito, this.state.escuela, this.state.mesa).then(res => {
         utils.showSuccess(this.msg, "Fiscal Asignado")
       }).catch(error => {
-<<<<<<< HEAD
         console.log(error)
         utils.showError(this.msg, error.response.data)
-=======
-        utils.showError(this.msg, "Fallo en la asignación del fiscal:" + error)
->>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
       })
       this.setState({open : false, email : "", candidato : "", distrito : "", escuela : "", mesa : ""})
     }
