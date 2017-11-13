@@ -15,7 +15,6 @@ module.exports = (app, express) => {
   // GET API calls
   /////////////////////////////////////////////////////////////////////////////
 	api.get('/', (req, res) => {
-    console.log("Somebody asked for /")
     res.json({result : "hola"})
 	})
 	return api;

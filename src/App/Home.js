@@ -1,23 +1,28 @@
 import React, { Component } from 'react'
 import Scrollchor from 'react-scrollchor'
-import { Container, Header, List} from 'semantic-ui-react'
-// import ComponentTitle from '../utils/ComponentTitle.js'
+import { Container, Header, Divider, List, Segment} from 'semantic-ui-react'
 
 class Home extends Component {
   handleInfoEleccion(event){
-    console.log(event)
+    // api.getElectionInfo().then(res => {
+    //
+    // }).catch(error => {
+    //
+    // })
   }
   renderContentsTable(){
     return (
       <Container text>
         <Header as='h3'>Tabla de Contenidos</Header>
-        <List ordered link>
-          <List.Item as={Scrollchor} to="#eleccion">Informacion de la eleccion</List.Item>
-          <List.Item as={Scrollchor} to="#distritos">Informacion de los distritos</List.Item>
-          <List.Item as={Scrollchor} to="#escuelas">Informacion de las escuelas</List.Item>
-          <List.Item as={Scrollchor} to="#mesas">Informacion de las mesas</List.Item>
-          <List.Item as={Scrollchor} to="#candidatos">Informacion de los candidatos</List.Item>
-        </List>
+        <Segment compact>
+          <List ordered link>
+            <List.Item as={Scrollchor} to="#eleccion">Informacion de la eleccion</List.Item>
+            <List.Item as={Scrollchor} to="#distritos">Informacion de los distritos</List.Item>
+            <List.Item as={Scrollchor} to="#escuelas">Informacion de las escuelas</List.Item>
+            <List.Item as={Scrollchor} to="#mesas">Informacion de las mesas</List.Item>
+            <List.Item as={Scrollchor} to="#candidatos">Informacion de los candidatos</List.Item>
+          </List>
+        </Segment>
       </Container>
     )
   }
@@ -68,6 +73,7 @@ class Home extends Component {
           <Container text>
               <Header as='h2'>Bienvenidos a Escrutinio Peer to Peer</Header>
               {this.renderContentsTable()}
+              <Divider/>
               {this.renderBody()}
           </Container>
       );

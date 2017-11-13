@@ -294,6 +294,20 @@ contract Election {
       UserElectionCRUD(userCRUDaddress).setFiscal(fiscalEmail, distritoId, escuelaId, mesaId);
       DistritoCRUD(distritoCRUDaddress).setFiscal(distritoId, escuelaId, mesaId, fiscalEmail);
     }
+
+    function getDistrito(uint id) constant public returns(address){
+      return DistritoCRUD(distritoCRUDaddress).getDistrito(id);
+    }
+
+    function getEscuela(uint distritoId, uint escuelaId) constant public returns(address){
+      return DistritoCRUD(distritoCRUDaddress).getEscuela(distritoId, escuelaId);
+    }
+
+    function getMesa(uint distritoId, uint escuelaId, uint mesaId) constant public returns(address){
+      return DistritoCRUD(distritoCRUDaddress).getMesa(distritoId, escuelaId, mesaId);
+    }
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*function getTotal() public constant returns(bytes32[], uint[]){

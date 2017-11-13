@@ -18,6 +18,19 @@ import Footer from './Footer.js'
 
 import Error404 from '../ErrorComponents/Error404.js'
 
+
+import CreateDistrito from '../UserActionComponents/CreateDistrito.js'
+import CreateEscuela from '../UserActionComponents/CreateEscuela.js'
+import SetApoderado from '../UserActionComponents/SetApoderado.js'
+import SetDelegadoDeDistrito from '../UserActionComponents/SetDelegadoDeDistrito.js'
+import SetDelegadoDeEscuela from '../UserActionComponents/SetDelegadoDeEscuela.js'
+import SetPresidenteDeMesa from '../UserActionComponents/SetPresidenteDeMesa.js'
+import SetVicepresidenteDeMesa from '../UserActionComponents/SetVicepresidenteDeMesa.js'
+import SetFiscal from '../UserActionComponents/SetFiscal.js'
+import CompleteMesa from '../UserActionComponents/CompleteMesa.js'
+import LoadMesa from '../UserActionComponents/LoadMesa.js'
+
+
 class App extends Component{
   render() {
     return (
@@ -38,6 +51,19 @@ class App extends Component{
 
           <Route path='/acceder' component={Login}/>
           <Route path='/registrar' component={Signup}/>
+
+
+          <Route path={'/distrito'} component={CreateDistrito}/>
+          <Route path={'/escuela'} component={CreateEscuela}/>
+          <Route path={'/asignarapoderado'} component={SetApoderado}/>
+          <Route path={'/asignarfiscal'} component={SetFiscal}/>
+          <Route path={'/asignardelegadodistrito'} component={SetDelegadoDeDistrito}/>
+          <Route path={'/asignardelegadoescuela'} component={SetDelegadoDeEscuela}/>
+          <Route path={'/asignarpresidente'} component={SetPresidenteDeMesa}/>
+          <Route path={'/asignarvicepresidente'} component={SetVicepresidenteDeMesa}/>
+          <Route path={'/completarmesa'} component={CompleteMesa}/>
+          <Route path={'/cargar'} component={LoadMesa}/>
+
           <Route component={Error404}/>
         </Switch>
       </Container>

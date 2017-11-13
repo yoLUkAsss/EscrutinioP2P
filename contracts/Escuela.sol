@@ -76,7 +76,7 @@ contract Escuela {
     return mesaIds.length != 0 && mesaMapping[id].isMesa;
   }
   function getMesa(uint id) public constant returns(address){
-    if(!existsMesa(id)) revert();
+    require(existsMesa(id));
     return mesaMapping[id].mesaAddress;
   }
   function getMesas() public constant returns(uint[]){

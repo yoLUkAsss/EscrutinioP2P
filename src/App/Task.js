@@ -50,16 +50,16 @@ class Task extends Component {
             <Divider/>
             <Switch>
               <Route exact path={`${this.props.match.url}`} component={NoTask}/>
-              <Route path={`${this.props.match.url}/setapoderado`} component={SetApoderado}/>
-              <Route path={`${this.props.match.url}/setdelegadodistrito`} component={SetDelegadoDeDistrito}/>
               <Route path={`${this.props.match.url}/distrito`} component={CreateDistrito}/>
               <Route path={`${this.props.match.url}/escuela`} component={CreateEscuela}/>
-              <Route path={`${this.props.match.url}/setfiscalmesa`} component={SetFiscal}/>
-              <Route path={`${this.props.match.url}/setdelegadoescuela`} component={SetDelegadoDeEscuela}/>
-              <Route path={`${this.props.match.url}/setpresidentemesa`} component={SetPresidenteDeMesa}/>
-              <Route path={`${this.props.match.url}/setvicepresidentemesa`} component={SetVicepresidenteDeMesa}/>
-              <Route path={`${this.props.match.url}/completemesa`} component={CompleteMesa}/>
-              <Route path={`${this.props.match.url}/loadmesa`} component={LoadMesa}/>
+              <Route path={`${this.props.match.url}/asignarapoderado`} component={SetApoderado}/>
+              <Route path={`${this.props.match.url}/asignarfiscal`} component={SetFiscal}/>
+              <Route path={`${this.props.match.url}/asignardelegadodistrito`} component={SetDelegadoDeDistrito}/>
+              <Route path={`${this.props.match.url}/asignardelegadoescuela`} component={SetDelegadoDeEscuela}/>
+              <Route path={`${this.props.match.url}/asignarpresidente`} component={SetPresidenteDeMesa}/>
+              <Route path={`${this.props.match.url}/asignarvicepresidente`} component={SetVicepresidenteDeMesa}/>
+              <Route path={`${this.props.match.url}/completarmesa`} component={CompleteMesa}/>
+              <Route path={`${this.props.match.url}/cargar`} component={LoadMesa}/>
               <Route component={Error404}/>
             </Switch>
           </Container>

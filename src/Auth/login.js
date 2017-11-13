@@ -55,7 +55,6 @@ class Login extends Component {
           utils.showError(this.msg, "problem with election created")
         })
       }).catch(error => {
-        console.log(JSON.stringify(error, undefined, 2))
         utils.showError(this.msg, error.response.data)
       })
     }

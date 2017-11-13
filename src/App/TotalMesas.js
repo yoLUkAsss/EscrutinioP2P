@@ -21,7 +21,6 @@ class TotalMesas extends Component {
 
   componentWillMount(){
     api.getTotal().then(results => {
-      console.log(results)
       this.setState({candidates : results.data.candidates, counts : results.data.counts, background : utils.getBackground(results.data.candidates.length), border : utils.getBorder(results.data.candidates.length), loading : false})
     }).catch(error => {
       this.setState({loading : false})
@@ -30,7 +29,7 @@ class TotalMesas extends Component {
 
     render() {
       if(this.state.loading){
-        return (<LoadingComponent/>)
+        return (<LoadingComponent active={this.state.loading}/>)
       }
         return (
           <Container>

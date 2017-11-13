@@ -13,7 +13,7 @@ import { Link, withRouter} from 'react-router-dom'
 import LogInItem from '../NavBarComponents/LogInItem.js'
 import SignUpItem from '../NavBarComponents/SignUpItem.js'
 import LogOutItem from '../NavBarComponents/LogOutItem.js'
-
+import TaskItem from '../NavBarComponents/TaskItem.js'
 
 import * as currentUser from '../utils/user_session.js'
 
@@ -35,6 +35,14 @@ class NavBar extends Component {
     return currentUser.identifyRol(cookie)
   }
 
+  getTasks(){
+    return currentUser.getTasks(cookie).all
+  }
+
+  getCanCreate(){
+    return currentUser.canCreateElection(cookie)
+  }
+
   handleItemClick = (e, {name}) => {
     this.setState({activeItem : name})
   }
@@ -45,10 +53,10 @@ class NavBar extends Component {
         <Menu.Item as={Link} to="/" name='inicio' active={this.state.activeItem === 'inicio'} onClick={this.handleItemClick}>
           Inicio
         </Menu.Item>
-        <CreateElectionItem activeItem={this.state.activeItem === 'eleccion'} activate={this.handleItemClick.bind(this)}/>
-        <Menu.Item as={Link} to="/tareas" name='tareas' active={this.state.activeItem === 'tareas'} onClick={this.handleItemClick}>
-          Tareas
-        </Menu.Item>
+        <CreateElectionItem activeItem={this.state.activeItem === 'eleccion'} activate={this.handleItemClick.bind(this)} canCreate={this.getCanCreate()}/>
+
+        <TaskItem activeItem={this.state.activeItem} activate={this.handleItemClick.bind(this)} tasks={this.getTasks()}/>
+
         <Menu.Item as={Link} to="/mesas" name='mesas' active={this.state.activeItem === 'mesas'} onClick={this.handleItemClick}>
           Mesas
         </Menu.Item>
@@ -68,3 +76,6 @@ class NavBar extends Component {
   }
 }
 export default withRouter(NavBar)
+// <Menu.Item as={Link} to="/tareas" name='tareas' active={this.state.activeItem === 'tareas'} onClick={this.handleItemClick}>
+//   Tareas
+// </Menu.Item>

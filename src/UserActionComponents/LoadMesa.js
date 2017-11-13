@@ -24,7 +24,8 @@ class LoadMesa extends Component {
           participants : [],
           isMesaInvalid : false,
           loading : true,
-          candidates : []
+          candidates : [],
+          loadingCM : false
         }
         this.distrito = currentUser.getUser(cookie).distrito
         this.escuela = currentUser.getUser(cookie).escuela
@@ -33,9 +34,7 @@ class LoadMesa extends Component {
 
     componentWillMount() {
       if(currentUser.canLoadMesaUser(cookie)){
-        console.log("buscando la mesa")
         api.getMesaParticipants(this.distrito, this.escuela, this.mesa).then((res) => {
-          console.log(res.data)
           let candidates2load = []
           let newparticipants = []
           res.data.forEach(x => {
@@ -58,18 +57,28 @@ class LoadMesa extends Component {
       event.preventDefault()
       this.setState({ loading: true })
       api.checkMesa(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
+<<<<<<< HEAD
         console.log(res)
         this.setState({ loading: false })
+=======
+>>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
         utils.showSuccess(this.msg, "Validacion de votos correcto")
+        this.setState({loadingCM : false})
       }).catch(error => {
+<<<<<<< HEAD
         utils.showError(this.msg, error.response.data)
+=======
+        this.setState({loadingCM : false})
+        utils.showError(this.msg, "Fallo en la validacion de votos")
+>>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
       })
+      this.setState({loadingCM : true})
     }
     renderCanCheck(){
       if(currentUser.isPresidenteDeMesa(cookie)){
         return (
           <Button onClick={this.handleCheckMesa.bind(this)}>
-          Validar conteo
+            Validar conteo
           </Button>
         )
       } else {
@@ -94,17 +103,24 @@ class LoadMesa extends Component {
       event.preventDefault()
       this.setState({ loading: true })
       api.loadMesa(currentUser.getEmail(cookie), this.state.candidates, this.distrito, this.escuela, this.mesa).then(res => {
+<<<<<<< HEAD
         this.setState({ loading : false })
+=======
+        this.setState({loadingCM : false})
+>>>>>>> c367d427ae06b63bb06883a4018498f8d4ab07ae
         utils.showSuccess(this.msg, "Carga de datos correcta")
       }).catch(error => {
+        this.setState({loadingCM : false})
         utils.showError(this.msg, error.response.data)
       })
+      this.setState({loadingCM : true})
     }
 
     renderMesaLoadable(){
         return (
           <Container text>
-          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+            {this.state.loadingCM ? (<LoadingComponent active={this.state.loadingCM}/>) : (null)}
             <Header as='h3'>Cargar Mesa: {this.getMesaId()}</Header>
               {this.renderLoadUser()}
               {this.renderCanCheck()}
@@ -127,14 +143,13 @@ class LoadMesa extends Component {
         </Container>
       )
     }
-    //agregar renderizar las otras tablas debajo del cargar mesa
     renderParticipants(){
       return (
         <Container text>
           {
             this.state.participants.map((x, idX) => {
               return (
-                <div>
+                <div key={idX}>
                   <Header as='h2'>{x.name}</Header>
                   <CustomTable key={idX} itemsHeader={["Candidato","Conteo"]} itemsBody={x.candidates}/>
                   <Divider/>
@@ -145,7 +160,6 @@ class LoadMesa extends Component {
         </Container>
       )
     }
-
     renderLoadUser(){
       return (
         <Form>
@@ -168,16 +182,10 @@ class LoadMesa extends Component {
       )
     }
 
-    renderLoadingMesa() {
-      return (
-        <LoadingComponent/>
-      )
-    }
-
     render () {
       if(this.state.loading){
-        return this.renderLoadingMesa();
-      } else if(this.state.isMesaInvalid){
+        return (<LoadingComponent active={this.state.loading}/>);
+      }else if(this.state.isMesaInvalid){
         return this.renderInvalidMesa();
       } else{
         return this.renderMesaLoadable();
@@ -187,27 +195,3 @@ class LoadMesa extends Component {
 }
 
 export default withRouter(LoadMesa)
-
-// this.state.participants.map(x => {
-//   return (
-//     x === currentUser.getEmail(cookie) <div><p>Hola</p></div> : <CustomTable itemsHeader={["Candidato","Conteo"]} itemsBody={x.candidates}/>
-//   )
-
-// <Form>
-//     <Header as='h3'>Candidatos</Header>
-//     {
-//       this.state.candidatos.map((candidato, idx) => (
-//         <Form.Input
-//           type='number'
-//           key={idx}
-//           label={`Candidato: ${candidato.name}`}
-//           placeholder={`Candidato: ${idx + 1}`}
-//           value={candidato.counts}
-//           onChange={this.handleCandidatoCountsChange(idx)}
-//         />
-//       ))
-//     }
-//     <Button onClick={this.handleLoadMesa.bind(this)}>
-//       Cargar Mesa
-//     </Button>
-// </Form>

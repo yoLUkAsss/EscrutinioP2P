@@ -195,12 +195,14 @@ contract Mesa {
     function checkVerify(bytes32 presi) public returns (bool, bytes32) {
       if (presidenteDeMesaAsignado != presi) {
         return (true, "Debe ser presidente de mesa");
-      } else {
+      } else if(checked){
+        return (true, "La mesa ya fue verificada");
+      } else{
         return (false, "");
       }
     }
     function check(bytes32 presi) public {
-      require(presidenteDeMesaAsignado == presi);
+      require(presidenteDeMesaAsignado == presi && !checked);
       checked = true;
       Counts countsCopy = Counts(countsAddress);
       for (uint8 index = 0 ; index < candidateList.length ; index++) {
@@ -251,9 +253,9 @@ contract Mesa {
       if (! isValidParticipant(participante)) {
         return (true, "Participante no valido");
       }
-      if (! conteoValido(conteos)) {
+      /*if (! conteoValido(conteos)) {
         return (true, "Valores en el conteo invalidos");
-      }
+      }*/
       for (uint i=0 ; i<candidatos.length ; i++) {
         bool huboError;
         bytes32 mensaje;
