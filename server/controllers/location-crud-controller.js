@@ -168,7 +168,6 @@ export class LocationController {
         return mesaInstance.getCounting.call(p, fromObject)
       })
       Promise.all(promises).then(results => {
-        console.log(JSON.stringify(results, undefined, 2))
         let response = []
         results.forEach(r => {
           let participant = {}
@@ -180,10 +179,8 @@ export class LocationController {
           participant.candidates = candidates
           response.push(participant)
         })
-        console.log(response)
         res.status(200).json(response)
       }).catch(error => {
-        console.log(error)
         res.status(400).json("error")
       })
     })
@@ -256,8 +253,6 @@ export class LocationController {
         parsedCandidates.push(candidate.name)
         parsedCountings.push(parseInt(candidate.counts))
       })
-
-      console.log(JSON.stringify( parsedCountings, undefined, 2))
       let canLoad = await mesaInstance.loadMesaVerify.call(req.body.email, parsedCandidates, parsedCountings, fromObject)
       if (canLoad[0]) {
         res.status(400).json( web3.toAscii(canLoad[1]) )
