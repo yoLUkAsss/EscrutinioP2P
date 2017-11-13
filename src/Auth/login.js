@@ -47,8 +47,8 @@ class Login extends Component {
         currentUser.setUser(cookie, res.data)
         api.isCreated().then( result => {
           currentUser.setElectionCreated(cookie, result)
-          // utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
-          utils.showSuccess(this.msg, "Inicio de sesion exitoso")
+          utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
+          // utils.showSuccess(this.msg, "Inicio de sesion exitoso")
           this.setState({email : "", password : ""})
         }).catch(err => {
           currentUser.setElectionCreated(cookie, false)
