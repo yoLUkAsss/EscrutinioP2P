@@ -54,6 +54,7 @@ class Election extends Component {
         }))
         api.initElectionByCSV(data).then((res) => {
           currentUser.setElectionCreated(cookie, true)
+          console.log(res.data)
           utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
         }).catch(error => {
           console.log(error)

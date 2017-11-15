@@ -25,9 +25,10 @@ contract DistritoCRUD {
       return (false, "");
     }
   }
-  function createDistrito(uint distritoId) public {
+  function createDistrito(uint distritoId, address distritoAddress) public {
     require(! existsDistrito(distritoId));
-    distritoMapping[distritoId] = DistritoStruct(distritoId, new Distrito(), distritoIds.length, true);
+    /*distritoMapping[distritoId] = DistritoStruct(distritoId, new Distrito(), distritoIds.length, true);*/
+    distritoMapping[distritoId] = DistritoStruct(distritoId, distritoAddress, distritoIds.length, true);
     distritoIds.push(distritoId);
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////

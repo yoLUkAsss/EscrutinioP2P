@@ -21,9 +21,10 @@ contract Distrito {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-  function createEscuela(uint escuelaId) public {
+  function createEscuela(uint escuelaId, address escuelaAddress) public {
     /*lastEscuelaId += 1;*/
-    escuelaMapping[escuelaId] = EscuelaStruct(escuelaId, new Escuela(), escuelaIds.length, true);
+    /*escuelaMapping[escuelaId] = EscuelaStruct(escuelaId, new Escuela(), escuelaIds.length, true);*/
+    escuelaMapping[escuelaId] = EscuelaStruct(escuelaId, escuelaAddress, escuelaIds.length, true);
     escuelaIds.push(escuelaId);
   }
 /////////////////////////////////////////////////////////////////////////////////////////////////

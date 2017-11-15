@@ -1,5 +1,5 @@
 import { fromObject, election, web3, distritoCRUD, distrito, escuela, mesa} from '../utils/web3-utils.js'
-const csv = require('csvtojson')
+// const csv = require('csvtojson')
 
 
 function getElectionMap(csv){
@@ -274,50 +274,68 @@ export class ElectionController {
         if(!req.file){
           res.status(400).send('No files were uploaded.')
         } else {
-          let electionMap = getElectionMap(req.file.buffer.toString('utf8').split('\n'))
-          let finished = electionMap.total.mesas
-          let distritoCRUDInstance = await distritoCRUD.deployed()
-          electionMap.election.forEach((escuelasMap, distritoId) => {
-            distritoCRUDInstance.createDistrito.sendTransaction(distritoId, fromObject).then(idTx1 => {
-              distritoCRUDInstance.getDistrito.call(distritoId, fromObject).then(distritoAddress => {
-                distrito.at(distritoAddress).then(currentDistritoInstance => {
-                  escuelasMap.forEach((mesas, escuelaId) => {
-                    currentDistritoInstance.createEscuela.sendTransaction(escuelaId, fromObject).then(idTx2 => {
-                      currentDistritoInstance.getEscuela.call(escuelaId, fromObject).then(escuelaAddress => {
-                        escuela.at(escuelaAddress).then(currentEscuelaInstance => {
-                          mesas.forEach((personas, mesaId) => {
-                            currentEscuelaInstance.createMesa.sendTransaction(mesaId, candidates, personas, fromObject).then(idTx3 => {
-                              finished -= 1
-                              if(finished == 0){
-                                res.status(200).json(electionMap.total)
-                              }
-                            }).catch(error => {
-                              res.status(400).json("catched mesa promise")
-                            })
-                          })
-                        }).catch(error => {
-                          res.status(400).json("catched current escuela promise")
-                        })
-                      }).catch(error => {
-                        res.status(400).json("catched escuela address promise")
-                      })
-                    }).catch(error => {
-                      res.status(400).json("catched create escuela promise")
-                    })
-                  })
-                }).catch(error => {
-                  res.status(400).json("catched current distrito promise")
+            let electionMap = getElectionMap(req.file.buffer.toString('utf8').split('\n'))
+            let finished = electionMap.total.mesas
+            let distritoCRUDInstance = await distritoCRUD.deployed()
+            //https://github.com/ethereum/wiki/wiki/JavaScript-API#returns-49
+            //revisar para hacer new
+            electionMap.election.forEach(async (escuelasMap, distritoId) => {
+              let distritoInstance = await distrito.new(fromObject)
+              await distritoCRUDInstance.createDistrito.sendTransaction(distritoId, distritoInstance.address, fromObject)
+              escuelasMap.forEach(async (mesasMap, escuelaId) => {
+                let escuelaInstance = await escuela.new(fromObject)
+                await distritoInstance.createEscuela.sendTransaction(escuelaId, escuelaInstance.address, fromObject)
+                mesasMap.forEach(async (personas, mesaId) => {
+                  await escuelaInstance.createMesa.sendTransaction(mesaId, candidates, personas, fromObject)
+                  finished -= 1
+                  if(finished === 0){
+                    res.status(200).json(electionMap.total)
+                  }
                 })
-              }).catch(error => {
-                res.status(400).json("catched distrito address promise")
               })
-            }).catch(err => {
-              console.log(err)
-              res.status(400).json("catched create distrito promise")
             })
-          })
+          }
         }
-      }
+        //   electionMap.election.forEach((escuelasMap, distritoId) => {
+        //     distritoCRUDInstance.createDistrito.sendTransaction(distritoId, fromObject).then(idTx1 => {
+        //       distritoCRUDInstance.getDistrito.call(distritoId, fromObject).then(distritoAddress => {
+        //         distrito.at(distritoAddress).then(currentDistritoInstance => {
+        //           escuelasMap.forEach((mesas, escuelaId) => {
+        //             currentDistritoInstance.createEscuela.sendTransaction(escuelaId, fromObject).then(idTx2 => {
+        //               currentDistritoInstance.getEscuela.call(escuelaId, fromObject).then(escuelaAddress => {
+        //                 escuela.at(escuelaAddress).then(currentEscuelaInstance => {
+        //                   mesas.forEach((personas, mesaId) => {
+        //                     currentEscuelaInstance.createMesa.sendTransaction(mesaId, candidates, personas, fromObject).then(idTx3 => {
+        //                       finished -= 1
+        //                       if(finished == 0){
+        //                         res.status(200).json(electionMap.total)
+        //                       }
+        //                     }).catch(error => {
+        //                       res.status(400).json("catched mesa promise")
+        //                     })
+        //                   })
+        //                 }).catch(error => {
+        //                   res.status(400).json("catched current escuela promise")
+        //                 })
+        //               }).catch(error => {
+        //                 res.status(400).json("catched escuela address promise")
+        //               })
+        //             }).catch(error => {
+        //               res.status(400).json("catched create escuela promise")
+        //             })
+        //           })
+        //         }).catch(error => {
+        //           res.status(400).json("catched current distrito promise")
+        //         })
+        //       }).catch(error => {
+        //         res.status(400).json("catched distrito address promise")
+        //       })
+        //     }).catch(err => {
+        //       console.log(err)
+        //       res.status(400).json("catched create distrito promise")
+        //     })
+        //   })
+        // }
       } catch(error){
         console.log(error)
         res.status(400).json("algo fallo")
