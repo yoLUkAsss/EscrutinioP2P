@@ -1,25 +1,25 @@
 import React, { Component } from 'react'
 import Scrollchor from 'react-scrollchor'
-import { Container, Header, Divider, List} from 'semantic-ui-react'
-// import ComponentTitle from '../utils/ComponentTitle.js'
+import { Container, Header, Divider, List, Segment} from 'semantic-ui-react'
 
 class Guide extends Component {
-  handleInfoEleccion(event){
-    console.log(event)
-  }
+  // handleInfoEleccion(event){
+  // }
   renderContentsTable(){
     return (
       <Container text>
         <Header as='h3'>Tabla de Contenidos</Header>
-        <List ordered link>
-          <List.Item as={Scrollchor} to="#autoridad">Guia de la autoridad electoral</List.Item>
-          <List.Item as={Scrollchor} to="#apoderado">Guia del apoderado de partido</List.Item>
-          <List.Item as={Scrollchor} to="#delegadodistrito">Guia del delegado de distrito</List.Item>
-          <List.Item as={Scrollchor} to="#delegadoescuela">Guia del delegado de escuela</List.Item>
-          <List.Item as={Scrollchor} to="#presidentemesa">Guia del presidente de mesa</List.Item>
-          <List.Item as={Scrollchor} to="#vicepresidentemesa">Guia del vicepresidente de mesa</List.Item>
-          <List.Item as={Scrollchor} to="#fiscalmesa">Guia del fiscal de mesa</List.Item>
-        </List>
+        <Segment compact>
+          <List ordered link>
+            <List.Item as={Scrollchor} to="#autoridad">Guia de la autoridad electoral</List.Item>
+            <List.Item as={Scrollchor} to="#apoderado">Guia del apoderado de partido</List.Item>
+            <List.Item as={Scrollchor} to="#delegadodistrito">Guia del delegado de distrito</List.Item>
+            <List.Item as={Scrollchor} to="#delegadoescuela">Guia del delegado de escuela</List.Item>
+            <List.Item as={Scrollchor} to="#presidentemesa">Guia del presidente de mesa</List.Item>
+            <List.Item as={Scrollchor} to="#vicepresidentemesa">Guia del vicepresidente de mesa</List.Item>
+            <List.Item as={Scrollchor} to="#fiscalmesa">Guia del fiscal de mesa</List.Item>
+          </List>
+        </Segment>
       </Container>
     )
   }

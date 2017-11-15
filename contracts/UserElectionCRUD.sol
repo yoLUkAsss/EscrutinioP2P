@@ -8,19 +8,13 @@ contract UserElectionCRUD is UserCRUD{
   /*functions defined to be used for election contract*/
     mapping (bytes32 => uint) public emailMap;
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
     function signupVerify(bytes32 email, bytes32 pass) public returns (bool,bytes32){
         return createUserByEmailVerify(email, pass, 7);
     }
     function signup(bytes32 email, bytes32 pass) public {
         createUserByEmail(email, pass, 7);
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
     function createUserByEmailVerify(bytes32 email, bytes32 password, uint category) internal returns (bool,bytes32) {
         if(existsUser(emailMap[email])) {
           return (true, "Username se encuentra en uso");
@@ -33,9 +27,6 @@ contract UserElectionCRUD is UserCRUD{
         createUser(email, password, category);
         emailMap[email] = lastId;
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
     function deleteUserByEmail(bytes32 email) public {
         if(!existsUser(emailMap[email])) revert();
@@ -51,9 +42,6 @@ contract UserElectionCRUD is UserCRUD{
         createUserByEmail(email, password, 0);
     }
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
     function getUserByEmailVerify(bytes32 email) public constant returns(bool,bytes32){
       if(!existsUserByEmail(email)) {
         return (true, "Usuario inexistente");
@@ -66,22 +54,15 @@ contract UserElectionCRUD is UserCRUD{
       if(!existsUserByEmail(email)) revert();
       return getUser(emailMap[email]);
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     /*
     FUNCIONALIDAD: setear roles,
     quizas para mantener la transaccionabilidad y seguridad sobre los unicos usuarios q puedan realizar
     esta operacion, sea mejor dejar el conjunto de funciones q esta conlleva en election
     */
-    //setear roles
     function setAutoridadElectoral(bytes32 email) public {
       User(getUserByEmail(email)).setCategory(0);
     }
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
     function setDelegadoDeDistritoVerify(bytes32 email, uint idDistrito) public returns (bool, bytes32) {
       if(! existsUser(emailMap[email])) {
         return (true, "Usuario inexistente");
@@ -93,11 +74,7 @@ contract UserElectionCRUD is UserCRUD{
       User(getUserByEmail(email)).setCategory(1);
       User(getUserByEmail(email)).setDistrito(idDistrito);
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
     function setDelegadoDeEscuelaVerify(bytes32 email, uint idDistrito, uint idEscuela) public returns (bool, bytes32) {
       if(! existsUser(emailMap[email])) {
         return (true, "Usuario inexistente");
@@ -110,11 +87,7 @@ contract UserElectionCRUD is UserCRUD{
       User(getUserByEmail(email)).setDistrito(idDistrito);
       User(getUserByEmail(email)).setEscuela(idEscuela);
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
     function setApoderadoVerify(bytes32 email) public returns (bool, bytes32) {
       if(! existsUser(emailMap[email])) {
         return (true, "Usuario inexistente");
@@ -125,40 +98,29 @@ contract UserElectionCRUD is UserCRUD{
     function setApoderado(bytes32 email) public {
       User(getUserByEmail(email)).setCategory(3);
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-    
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-    function setPresidenteDeMesaVerify(bytes32 email, uint idDistrito, uint idEscuela, uint idMesa) public returns (bool, bytes32) { 
+    function setPresidenteDeMesaVerify(bytes32 email, uint idDistrito, uint idEscuela, uint idMesa) public returns (bool, bytes32) {
       if(! existsUser(emailMap[email])) {
         return (true, "Usuario inexistente");
       } else {
         return User(getUserByEmail(email)).setCategoryVerify(3);
       }
     }
+
     function setPresidenteDeMesa(bytes32 email, uint idDistrito, uint idEscuela, uint idMesa) public {
       User(getUserByEmail(email)).setCategory(4);
       User(getUserByEmail(email)).setDistrito(idDistrito);
       User(getUserByEmail(email)).setEscuela(idEscuela);
       User(getUserByEmail(email)).setMesa(idMesa);
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
     function setVicepresidenteDeMesa(bytes32 email, uint idDistrito, uint idEscuela, uint idMesa) public {
       User(getUserByEmail(email)).setCategory(5);
       User(getUserByEmail(email)).setDistrito(idDistrito);
       User(getUserByEmail(email)).setEscuela(idEscuela);
       User(getUserByEmail(email)).setMesa(idMesa);
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
     function setFiscalVerify(bytes32 email, uint idDistrito, uint idEscuela, uint idMesa) public returns (bool, bytes32) {
       if(! existsUser(emailMap[email])) {
         return (true, "Usuario inexistente");
@@ -173,4 +135,3 @@ contract UserElectionCRUD is UserCRUD{
       User(getUserByEmail(email)).setMesa(idMesa);
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////

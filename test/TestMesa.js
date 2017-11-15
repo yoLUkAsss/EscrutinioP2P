@@ -4,7 +4,8 @@ contract('Mesa', function(accounts) {
   let fromObject = {from : accounts[0]}
 
   it("create a new Mesa with 2 candidates should create a Mesa with 2 candidates, and an empty address for crud.", async () => {
-    let mesaInstance = await Mesa.new(['c1', 'c2'], fromObject)
+    let zero = "0x0000000000000000000000000000000000000000"
+    let mesaInstance = await Mesa.new(['c1', 'c2'], zero, fromObject)
     let candidates = await mesaInstance.getCandidatesList.call(fromObject)
     assert.equal(candidates.length, 2, "There are 2 candidates.")
 
@@ -12,7 +13,8 @@ contract('Mesa', function(accounts) {
   })
 
   it("set fiscal should add 1 participant", async () => {
-    let mesaInstance = await Mesa.new([], fromObject)
+    let zero = "0x0000000000000000000000000000000000000000"
+    let mesaInstance = await Mesa.new([], zero, fromObject)
     let email = "jesus@gmail.com"
     await mesaInstance.setFiscal(email, fromObject)
     let isFiscal = await mesaInstance.isFiscal.call(email, fromObject)
@@ -22,7 +24,8 @@ contract('Mesa', function(accounts) {
   })
 
   it("set presidente should add 1 participant and set presidente", async () => {
-    let mesaInstance = await Mesa.new([], fromObject)
+    let zero = "0x0000000000000000000000000000000000000000"
+    let mesaInstance = await Mesa.new([], zero, fromObject)
     let email = "jesus@gmail.com"
     await mesaInstance.setPresidenteDeMesa(email, fromObject)
     let isPresidenteDeMesa = await mesaInstance.isPresidenteDeMesa.call(email, fromObject)

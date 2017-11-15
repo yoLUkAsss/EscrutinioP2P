@@ -1,34 +1,13 @@
-/**
- * React utilities
- */
 import React, { Component } from 'react'
-import { Grid, Container, Divider, Button, Form, Dimmer, Loader, Header } from 'semantic-ui-react'
-// import Center from 'react-center'
+import { Grid, Container, Button, Form, Header } from 'semantic-ui-react'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
-// import Files from 'react-files'
 
-// import ReactFileReader from 'react-file-reader';
-
-/**
- * Components
- */
-// import ComponentTitle from '../utils/ComponentTitle.js'
 import RefactoredDLF from '../utils/RDLF.js'
-/**
- * Controller for Component
- */
-// import contract from 'truffle-contract'
-// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
-
-/**
- * Contracts
-*/
-// import ElectionContract from '../../build/contracts/Election.json'
 
 class Election extends Component {
     constructor() {
@@ -54,8 +33,10 @@ class Election extends Component {
         }))
         api.initElectionByCSV(data).then((res) => {
           currentUser.setElectionCreated(cookie, true)
+          currentUser.setCategory(cookie, "0")
           console.log(res.data)
           utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
+          // utils.showSuccess(this.msg, "Eleccion creada, eres la Autoridad Electoral para esta eleccion", () => {this.props.history.push("/")})
         }).catch(error => {
           console.log(error)
           utils.showError(this.msg, error.response.data)
@@ -97,7 +78,6 @@ class Election extends Component {
                       add={"Agregar Candidato"}
                       del={"Eliminar Candidato"}
                     />
-                    <Divider hidden />
                     <Button basic positive floated="left" onClick={this.handleCreateElection.bind(this)}>
                         Crear Eleccion
                     </Button>
@@ -114,13 +94,3 @@ class Election extends Component {
 }
 
 export default withRouter(Election)
-
-// api.initElection(currentUser.getEmail(cookie), this.state.candidates.map(x => {return x.name})).then((res) => {
-//   currentUser.setElectionCreated(cookie, true)
-//   currentUser.setCategory(cookie, "0")
-//   utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
-//   this.props.history.push("/")
-// }).catch(error => {
-//   console.log(error)
-//   utils.showError(this.msg, error.response.data)
-// })

@@ -6,24 +6,9 @@ import { Button, Header, Container, Form , Grid, Segment, Message} from 'semanti
 import {withRouter, Link} from 'react-router-dom'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'
-/**
- * Components
- */
-// import ComponentTitle from '../utils/ComponentTitle.js'
-
-/**
- * Controller for Component
- */
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
-// import getWeb3 from '../utils/getWeb3'
-/**
-*   Contracts
-*/
-// import UserElectionCRUDcontract from '../../build/contracts/UserElectionCRUD.json'
-// import UserContract from '../../build/contracts/User.json'
-// import contract from 'truffle-contract'
 
 /**
 usa los siguientes props:
@@ -45,17 +30,16 @@ class Login extends Component {
       event.preventDefault()
       api.login(this.state.email, this.state.password).then(res => {
         currentUser.setUser(cookie, res.data)
-        api.isCreated().then( result => {
-          currentUser.setElectionCreated(cookie, result)
-          // utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
-          utils.showSuccess(this.msg, "Inicio de sesion exitoso")
+        api.getElectionInfo().then( result => {
+          currentUser.setElectionCreated(cookie, result.data.created)
+          utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
+          // utils.showSuccess(this.msg, "Inicio de sesion exitoso")
           this.setState({email : "", password : ""})
         }).catch(err => {
           currentUser.setElectionCreated(cookie, false)
           utils.showError(this.msg, "problem with election created")
         })
       }).catch(error => {
-        console.log(JSON.stringify(error, undefined, 2))
         utils.showError(this.msg, error.response.data)
       })
     }
@@ -108,31 +92,3 @@ class Login extends Component {
 }
 
 export default withRouter(Login)
-// <div>
-//     <Container>
-//     <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-//     <ComponentTitle title='Iniciar Sesion'/>
-//     <Form>
-//         <Form.Input
-//             focus
-//             required
-//             inline
-//             type='email'
-//             label='Email'
-//             placeholder='fiscal@email ex..'
-//             value={this.state.email}
-//             onChange={this.handleEmail.bind(this)}
-//         />
-//         <Form.Input
-//             required
-//             inline
-//             type='password'
-//             label='Contraseña'
-//             placeholder='Contraseña'
-//             value={this.state.password}
-//             onChange={this.handlePassword.bind(this)}
-//         />
-//         <Button onClick={this.handleLogin.bind(this)}>Iniciar Sesion</Button>
-//     </Form>
-//     </Container>
-// </div>

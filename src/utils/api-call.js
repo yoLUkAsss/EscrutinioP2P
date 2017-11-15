@@ -14,45 +14,20 @@ export function logout(userAddress){
   return axios.post(urlBase + 'users/logout', {address : userAddress})
 }
 
-export function initDistrito(userEmail, distrito, cantidadDeEscuelas){
-  return axios.post(urlBase + 'locations/initdistrito',
-  { email : userEmail ,
-    distritoId: distrito,
-    escuelas: cantidadDeEscuelas
-  })
-}
-
-export function initEscuela(userEmail, distrito, escuela, cantidadDeMesas){
-  return axios.post(urlBase + 'locations/initescuela',
-  { email : userEmail ,
-    distritoId: distrito,
-    escuelaId: escuela,
-    mesas : cantidadDeMesas
-  })
-}
-
-export function initElection(userEmail, newCandidates){
-  return axios.post(urlBase + 'election/initelection',
-  {
-    email : userEmail,
-    candidates : newCandidates
-  })
-}
-
-export function isCreated() {
-  return axios.get(urlBase + "election/initialized")
-}
-
 export function getMesaTotal(distrito, escuela, mesa){
   return axios.get(urlBase + `locations/${distrito}/${escuela}/${mesa}`)
 }
 
 export function getMesaUser(userEmail, distrito, escuela, mesa){
-  return axios.post(urlBase + `locations/${distrito}/${escuela}/${mesa}`, {
-    participant : userEmail
+  return axios.get(urlBase + `locations/${distrito}/${escuela}/${mesa}/user`, {
+    params : {
+      email : userEmail
+    }
   })
 }
-
+export function getMesaParticipants(distrito, escuela, mesa){
+  return axios.get(urlBase + `locations/${distrito}/${escuela}/${mesa}/participants`)
+}
 
 export function isValidParticipant(userEmail, distrito, escuela, mesa){
   return axios.post(urlBase + `locations/${distrito}/${escuela}/${mesa}/isvalidparticipant`, {
@@ -140,4 +115,11 @@ export function initElectionByCSV(data){
           'Content-Type': 'multipart/form-data'
     }
   })
+}
+export function getTotal(){
+  return axios.get(urlBase + 'election/total')
+}
+
+export function getElectionInfo(){
+  return axios.get(urlBase + 'election/info')
 }

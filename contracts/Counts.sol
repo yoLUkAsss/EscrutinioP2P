@@ -35,5 +35,4 @@ contract Counts {
       }
       return (res1, res2);
     }
-
 }

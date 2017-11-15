@@ -37,10 +37,8 @@ class CreateDistrito extends Component {
     handleCreateDistrito(event) {
       event.preventDefault()
       api.initDistrito(currentUser.getEmail(cookie), parseInt(this.state.distrito, 10), parseInt(this.state.escuelas, 10)).then((res) => {
-        console.log(res)
         utils.showSuccess(this.msg, "Distrito creado correctamente")
       }).catch(error => {
-        console.log(error)
         utils.showError(this.msg, error.response.data)
       })
     }

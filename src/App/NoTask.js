@@ -17,7 +17,6 @@ class NoTask extends Component {
 
     seeinfo(event) {
         event.preventDefault()
-        console.log(JSON.stringify(utils.getUser(cookie), undefined, 2))
     }
 
     cleaninfo(event) {

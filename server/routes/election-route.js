@@ -9,12 +9,9 @@ const ElectionCtrl = new ElectionController()
 router.route('/').get(ElectionCtrl.getHome)
 
 router.route('/candidates').get(ElectionCtrl.getCandidates)
-router.route('/initialized').get(ElectionCtrl.getInitializedElection)
-
-
+router.route('/info').get(ElectionCtrl.getElectionInfo)
 router.route('/initbycsv').post(upload.single("file"), ElectionCtrl.initByCSV)
-
-// router.route('/initelection').post(ElectionCtrl.initElection)
+router.route('/total').get(ElectionCtrl.getTotal)
 
 router.route('/setautoridadelectoral').post(ElectionCtrl.setAutoridadElectoral)
 router.route('/setapoderadodepartido').post(ElectionCtrl.setApoderadoDePartido)

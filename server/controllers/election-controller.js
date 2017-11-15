@@ -1,6 +1,4 @@
-import { fromObject, election, web3, distritoCRUD, distrito, escuela, mesa} from '../utils/web3-utils.js'
-// const csv = require('csvtojson')
-
+import { fromObject, election, web3, distritoCRUD, distrito, escuela, mesa, counts} from '../utils/web3-utils.js'
 
 function getElectionMap(csv){
   let distritos = new Map()
@@ -33,8 +31,7 @@ function getElectionMap(csv){
 
 export class ElectionController {
   getHome(req, res){
-    console.log(electionInstance)
-    res.json("HOLA HOME")
+    res.status(200).json("HOLA HOME")
   }
   getCandidates(req, res){
     try{
@@ -51,11 +48,11 @@ export class ElectionController {
       res.status(400).json({ message : error.message })
     }
   }
-  getInitializedElection(req, res){
+  getElectionInfo(req, res){
     try{
       election.deployed().then((electionInstance) => {
-        electionInstance.created.call(fromObject).then((result) => {
-          res.status(200).json(result)
+        electionInstance.getElectionInfo.call(fromObject).then((result) => {
+          res.status(200).json({created : result[0], distritos : result[1].toNumber(), escuelas : result[2].toNumber(), mesas : result[3].toNumber()})
         }).catch(error => {
           res.status(400).json({ message : error.message })
         })
@@ -66,25 +63,6 @@ export class ElectionController {
       res.status(400).json({ message : error.message })
     }
   }
-  /* body should have
-    email: string,
-    candidates : [string] */
-  // initElection(req, res){
-  //   election.deployed()
-  //   .then( async electionInstance => {
-  //     let result = await electionInstance.createElectionVerify.call(req.body.email, req.body.candidates, fromObject)
-  //     if (result[0]) {
-  //       res.status(400).json( web3.toAscii(result[1]) )
-  //     } else {
-  //       await electionInstance.createElection.sendTransaction(req.body.email, req.body.candidates, fromObject)
-  //       res.status(200).json( "Elección creada correctamente" )
-  //     }
-  //   })
-  //   .catch( error => {
-  //     res.status(500).json( "Error desconocido, por favor contacte un administrador" )
-  //   })
-  // }
-
   /* body should have
     email: string*/
   setAutoridadElectoral(req, res){
@@ -265,6 +243,7 @@ export class ElectionController {
   async initByCSV(req, res){
     try{
       let electionInstance = await election.deployed()
+      let countsInstance = await counts.deployed()
       let candidates = req.body.candidates.split(',')
       let result = await electionInstance.createElectionVerify.call(req.body.email, candidates, fromObject)
       if (result[0]) {
@@ -277,8 +256,6 @@ export class ElectionController {
             let electionMap = getElectionMap(req.file.buffer.toString('utf8').split('\n'))
             let finished = electionMap.total.mesas
             let distritoCRUDInstance = await distritoCRUD.deployed()
-            //https://github.com/ethereum/wiki/wiki/JavaScript-API#returns-49
-            //revisar para hacer new
             electionMap.election.forEach(async (escuelasMap, distritoId) => {
               let distritoInstance = await distrito.new(fromObject)
               await distritoCRUDInstance.createDistrito.sendTransaction(distritoId, distritoInstance.address, fromObject)
@@ -286,9 +263,11 @@ export class ElectionController {
                 let escuelaInstance = await escuela.new(fromObject)
                 await distritoInstance.createEscuela.sendTransaction(escuelaId, escuelaInstance.address, fromObject)
                 mesasMap.forEach(async (personas, mesaId) => {
-                  await escuelaInstance.createMesa.sendTransaction(mesaId, candidates, personas, fromObject)
+                  let mesaInstance = await mesa.new(candidates, personas, countsInstance.address, fromObject)
+                  await escuelaInstance.createMesa.sendTransaction(mesaId, mesaInstance.address, fromObject)
                   finished -= 1
                   if(finished === 0){
+                    await electionInstance.setElectionInfo(electionMap.total.distritos, electionMap.total.escuelas, electionMap.total.mesas, fromObject)
                     res.status(200).json(electionMap.total)
                   }
                 })
@@ -296,50 +275,30 @@ export class ElectionController {
             })
           }
         }
-        //   electionMap.election.forEach((escuelasMap, distritoId) => {
-        //     distritoCRUDInstance.createDistrito.sendTransaction(distritoId, fromObject).then(idTx1 => {
-        //       distritoCRUDInstance.getDistrito.call(distritoId, fromObject).then(distritoAddress => {
-        //         distrito.at(distritoAddress).then(currentDistritoInstance => {
-        //           escuelasMap.forEach((mesas, escuelaId) => {
-        //             currentDistritoInstance.createEscuela.sendTransaction(escuelaId, fromObject).then(idTx2 => {
-        //               currentDistritoInstance.getEscuela.call(escuelaId, fromObject).then(escuelaAddress => {
-        //                 escuela.at(escuelaAddress).then(currentEscuelaInstance => {
-        //                   mesas.forEach((personas, mesaId) => {
-        //                     currentEscuelaInstance.createMesa.sendTransaction(mesaId, candidates, personas, fromObject).then(idTx3 => {
-        //                       finished -= 1
-        //                       if(finished == 0){
-        //                         res.status(200).json(electionMap.total)
-        //                       }
-        //                     }).catch(error => {
-        //                       res.status(400).json("catched mesa promise")
-        //                     })
-        //                   })
-        //                 }).catch(error => {
-        //                   res.status(400).json("catched current escuela promise")
-        //                 })
-        //               }).catch(error => {
-        //                 res.status(400).json("catched escuela address promise")
-        //               })
-        //             }).catch(error => {
-        //               res.status(400).json("catched create escuela promise")
-        //             })
-        //           })
-        //         }).catch(error => {
-        //           res.status(400).json("catched current distrito promise")
-        //         })
-        //       }).catch(error => {
-        //         res.status(400).json("catched distrito address promise")
-        //       })
-        //     }).catch(err => {
-        //       console.log(err)
-        //       res.status(400).json("catched create distrito promise")
-        //     })
-        //   })
-        // }
       } catch(error){
-        console.log(error)
         res.status(400).json("algo fallo")
       }
+    }
+  //returns [{string, int}]
+  getTotal(req, res){
+    try{
+      counts.deployed().then(countsInstance => {
+        countsInstance.getCounts.call(fromObject).then(counts => {
+          res.status(200).json({
+            "candidates" : counts[0].map(x => {return web3.toAscii(x)}),
+            "counts" : counts[1].map(x => {return x.toNumber()})
+          })
+        })
+        .catch(err => {
+          res.status(400).json("error 400")
+        })
+      })
+      .catch(err => {
+        res.status(400).json("error 400")
+      })
+    } catch(error){
+      res.status(400).json("error 400")
+    }
   }
 
 }

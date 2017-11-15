@@ -4,5 +4,5 @@ module.exports = {
   env : process.env.NODE_ENV || 'development',
   port : process.env.PORT || 8080,
   base_url : process.env.BASE_URL || 'http://localhost:8080',
-  blockchain_url : process.env.LMS_URL || 'http://localhost:8545',
+  blockchain_url : process.env.EP2P_URL || 'http://localhost:8545',
 }
