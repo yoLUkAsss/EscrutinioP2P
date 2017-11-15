@@ -1,4 +1,4 @@
-import { fromObject, distritoCRUD, election, distrito, escuela, mesa, web3 } from '../utils/web3-utils.js'
+import { fromObject, distritoCRUD, election, distrito, escuela, mesa, web3, counts } from '../utils/web3-utils.js'
 
 export class LocationController {
   /*    returns locationsId : [int]   */
@@ -129,20 +129,11 @@ export class LocationController {
   //return :- candidates : [{name : string, counts : int}]
   async getMesaTotal(req, res){
     election.deployed().then(async electionInstance => {
-      let mesaAddress = await electionInstance.getMesa(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
-      let mesaInstance = await mesa.at(mesaAddress)
-      let candidatesList = await mesaInstance.getCandidatesList.call(fromObject)
-      let promises
-      let candidates
-      promises = candidatesList.map(c => {
-        return mesaInstance.getTotal.call(c, fromObject)
-      })
-      Promise.all(promises).then((results) => {
-        candidates = results.map(r => { return {"name" : web3.toAscii(r[0]), "counts" : r[1].toNumber()}})
-        res.status(200).json(candidates)
-      }).catch(error => {
-        res.status(400).json(error.message)
-      })
+      let result = await counts.getTotal.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
+      let parsedResult = [];
+      for (var index = 0; index < array.length; index++) {
+        parsedResult.push({ 'name':web3.toAscii(result[0][index]), 'counts':result[1][index].toNumber() })
+      }
     }).catch(error => {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )
     })
@@ -244,7 +235,7 @@ export class LocationController {
         // let escuelaInstance = await escuela.at(escuelaAddress)
         // let newMesaAddress = await escuelaInstance.getMesa.call(parseInt(req.params.mesaId), fromObject)
         let mesaInstance = await mesa.at(mesaAddress)
-        await mesaInstance.check.sendTransaction(req.body.email, fromObject)
+        await mesaInstance.check.sendTransaction(req.body.email, parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
         res.status(200).json("checked correctly")
       }).catch(error => {
         res.status(400).json(error.message)

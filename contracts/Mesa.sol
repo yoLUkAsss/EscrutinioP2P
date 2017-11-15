@@ -192,7 +192,7 @@ contract Mesa {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function checkVerify(bytes32 presi) public returns (bool, bytes32) {
+    function checkVerify(bytes32 presi, uint distritoId, uint escuelaId, uint mesaId) public returns (bool, bytes32) {
       if (presidenteDeMesaAsignado != presi) {
         return (true, "Debe ser presidente de mesa");
       } else if(checked){
@@ -201,14 +201,16 @@ contract Mesa {
         return (false, "");
       }
     }
-    function check(bytes32 presi) public {
+    function check(bytes32 presi, uint distritoId, uint escuelaId, uint mesaId) public {
       require(presidenteDeMesaAsignado == presi && !checked);
       checked = true;
       Counts countsCopy = Counts(countsAddress);
+      uint[] memory result = new uint[](candidateList.length);
       for (uint8 index = 0 ; index < candidateList.length ; index++) {
         total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
-        countsCopy.setCount(candidateList[index], total[candidateList[index]]);
+        result[index] = (participantMap[presidenteDeMesaAsignado].votes[candidateList[index]]);
       }
+      countsCopy.setData(distritoId, escuelaId, mesaId, result);
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
