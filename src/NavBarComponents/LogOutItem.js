@@ -44,8 +44,8 @@ class LogOutItem extends Component {
       if(currentUser.isLogged(cookie)){
         return (
           <div>
-            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
             <Menu.Item as={Link} to="/" onClick={this.handleLogout.bind(this)}>Salir</Menu.Item>
+            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
           </div>
         );
       } else {

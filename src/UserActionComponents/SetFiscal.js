@@ -38,7 +38,7 @@ class SetFiscal extends Component {
         utils.showSuccess(this.msg, "Fiscal Asignado")
       }).catch(error => {
         console.log(error)
-        utils.showError(this.msg, error.response.data)
+        utils.showError(this.msg, error.response.data.message)
       })
       this.setState({open : false, email : "", candidato : "", distrito : "", escuela : "", mesa : ""})
     }

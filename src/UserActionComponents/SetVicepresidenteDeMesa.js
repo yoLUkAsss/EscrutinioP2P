@@ -38,7 +38,7 @@ class SetVicepresidenteDeMesa extends Component {
         utils.showSuccess(this.msg, "Seteado vicepresidente de mesa")
       }).catch(error => {
         console.log(error)
-        utils.showError(this.msg, error.response.data)
+        utils.showError(this.msg, error.response.data.message)
       })
       this.setState({open : false, email : "", mesa : ""})
     }

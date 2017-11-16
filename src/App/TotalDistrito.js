@@ -32,13 +32,10 @@ class TotalDistrito extends Component {
     componentWillMount(){
       api.getTotalDistrito(this.props.match.params.distritoId)
       .then(results => {
-        console.log("entre aca antes")
-        console.log(JSON.stringify(results, undefined, 2))
         this.setState({candidates : results.data.candidates, counts : results.data.counts, background : utils.getBackground(results.data.candidates.length), border : utils.getBorder(results.data.candidates.length), loading : false})
         utils.showSuccess(this.msg, "TODO OK")
       })
       .catch(error => {
-        console.log("y detecte un error en el medio")
         utils.showError(this.msg, error.response.data)
         this.setState({loading : false, errorMessage : error.response.data})
       })
@@ -53,12 +50,12 @@ class TotalDistrito extends Component {
         return (
           <Container text>
             <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-            <PieChartComponent 
-              candidates={this.state.candidates} 
-              counts={this.state.counts} 
-              background={this.state.background} 
-              border={this.state.border} 
-              title={"Resultados Parciales del distrito: " + this.props.match.params.distritoId} 
+            <PieChartComponent
+              candidates={this.state.candidates}
+              counts={this.state.counts}
+              background={this.state.background}
+              border={this.state.border}
+              title={"Resultados Parciales del distrito: " + this.props.match.params.distritoId}
               label={"# de votos"}/>
           </Container>
         )
