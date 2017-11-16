@@ -9,7 +9,7 @@ contract Mesa {
 
     ////////////////////////////////////////
     // Total por candidato
-    mapping (bytes32 => uint) total;
+    mapping (bytes32 => uint8) total;
     ////////////////////////////////////////
     bytes32[] candidateList;
     bytes32[] participantList;
@@ -31,20 +31,20 @@ contract Mesa {
     struct ParticipantData {
       bool isValidParticipant;
       ParticipantCategory category;
-      mapping (bytes32 => uint) votes;
+      mapping (bytes32 => uint8) votes;
     }
     mapping(bytes32 => bool) participanteValidoConteo;
 
     struct CandidateData {
       bool isValidCandidate;
-      uint votes;
+      uint8 votes;
     }
 
 
     function Mesa(bytes32[] inputCandidates, address newCountsAddress) public{
       countsAddress = newCountsAddress;
       candidateList = inputCandidates;
-      for(uint i=0;i<inputCandidates.length;i++){
+      for(uint8 i=0;i<inputCandidates.length;i++){
         candidateMap[inputCandidates[i]] = CandidateData(true, 0);
       }
       cantidadDePersonas = 0;
@@ -94,11 +94,11 @@ contract Mesa {
         return participantList;
     }
 
-    function getCounting ( bytes32 participant ) public constant returns (bytes32, bytes32[], uint[]) {
+    function getCounting ( bytes32 participant ) public constant returns (bytes32, bytes32[], uint8[]) {
       require(isValidParticipant(participant));
       bytes32[] memory resultCandidatos = new bytes32[](candidateList.length);
-      uint[] memory resultConteos = new uint[](candidateList.length);
-      for (uint i=0 ; i<candidateList.length ; i++) {
+      uint8[] memory resultConteos = new uint8[](candidateList.length);
+      for (uint8 i=0 ; i<candidateList.length ; i++) {
         resultCandidatos[i] = candidateList[i];
         resultConteos[i] = participantMap[participant].votes[candidateList[i]];
       }
@@ -107,7 +107,7 @@ contract Mesa {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function loadVotesForParticipantVerify(bytes32 participant, bytes32 candidate, uint votos) public returns (bool, bytes32) {
+    function loadVotesForParticipantVerify(bytes32 participant, bytes32 candidate, uint8 votos) public returns (bool, bytes32) {
       if (! isValidCandidate(candidate)) {
         return (true, "Candidato no valido");
       }
@@ -120,7 +120,7 @@ contract Mesa {
         return (false, "");
       }
     }
-    function loadVotesForParticipant(bytes32 participant, bytes32 candidate, uint votos) private {
+    function loadVotesForParticipant(bytes32 participant, bytes32 candidate, uint8 votos) private {
       require(isValidCandidate(candidate) && isValidParticipant(participant) && cantidadDePersonas > 0);
       participantMap[participant].votes[candidate] = votos;
     }
@@ -205,10 +205,10 @@ contract Mesa {
       require(presidenteDeMesaAsignado == presi && !checked);
       checked = true;
       Counts countsCopy = Counts(countsAddress);
-      uint[] memory result = new uint[](candidateList.length);
+      uint8[] memory result = new uint8[](candidateList.length);
       for (uint8 index = 0 ; index < candidateList.length ; index++) {
         total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
-        result[index] = (participantMap[presidenteDeMesaAsignado].votes[candidateList[index]]);
+        result[index] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
       }
       countsCopy.setData(distritoId, escuelaId, mesaId, result);
     }
@@ -235,20 +235,8 @@ contract Mesa {
 
 
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
-    function getTotal(bytes32 candidate) public constant returns (bytes32, uint) {
-        require(isValidCandidate(candidate));
-        return (candidate, total[candidate]);
-    }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-    function loadMesaVerify(bytes32 participante, bytes32[] candidatos, uint[] conteos) public returns (bool, bytes32) {
+    function loadMesaVerify(bytes32 participante, bytes32[] candidatos, uint8[] conteos) public returns (bool, bytes32) {
       if (candidatos.length != conteos.length) {
         return (true, "Planilla incorrecta");
       }
@@ -258,7 +246,7 @@ contract Mesa {
       /*if (! conteoValido(conteos)) {
         return (true, "Valores en el conteo invalidos");
       }*/
-      for (uint i=0 ; i<candidatos.length ; i++) {
+      for (uint8 i=0 ; i<candidatos.length ; i++) {
         bool huboError;
         bytes32 mensaje;
         (huboError, mensaje) = loadVotesForParticipantVerify(participante, candidatos[i], conteos[i]);
@@ -268,25 +256,12 @@ contract Mesa {
       }
       return (false, "");
     }
-    function loadMesa(bytes32 participante, bytes32[] candidatos, uint[] conteos) public {
-      require(candidatos.length == conteos.length && isValidParticipant(participante) && conteoValido(conteos));
-      for (uint i=0 ; i<candidatos.length ; i++) {
+    function loadMesa(bytes32 participante, bytes32[] candidatos, uint8[] conteos) public {
+      require(candidatos.length == conteos.length && isValidParticipant(participante));
+      for (uint8 i=0 ; i<candidatos.length ; i++) {
         loadVotesForParticipant(participante, candidatos[i], conteos[i]);
       }
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    function conteoValido(uint[] conteos) private constant returns (bool) {
-      uint resultados = 0;
-      for (uint i=0 ; i<conteos.length ; i++) {
-        resultados = resultados + conteos[i];
-      }
-      if (resultados == cantidadDePersonas) {
-        return true;
-      } else {
-        return false;
-      }
-    }
 
 }

@@ -141,3 +141,13 @@ export function cargarPersonasALaMesa(autoridad, distrito, escuela, mesa, person
 export function getTotal(){
   return axios.get(urlBase + 'election/total')
 }
+
+export function getTotalDistrito(distrito) {
+  return axios.post(urlBase + 'locations/totaldistrito', {
+    distritoId : distrito
+  })
+}
+
+export function getTotalEscuela(distrito, escuela) {
+  return axios.get(urlBase + `locations/${distrito}/${escuela}`)
+}

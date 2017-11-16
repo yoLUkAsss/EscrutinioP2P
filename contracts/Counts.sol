@@ -5,111 +5,81 @@ contract Counts {
 
     bytes32[] candidates;
     bool created;
-
-    struct RowData {
-      uint distritoID;
-      uint escuelaID;
-      uint mesaID;
-      uint[] conteo;
-    }
     
     struct TotalPorDistritoData {
-        uint[] total;
-        bool update;
+        uint8[] total;
         mapping (uint => TotalPorEscuelaData) totalPorEscuela;
     }
     
     struct TotalPorEscuelaData {
-        uint[] total;
-        bool update;
+        uint8[] total;
         mapping (uint => TotalPorMesaData) totalPorMesa;
     }
     
     struct TotalPorMesaData {
-        uint[] total;
+        uint8[] total;
     }
 
-    uint[] total;
+    uint8[] total;
     mapping (uint => TotalPorDistritoData) totalPorDistrito;
 
-    uint rows;
-    RowData[] allData;
-
     function init(bytes32[] newCandidates) public {
-      require(!created);
-      candidates = newCandidates;
-      rows = 0;
-      created = true;
+        require(!created);
+        candidates = newCandidates;
+        created = true;
+        for (uint8 i=0 ; i<candidates.length ; i++) {
+            total.push(0);
+        }
     }
 
-    function getTotal() public constant returns(uint[]) {
-      return total;
+    function getTotal() public constant returns(bytes32[], uint8[]) {
+      return (candidates, total);
     }
     
-    function setData(uint did, uint eid, uint mid, uint[] co) public {
-        // SE AGREGA NUEVA FILA
-        allData[rows] = RowData(did, eid, mid, co );
-        rows++;
-
-        // SE ACTUALIZA TOTAL DE ELECCION
-        for (uint i=0 ; i<candidates.length ; i++) {
-          total[i] += co[i];
-        }
+    function setData(uint did, uint eid, uint mid, uint8[] co) public {
 
         // SE INDICA EL TOTAL DE UNA MESA
         totalPorDistrito[did].totalPorEscuela[eid].totalPorMesa[mid].total = co;
-
-        // SE INDICA QUE LA ESCUELA INDICADA DEBE SER ACTUALIZADA
-        totalPorDistrito[did].totalPorEscuela[eid].update = true;
-
-        // SE INDICA QUE EL DISTRITO INDICADO DEBE SER ACTUALIZADO
-        totalPorDistrito[did].update = true;
-    }
-    
-    function getByDistrict(uint did) public returns (uint[]) {
-        if (totalPorDistrito[did].total.length != 0 && ! totalPorDistrito[did].update) {
-            return totalPorDistrito[did].total;
-        } else {
-            uint[] memory result = new uint[](allData[0].conteo.length);
-            for (uint k=0 ; k<allData[0].conteo.length ; k++) {
-                result[k] = 0;
+        uint8 i;
+        uint8[] totalD = totalPorDistrito[did].total;
+        if (totalD.length == 0) {
+            for (i=0 ; i<candidates.length ; i++) {
+                totalD.push(0);
             }
-            for (uint i=0 ; i<allData.length ; i++) {
-                if (allData[i].distritoID == did) {
-                    for (uint j=0 ; j<allData[0].conteo.length ; j++) {
-                        result[j] += allData[i].conteo[j];
-                    }
-                }
-            }
-            totalPorDistrito[did].total = result;
-            totalPorDistrito[did].update = false;
-            return totalPorDistrito[did].total;
         }
-    }
-    
-    function getBySchool(uint did, uint eid) public returns (uint[]) {
-        if (totalPorDistrito[did].totalPorEscuela[eid].total.length != 0 && ! totalPorDistrito[did].totalPorEscuela[eid].update) {
-            return totalPorDistrito[did].totalPorEscuela[eid].total;
-        } else {
-            uint[] memory result = new uint[](allData[0].conteo.length);
-            for (uint k=0 ; k<allData[0].conteo.length ; k++) {
-                result[k] = 0;
+        uint8[] totalE = totalPorDistrito[did].totalPorEscuela[eid].total;
+        if (totalE.length == 0) {
+            for (i=0 ; i<candidates.length ; i++) {
+                totalE.push(0);
             }
-            for (uint i=0 ; i<allData.length ; i++) {
-                if (allData[i].distritoID == did && allData[i].escuelaID == eid) {
-                    for (uint j=0 ; j<allData[0].conteo.length ; j++) {
-                        result[j] += allData[i].conteo[j];
-                    }
-                }
-            }
-            totalPorDistrito[did].totalPorEscuela[eid].total = result;
-            totalPorDistrito[did].totalPorEscuela[eid].update = false;
-            return totalPorDistrito[did].totalPorEscuela[eid].total;
         }
+
+        for (i=0 ; i<candidates.length ; i++) {
+
+            // ACTUALIZO TOTAL DE LA ESCUELA
+            totalD[i] += co[i];
+
+            // ACTUALIZO EL TOTAL DEL DISTRITO
+            totalE[i] += co[i];
+
+            // ACTUALIZO EL TOTAL DE LA ELECCION
+            total[i] += co[i];
+        }
+
+        totalPorDistrito[did].total = totalD;
+        totalPorDistrito[did].totalPorEscuela[eid].total = totalE;
     }
     
-    function getByMesa(uint did, uint eid, uint mid) public returns (uint[]) {
-        return totalPorDistrito[did].totalPorEscuela[eid].totalPorMesa[mid].total;
+    function getByDistrict(uint did) public constant returns (bytes32[], uint8[]) {
+        return (candidates, totalPorDistrito[did].total);
+    }
+    
+    function getBySchool(uint did, uint eid) public constant returns (bytes32[], uint8[]) {
+        return (candidates, totalPorDistrito[did].totalPorEscuela[eid].total);
+    }
+    
+    function getByMesa(uint did, uint eid, uint mid) public constant returns (bytes32[], uint8[]) {
+        return (candidates, totalPorDistrito[did].totalPorEscuela[eid].totalPorMesa[mid].total);
     }
 
 }

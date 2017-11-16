@@ -11,6 +11,8 @@ router.route('/initdistrito').post(LocationCtrl.initDistrito)
 router.route('/initescuela').post(LocationCtrl.initEscuela)
 
 router.route('/:distritoId/:escuelaId/:mesaId').get(LocationCtrl.getMesaTotal)
+router.route('/:distritoId/:escuelaId').get(LocationCtrl.getEscuelaTotal)
+router.route('/totaldistrito').post(LocationCtrl.totalDistrito)
 router.route('/:distritoId/:escuelaId/:mesaId/user').get(LocationCtrl.getMesaUser)
 router.route('/:distritoId/:escuelaId/:mesaId/participants').get(LocationCtrl.getMesaParticipants)
 
