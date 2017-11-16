@@ -17,9 +17,9 @@ let Mesa = artifacts.require("./Mesa.sol")
 module.exports = (deployer) => {
   deployer.deploy([UserCRUD, Distrito, Escuela, Mesa])
   deployer.deploy(UserElectionCRUD).then( () => {
-    return deployer.deploy(DistritoCRUD)
-  }).then( () => {
     return deployer.deploy(Counts)
+  }).then( () => {
+    return deployer.deploy(DistritoCRUD)
   }).then( () => {
     return deployer.deploy(Election, UserElectionCRUD.address, DistritoCRUD.address, Counts.address)
   })

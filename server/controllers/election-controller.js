@@ -281,24 +281,20 @@ export class ElectionController {
     }
   //returns [{string, int}]
   getTotal(req, res){
-    try{
-      counts.deployed().then(countsInstance => {
-        countsInstance.getCounts.call(fromObject).then(counts => {
-          res.status(200).json({
-            "candidates" : counts[0].map(x => {return web3.toAscii(x)}),
-            "counts" : counts[1].map(x => {return x.toNumber()})
-          })
+    counts.deployed()
+    .then( async countsInstance => {
+      let result = await countsInstance.getTotal.call(fromObject)
+      if (result[1].length == 0) {
+        res.status(400).json("No existen datos iniciales")
+      } else {
+        res.status(200).json({
+          "candidates" : result[0].map(x => {return web3.toAscii(x)}),
+          "counts" : result[1].map(x => {return x.toNumber()})
         })
-        .catch(err => {
-          res.status(400).json("error 400")
-        })
-      })
-      .catch(err => {
-        res.status(400).json("error 400")
-      })
-    } catch(error){
-      res.status(400).json("error 400")
-    }
+      }
+    })
+    .catch(err => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
   }
-
 }

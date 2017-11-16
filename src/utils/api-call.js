@@ -116,10 +116,20 @@ export function initElectionByCSV(data){
     }
   })
 }
+
+export function getElectionInfo(){
+  return axios.get(urlBase + 'election/info')
+}
+
 export function getTotal(){
   return axios.get(urlBase + 'election/total')
 }
 
-export function getElectionInfo(){
-  return axios.get(urlBase + 'election/info')
+export function getTotalDistrito(distrito) {
+  return axios.post(urlBase + 'locations/totaldistrito', {
+    distritoId : distrito
+  })
+}
+export function getTotalEscuela(distrito, escuela) {
+  return axios.get(urlBase + `locations/${distrito}/${escuela}`)
 }

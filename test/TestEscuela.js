@@ -3,9 +3,6 @@ let Escuela = artifacts.require("./Escuela.sol")
 let getId = (idTx) => {
   return idTx.logs[0].args.mesaId.toNumber()
 }
-
-//refactor mesa crud should add its address when is trying to create another mesa
-
 contract('Escuela', function(accounts) {
 
   let fromObject = {from : accounts[0]}
@@ -24,7 +21,6 @@ contract('Escuela', function(accounts) {
     let mesaId = mesas[mesas.length - 1].toNumber()
     let exists = await escuelaInstance.existsMesa.call(mesaId)
     assert.ok(exists, "Exists mesa")
-    // await escuelaInstance.deleteMesa(mesaId, fromObject)
   })
 
   it("get an existent Mesa should returns its address.", async () => {
@@ -35,19 +31,5 @@ contract('Escuela', function(accounts) {
     let mesaId = mesas[mesas.length - 1].toNumber()
     let mesa = await escuelaInstance.getMesa.call(mesaId, fromObject)
     assert.ok(mesa !== zero, "has address")
-    // await escuelaInstance.deleteMesa(mesaId, fromObject)
   })
-
-  // it("delete an mesa by id decrease the length of mesas", async () => {
-  //   let escuelaInstance = await Escuela.deployed()
-  //   await escuelaInstance.createMesa([], fromObject)
-  //   let mesas = await escuelaInstance.getMesas.call(fromObject)
-  //   let mesaId = mesas[mesas.length - 1].toNumber()
-  //   let exists = await escuelaInstance.existsMesa.call(mesaId, fromObject)
-  //   assert.ok(exists, "Exists mesa created")
-  //   await escuelaInstance.deleteMesa(mesaId, fromObject)
-  //   let notexists = await escuelaInstance.existsMesa.call(mesaId, fromObject)
-  //   assert.ok(!notexists, "Not exists mesa deleted")
-  // })
-
 })

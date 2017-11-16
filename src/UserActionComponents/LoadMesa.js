@@ -55,14 +55,12 @@ class LoadMesa extends Component {
     /////////////////////////////////////////////////////////////////////////////////
     handleCheckMesa = (event) => {
       event.preventDefault()
-      this.setState({ loading: true })
       api.checkMesa(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
-        console.log(res)
-        this.setState({ loading: false })
         utils.showSuccess(this.msg, "Validacion de votos correcto")
         this.setState({loadingCM : false})
       }).catch(error => {
         utils.showError(this.msg, error.response.data)
+        this.setState({loadingCM : false})
       })
       this.setState({loadingCM : true})
     }
@@ -93,9 +91,8 @@ class LoadMesa extends Component {
     //carga los datos de un participante
     handleLoadMesa = (event) => {
       event.preventDefault()
-      this.setState({ loading: true })
       api.loadMesa(currentUser.getEmail(cookie), this.state.candidates, this.distrito, this.escuela, this.mesa).then(res => {
-        this.setState({ loading : false })
+        this.setState({ loadingCM : false })
         utils.showSuccess(this.msg, "Carga de datos correcta")
       }).catch(error => {
         this.setState({loadingCM : false})

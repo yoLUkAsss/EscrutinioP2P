@@ -8,6 +8,7 @@ import * as utils from '../utils/utils.js'
 import * as api from '../utils/api-call.js'
 import CustomTable from '../utils/CustomTable.js'
 import LoadingComponent from '../utils/LoadingComponent.js'
+import PieChartComponent from '../utils/PieChartComponent.js'
 
 //ver si se puede usar RefactoredDLF
 /**
@@ -15,11 +16,14 @@ Usa los siguientes props
 * match viene por ser un "child" component de route
 */
 
-class Mesa extends Component {
+class TotalEscuela extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          candidatos : [],
+          candidates : [],
+          counts : [],
+          background : [],
+          border : [],
           isMesaInvalid : false,
           loading : true
         }
@@ -29,40 +33,46 @@ class Mesa extends Component {
     // <PieChartComponent candidates={this.state.candidates} counts={this.state.counts} background={this.state.background} border={this.state.border} title={"Resultados Parciales de todas las Mesas"} label={"# de votos"}/>
 
 
-    componentWillMount() {
-      api.getMesaTotal(this.props.match.params.distritoId, this.props.match.params.escuelaId, this.props.match.params.mesaId)
-      .then(res => {
-        this.setState({candidatos : res.data, loading : false})
+    componentWillMount(){
+      api.getTotalEscuela(this.props.match.params.distritoId, this.props.match.params.escuelaId)
+      .then(results => {
+        console.log(JSON.stringify(results, undefined, 2))
+        this.setState({candidates : results.data.candidates, counts : results.data.counts, background : utils.getBackground(results.data.candidates.length), border : utils.getBorder(results.data.candidates.length), loading : false})
       })
       .catch(error => {
-        // utils.showError(this.msg, error.response.data)
-        this.setState({isMesaInvalid : true, loading : false})
+        utils.showError(this.msg, error.response.data)
+        this.setState({loading : false, errorMessage : error.response.data})
       })
     }
+
     //cambiarlo, setearle los props de los parametros en el componentWillMount como parte de la mesa
-    getMesaId = () => {
-    return `${this.props.match.params.distritoId}${this.props.match.params.escuelaId}${this.props.match.params.mesaId}`
+    getEscuelaId = () => {
+      return `${this.props.match.params.distritoId} ${this.props.match.params.escuelaId}`
     }
 
-    renderMesa(){
+    renderValid(){
         return (
           <Container text>
             <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-            <Header as='h4'>Datos de la Mesa: {this.getMesaId()}</Header>
-            <Header as='h3'>Candidatos</Header>
-            <CustomTable itemsHeader={["Candidato","Conteo"]} itemsBody={this.state.candidatos}/>
+            <PieChartComponent 
+              candidates={this.state.candidates} 
+              counts={this.state.counts} 
+              background={this.state.background} 
+              border={this.state.border} 
+              title={"Resultados Parciales del distrito: " + this.props.match.params.distritoId + " - escuela: " + this.props.match.params.escuelaId} 
+              label={"# de votos"}/>
           </Container>
         )
     }
 
-    renderInvalidMesa(){
+    renderInvalid(){
       return (
         <Container text>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Header as='h3'> {this.getMesaId()} no corresponde a una mesa válida</Header>
+          <Header as='h3'> {this.getEscuelaId()} no corresponde a una escuela válida</Header>
           <Button onClick={event => {
-            this.props.history.push("/mesas")
-          }}> Volver a las mesas
+            this.props.history.push("/")
+          }}> Inicio
           </Button>
         </Container>
       )
@@ -72,11 +82,11 @@ class Mesa extends Component {
       if(this.state.loading){
         return (<LoadingComponent actve={this.state.loading}/>)
       } else if(this.state.isMesaInvalid){
-          return this.renderInvalidMesa();
+          return this.renderInvalid();
         } else{
-          return this.renderMesa();
+          return this.renderValid();
         }
     }
 }
 
-export default withRouter(Mesa)
+export default withRouter(TotalEscuela)

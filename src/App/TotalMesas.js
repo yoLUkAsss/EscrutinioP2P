@@ -14,7 +14,8 @@ class TotalMesas extends Component {
       counts : [],
       background : [],
       border : [],
-      loading : true
+      loading : true,
+      errorMessage : ""
     }
   }
 
@@ -23,7 +24,7 @@ class TotalMesas extends Component {
     api.getTotal().then(results => {
       this.setState({candidates : results.data.candidates, counts : results.data.counts, background : utils.getBackground(results.data.candidates.length), border : utils.getBorder(results.data.candidates.length), loading : false})
     }).catch(error => {
-      this.setState({loading : false})
+      this.setState({loading : false, errorMessage : error.response.data})
     })
   }
 
@@ -31,11 +32,19 @@ class TotalMesas extends Component {
       if(this.state.loading){
         return (<LoadingComponent active={this.state.loading}/>)
       }
+      if(this.state.errorMessage != ""){
+        return (
+          <Container>
+            <PieChartComponent title={this.state.errorMessage}/>
+          </Container>
+        )
+      } else {
         return (
           <Container>
             <PieChartComponent candidates={this.state.candidates} counts={this.state.counts} background={this.state.background} border={this.state.border} title={"Resultados Parciales de todas las Mesas"} label={"# de votos"}/>
           </Container>
         )
+      }
     }
 }
 export default TotalMesas
