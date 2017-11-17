@@ -30,22 +30,15 @@ class Login extends Component {
       event.preventDefault()
       api.login(this.state.email, this.state.password).then(res => {
         currentUser.setUser(cookie, res.data)
-        api.getElectionInfo().then( result => {
-          currentUser.setElectionCreated(cookie, result.data.created)
-          utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
-          // utils.showSuccess(this.msg, "Inicio de sesion exitoso")
-          this.setState({email : "", password : ""})
-        }).catch(err => {
-          currentUser.setElectionCreated(cookie, false)
-          utils.showError(this.msg, "problem with election created")
-        })
+        utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
+        this.setState({email : "", password : ""})
       }).catch(error => {
         utils.showError(this.msg, error.response.data)
       })
     }
     render () {
         return (
-          <Container>
+          <div>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
           <Grid
             textAlign='center'
@@ -86,7 +79,7 @@ class Login extends Component {
               </Message>
             </Grid.Column>
           </Grid>
-          </Container>
+          </div>
         );
     }
 }

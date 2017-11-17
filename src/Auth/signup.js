@@ -52,7 +52,7 @@ class Signup extends Component {
 
     render () {
         return (
-          <Container>
+          <div>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
           <Grid
             textAlign='center'
@@ -93,7 +93,7 @@ class Signup extends Component {
               </Message>
             </Grid.Column>
           </Grid>
-          </Container>
+          </div>
         );
     }
 }
