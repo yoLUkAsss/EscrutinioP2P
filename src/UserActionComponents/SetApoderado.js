@@ -25,12 +25,22 @@ class SetFiscal extends Component {
         this.state = {
             email : "",
             candidato : "",
+            candidatos : [],
             open : false
         }
     }
 
     show = () => this.setState({ open: true })
     close = () => this.setState({ open: false })
+
+    componentWillMount(){
+      api.getCandidatos().then(res => {
+        console.log(res.data)
+        this.setState({candidatos : res.data.map((x, idX) => {return { key : idX, value : x, text : x}})})
+      }).catch(error => {
+        console.log(error)
+      })
+    }
 
     handleSetApoderado(event) {
       event.preventDefault()
@@ -43,13 +53,13 @@ class SetFiscal extends Component {
       this.setState({open : false, email : "", candidato : ""})
     }
 
-    handleCandidato = (event) => { this.setState({ candidato : event.target.value }) }
+    handleCandidato = (event, {value}) => { this.setState({ candidato : value }) }
     handleApoderado = (event) => { this.setState({ email : event.target.value }) }
     render () {
         return (
             <Container text>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Header as='h3'>Asignar Apoderado de Partido</Header>
+                <Header as='h2' color='teal' textAlign='center'>Asignar Apoderado de Partido</Header>
                 <Form>
                     <Form.Input
                         required
@@ -59,19 +69,19 @@ class SetFiscal extends Component {
                         value={this.state.email}
                         onChange={this.handleApoderado.bind(this)}
                     />
-                    <Form.Input
-                        required
-                        type="text"
-                        label='Candidato'
-                        placeholder='Partido Policito asociado'
-                        value={this.state.candidato}
-                        onChange={this.handleCandidato.bind(this)}
+                    <Form.Dropdown
+                      required
+                      label='Candidato'
+                      placeholder='Partido Politico Asociado'
+                      options={this.state.candidatos}
+                      selection
+                      onChange={this.handleCandidato.bind(this)}
                     />
                     <Button onClick={this.show.bind(this)}>Asignar</Button>
                     <Confirm
                       open={this.state.open}
                       header='Asignacion de Apoderado de Partido'
-                      content={`Estas seguro de asignar al usuario ${this.state.email} como apoderado del candidato  ${this.state.candidato}`}
+                      content={`Estas seguro de asignar al usuario: ${this.state.email}, como apoderado del candidato:  ${this.state.candidato}`}
                       onCancel={this.close.bind(this)}
                       onConfirm={this.handleSetApoderado.bind(this)}
                     />
@@ -82,3 +92,12 @@ class SetFiscal extends Component {
 }
 
 export default SetFiscal
+
+// <Form.Input
+//     required
+//     type="text"
+//     label='Candidato'
+//     placeholder='Partido Policito asociado'
+//     value={this.state.candidato}
+//     onChange={this.handleCandidato.bind(this)}
+// />
