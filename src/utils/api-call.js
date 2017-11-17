@@ -133,3 +133,27 @@ export function getTotalDistrito(distrito) {
 export function getTotalEscuela(distrito, escuela) {
   return axios.get(urlBase + `locations/${distrito}/${escuela}`)
 }
+
+
+///////////////////////
+//getters de ids distritos, escuelas, mesas
+export function getDistritos(){
+  return axios.get(urlBase + 'locations/')
+}
+export function getEscuelas(distritoId){
+  return axios.get(urlBase + `locations/${distritoId}/escuelas`)
+}
+export function getMesas(distritoId, escuelaId){
+  return axios.get(urlBase + `locations/${distritoId}/${escuelaId}/mesas`)
+}
+export function getCandidatos(){
+  return axios.get(urlBase + 'election/candidates')
+}
+
+export function getCandidato(apoderado){
+  return axios.get(urlBase + 'election/candidate', {
+    params : {
+      email : apoderado
+    }
+  })
+}
