@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Scrollchor from 'react-scrollchor'
 import { Container, Header, Divider, List, Segment} from 'semantic-ui-react'
 import * as api from '../utils/api-call.js'
+import * as currentUser from '../utils/user_session.js'
+import cookie from 'react-cookies'
 class Home extends Component {
 
   constructor(props){
@@ -16,10 +18,9 @@ class Home extends Component {
 
   componentWillMount(){
     api.getElectionInfo().then(res => {
-      console.log(res.data)
+      currentUser.setElectionCreated(cookie, res.data.created)
       this.setState({created : res.data.created, distritos : res.data.distritos, escuelas : res.data.escuelas, mesas : res.data.mesas})
     }).catch(error => {
-      console.log(error)
       this.setState({created : false})
     })
   }
@@ -84,12 +85,12 @@ class Home extends Component {
   //falta buscar los candidatos
   render() {
       return (
-          <Container text>
-              <Header as='h2'>Bienvenidos a Escrutinio Peer to Peer</Header>
+          <div>
+              <Header as='h2' textAlign='center'>Bienvenidos a Escrutinio Peer to Peer</Header>
               {this.renderContentsTable()}
               <Divider/>
               {this.state.created === true? this.renderBody() : (<p>Eleccion aun no creada</p>)}
-          </Container>
+          </div>
       );
   }
 }

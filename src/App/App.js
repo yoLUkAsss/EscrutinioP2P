@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { Container, Divider} from 'semantic-ui-react'
-// import cookie from 'react-cookies'
 
 import Home from './Home.js'
 import Election from './Election.js'
@@ -30,21 +29,21 @@ import SetFiscal from '../UserActionComponents/SetFiscal.js'
 import CompleteMesa from '../UserActionComponents/CompleteMesa.js'
 import LoadMesa from '../UserActionComponents/LoadMesa.js'
 
-
+//removed text in container navbar
 class App extends Component{
   render() {
     return (
       <div>
-      <Container text>
+      <Container>
         <Navbar/>
       </Container>
       <Divider/>
-      <Container text>
+      <Container text style={{marginTop: '1em', marginBottom: '2em'}}>
         <Switch>
           <Route exact path='/' component={Home}/>
           <Route path='/eleccion' component={Election}/>
           <Route path='/tareas' component={Task}/>
-          <Route path='/mesas' component={SearchMesa}/>
+          <Route path='/resultados' component={SearchMesa}/>
           <Route path='/guia' component={Guide}/>
           <Route path='/about' component={About}/>
 

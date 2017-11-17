@@ -25,9 +25,18 @@ class SetDelegadoDeEscuela extends Component {
         this.state = {
             correoDelegado : "",
             escuela : "",
+            escuelas : [],
             open : false
         }
         this.distrito = currentUser.getDistrito(cookie)
+    }
+    componentWillMount(){
+      api.getEscuelas(currentUser.getDistrito(cookie)).then(res => {
+        console.log(res.data)
+        this.setState({escuelas : res.data.map((x, idX) => {return {key : idX, value : x, text : x}})})
+      }).catch(error => {
+        console.log(error)
+      })
     }
     handleSetDelegadoDeEscuela(event) {
       event.preventDefault()
@@ -35,12 +44,12 @@ class SetDelegadoDeEscuela extends Component {
         utils.showSuccess(this.msg, "Delegado de Distrito Asignado Correctamente")
       }).catch(error => {
         console.log(error)
-        utils.showError(this.msg, error.response.data)
+        utils.showError(this.msg, error.response.data.message)
       })
       this.setState({open : false, correoDelegado : "", escuela : ""})
     }
     handleDelegadoEscuela = (event) => { this.setState({ correoDelegado : event.target.value }) }
-    handleEscuela = (event) => { this.setState({ escuela : event.target.value }) }
+    handleEscuela = (event, {value}) => { this.setState({ escuela : value }) }
     show = () => this.setState({ open: true })
     close = () => this.setState({ open: false })
 
@@ -48,7 +57,7 @@ class SetDelegadoDeEscuela extends Component {
         return (
             <Container text>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h3'>Asignar Delegado de Escuela</Header>
+              <Header as='h2' color='teal' textAlign='center'>Asignar Delegado de Escuela</Header>
               <Form>
                   <Form.Input
                       required
@@ -58,21 +67,19 @@ class SetDelegadoDeEscuela extends Component {
                       value={this.state.correoDelegado}
                       onChange={this.handleDelegadoEscuela.bind(this)}
                   />
-                  <Form.Field
-                    control='input'
-                    min={1}
+                  <Form.Dropdown
                     required
-                    type='number'
                     label='ID de la Escuela'
-                    placeholder='ID de la Escuela'
-                    value={this.state.escuela}
+                    placeholder='Escuela'
+                    options={this.state.escuelas}
+                    selection
                     onChange={this.handleEscuela.bind(this)}
                   />
                   <Button onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
                     header='Asignacion de Delegado de Escuela'
-                    content={`Estas seguro de asignar al usuario ${this.state.correoDelegado} como delegado de la escuela ${this.distrito}${this.state.escuela}`}
+                    content={`Estas seguro de asignar al usuario: ${this.state.correoDelegado}, como delegado de la escuela: ${this.state.escuela} del distrito: ${this.distrito}`}
                     onCancel={this.close.bind(this)}
                     onConfirm={this.handleSetDelegadoDeEscuela.bind(this)}
                   />
@@ -83,3 +90,13 @@ class SetDelegadoDeEscuela extends Component {
 }
 
 export default SetDelegadoDeEscuela
+// <Form.Field
+//   control='input'
+//   min={1}
+//   required
+//   type='number'
+//   label='ID de la Escuela'
+//   placeholder='ID de la Escuela'
+//   value={this.state.escuela}
+//   onChange={this.handleEscuela.bind(this)}
+// />

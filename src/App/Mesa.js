@@ -43,39 +43,43 @@ class Mesa extends Component {
     getMesaId = () => {
     return `${this.props.match.params.distritoId}${this.props.match.params.escuelaId}${this.props.match.params.mesaId}`
     }
-
+    // <Header as='h3'>Candidatos</Header>
     renderMesa(){
         return (
-          <Container text>
-            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-            <Header as='h4'>Datos de la Mesa: {this.getMesaId()}</Header>
-            <Header as='h3'>Candidatos</Header>
-            <CustomTable itemsHeader={["Candidato","Conteo"]} itemsBody={this.state.candidatos}/>
-          </Container>
+            <div>
+              <Header as='h2' textAlign='center'>Datos de la Mesa: {this.getMesaId()}</Header>
+              <CustomTable itemsHeader={["Candidato","Conteo"]} itemsBody={this.state.candidatos}/>
+            </div>
         )
     }
 
     renderInvalidMesa(){
       return (
-        <Container text>
-          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Header as='h3'> {this.getMesaId()} no corresponde a una mesa válida</Header>
-          <Button onClick={event => {
-            this.props.history.push("/mesas")
-          }}> Volver a las mesas
-          </Button>
-        </Container>
+          <div>
+            <Header as='h2' textAlign='center'> {this.getMesaId()} no corresponde a una mesa válida</Header>
+            <Button onClick={event => {
+              this.props.history.push("/mesas")
+            }}> Volver a las mesas
+            </Button>
+          </div>
       )
     }
 
     render () {
+      let toRender = null
       if(this.state.loading){
-        return (<LoadingComponent actve={this.state.loading}/>)
+        toRender = <LoadingComponent/>
       } else if(this.state.isMesaInvalid){
-          return this.renderInvalidMesa();
+          toRender = this.renderInvalidMesa()
         } else{
-          return this.renderMesa();
+          toRender = this.renderMesa()
         }
+      return (
+        <div>
+          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()}/>
+          {toRender}
+        </div>
+      )
     }
 }
 

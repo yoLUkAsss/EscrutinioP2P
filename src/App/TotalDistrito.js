@@ -32,13 +32,10 @@ class TotalDistrito extends Component {
     componentWillMount(){
       api.getTotalDistrito(this.props.match.params.distritoId)
       .then(results => {
-        console.log("entre aca antes")
-        console.log(JSON.stringify(results, undefined, 2))
         this.setState({candidates : results.data.candidates, counts : results.data.counts, background : utils.getBackground(results.data.candidates.length), border : utils.getBorder(results.data.candidates.length), loading : false})
         utils.showSuccess(this.msg, "TODO OK")
       })
       .catch(error => {
-        console.log("y detecte un error en el medio")
         utils.showError(this.msg, error.response.data)
         this.setState({loading : false, errorMessage : error.response.data})
       })
@@ -51,40 +48,45 @@ class TotalDistrito extends Component {
 
     renderValid(){
         return (
-          <Container text>
-            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-            <PieChartComponent 
-              candidates={this.state.candidates} 
-              counts={this.state.counts} 
-              background={this.state.background} 
-              border={this.state.border} 
-              title={"Resultados Parciales del distrito: " + this.props.match.params.distritoId} 
+          <div>
+            <PieChartComponent
+              candidates={this.state.candidates}
+              counts={this.state.counts}
+              background={this.state.background}
+              border={this.state.border}
+              title={"Resultados Parciales del distrito: " + this.props.match.params.distritoId}
               label={"# de votos"}/>
-          </Container>
+          </div>
         )
     }
 
     renderInvalid(){
       return (
-        <Container text>
-          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+        <div>
           <Header as='h3'> {this.getDistritoId()} no corresponde a un distrito válido</Header>
           <Button onClick={event => {
             this.props.history.push("/")
           }}> Inicio
           </Button>
-        </Container>
+        </div>
       )
     }
 
     render () {
+      let toRender = null
       if(this.state.loading){
-        return (<LoadingComponent actve={this.state.loading}/>)
+        toRender = <LoadingComponent/>
       } else if(this.state.isMesaInvalid){
-          return this.renderInvalid();
+          toRender = this.renderInvalid()
         } else{
-          return this.renderValid();
+          toRender = this.renderValid()
         }
+      return (
+        <div>
+          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          {toRender}
+        </div>
+      )
     }
 }
 

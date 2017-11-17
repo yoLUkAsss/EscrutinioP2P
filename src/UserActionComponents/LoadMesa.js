@@ -103,46 +103,44 @@ class LoadMesa extends Component {
 
     renderMesaLoadable(){
         return (
-          <Container text>
-            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-            {this.state.loadingCM ? (<LoadingComponent active={this.state.loadingCM}/>) : (null)}
-            <Header as='h3'>Cargar Mesa: {this.getMesaId()}</Header>
-              {this.renderLoadUser()}
-              {this.renderCanCheck()}
-              <Divider/>
-              {
-                this.renderParticipants()
-              }
-          </Container>
+          <div>
+            {this.state.loadingCM ? (<LoadingComponent/>) : (null)}
+            <Header as='h2' textAlign='center'>Cargar Mesa: {this.getMesaId()}</Header>
+            {this.renderLoadUser()}
+            {this.renderCanCheck()}
+            <Divider/>
+            {
+              this.renderParticipants()
+            }
+          </div>
         )
     }
     renderInvalidMesa(){
       return (
-        <Container text>
-          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-          <Header as='h3'> {this.getMesaId()} no corresponde a una mesa válida</Header>
+        <div>
+          <Header as='h3' color='teal' textAlign='center'> {this.getMesaId()} no corresponde a una mesa válida</Header>
           <Button onClick={event => {
             this.props.history.push("/mesas")
           }}> Volver a las mesas
           </Button>
-        </Container>
+        </div>
       )
     }
     renderParticipants(){
       return (
-        <Container text>
+        <div>
           {
             this.state.participants.map((x, idX) => {
               return (
                 <div key={idX}>
-                  <Header as='h2'>{x.name}</Header>
+                  <Header as='h3' textAlign='center'>Conteo del candidato: {x.name}</Header>
                   <CustomTable key={idX} itemsHeader={["Candidato","Conteo"]} itemsBody={x.candidates}/>
                   <Divider/>
                 </div>
               )
             })
           }
-        </Container>
+        </div>
       )
     }
     renderLoadUser(){
@@ -168,13 +166,20 @@ class LoadMesa extends Component {
     }
 
     render () {
+      let toRender = null
       if(this.state.loading){
-        return (<LoadingComponent active={this.state.loading}/>);
+        toRender = <LoadingComponent/>
       }else if(this.state.isMesaInvalid){
-        return this.renderInvalidMesa();
+        toRender = this.renderInvalidMesa()
       } else{
-        return this.renderMesaLoadable();
+        toRender = this.renderMesaLoadable()
       }
+      return (
+        <div>
+          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          {toRender}
+        </div>
+      )
     }
 
 }

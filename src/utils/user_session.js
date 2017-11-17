@@ -5,6 +5,9 @@ export function clean(cookie){
   cookie.remove("current_user_distrito")
   cookie.remove("current_user_escuela")
   cookie.remove("current_user_mesa")
+}
+
+export function cleanElection(cookie){
   cookie.remove("current_user_election_created")
 }
 //////////////////////////////////////////////////////////////
@@ -41,10 +44,6 @@ export function getMesa(cookie){
 export function isLogged(cookie){
   return cookie.load("current_user_address") !== undefined
 }
-//modify can create eleccon
-export function canCreateElection(cookie){
-  return isLogged(cookie) && isElectionCreated(cookie)
-}
 export function isAutoridadElectoral(cookie){
   return cookie.load("current_user_category") === '0'
 }
@@ -72,8 +71,8 @@ export function setElectionCreated(cookie, value){
   cookie.save("current_user_election_created", value, {path : "/"})
 }
 
-export function isElectionCreated(cookie){
-  return cookie.load("current_user_election_created")
+export function isElectionActive(cookie){
+  return cookie.load("current_user_election_created") === true
 }
 
 export function canLoadMesaUser(cookie){

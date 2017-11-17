@@ -48,6 +48,24 @@ export class ElectionController {
       res.status(400).json({ message : error.message })
     }
   }
+  //me gustaria pedir, dado un apoderado de partido, pedir su candidato asignado
+  //params email : string
+  getCandidate(req, res){
+    try{
+      election.deployed().then((electionInstance) => {
+        electionInstance.getCandidates.call(fromObject).then((candidates) => {
+          res.json(web3.toAscii(candidates[0]))
+        }).catch(error => {
+          res.status(400).json({ message : error.message })
+        })
+      }).catch(error => {
+        res.status(400).json({ message : error.message })
+      })
+    } catch(error){
+      res.status(400).json({ message : error.message })
+    }
+  }
+
   getElectionInfo(req, res){
     try{
       election.deployed().then((electionInstance) => {
@@ -245,11 +263,12 @@ export class ElectionController {
       let electionInstance = await election.deployed()
       let countsInstance = await counts.deployed()
       let candidates = req.body.candidates.split(',')
+      candidates.push('votos en blanco')
+      candidates.push('votos nulos')
       let result = await electionInstance.createElectionVerify.call(req.body.email, candidates, fromObject)
       if (result[0]) {
         res.status(400).json( web3.toAscii(result[1]) )
       } else {
-        await electionInstance.createElection.sendTransaction(req.body.email, candidates, fromObject)
         if(!req.file){
           res.status(400).send('No files were uploaded.')
         } else {
@@ -267,6 +286,7 @@ export class ElectionController {
                   await escuelaInstance.createMesa.sendTransaction(mesaId, mesaInstance.address, fromObject)
                   finished -= 1
                   if(finished === 0){
+                    await electionInstance.createElection.sendTransaction(req.body.email, candidates, fromObject)
                     await electionInstance.setElectionInfo(electionMap.total.distritos, electionMap.total.escuelas, electionMap.total.mesas, fromObject)
                     res.status(200).json(electionMap.total)
                   }
