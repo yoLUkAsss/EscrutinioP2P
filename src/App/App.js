@@ -38,12 +38,12 @@ class App extends Component{
         <Navbar/>
       </Container>
       <Divider/>
-      <Container text>
+      <Container text style={{marginTop: '1em', marginBottom: '2em'}}>
         <Switch>
           <Route exact path='/' component={Home}/>
           <Route path='/eleccion' component={Election}/>
           <Route path='/tareas' component={Task}/>
-          <Route path='/mesas' component={SearchMesa}/>
+          <Route path='/resultados' component={SearchMesa}/>
           <Route path='/guia' component={Guide}/>
           <Route path='/about' component={About}/>
 

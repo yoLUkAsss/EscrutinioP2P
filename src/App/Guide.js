@@ -76,12 +76,12 @@ class Guide extends Component {
   }
   render() {
       return (
-          <Container text>
-            <Header as='h2'>Guia de usuarios</Header>
+          <div>
+            <Header as='h2' textAlign='center'>Guia de usuarios</Header>
               {this.renderContentsTable()}
               <Divider/>
               {this.renderBody()}
-          </Container>
+          </div>
       );
   }
 }

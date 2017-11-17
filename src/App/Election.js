@@ -63,7 +63,7 @@ class Election extends Component {
     render () {
         return (
           <div>
-            <Header as='h2'>Crear Eleccion con los siguientes candidatos</Header>
+            <Header as='h2' textAlign='center'>Crear Eleccion con los siguientes candidatos</Header>
             <Grid centered>
               <Grid.Column stretched>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />

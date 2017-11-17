@@ -48,8 +48,7 @@ class TotalDistrito extends Component {
 
     renderValid(){
         return (
-          <Container text>
-            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          <div>
             <PieChartComponent
               candidates={this.state.candidates}
               counts={this.state.counts}
@@ -57,31 +56,37 @@ class TotalDistrito extends Component {
               border={this.state.border}
               title={"Resultados Parciales del distrito: " + this.props.match.params.distritoId}
               label={"# de votos"}/>
-          </Container>
+          </div>
         )
     }
 
     renderInvalid(){
       return (
-        <Container text>
-          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+        <div>
           <Header as='h3'> {this.getDistritoId()} no corresponde a un distrito válido</Header>
           <Button onClick={event => {
             this.props.history.push("/")
           }}> Inicio
           </Button>
-        </Container>
+        </div>
       )
     }
 
     render () {
+      let toRender = null
       if(this.state.loading){
-        return (<LoadingComponent actve={this.state.loading}/>)
+        toRender = <LoadingComponent/>
       } else if(this.state.isMesaInvalid){
-          return this.renderInvalid();
+          toRender = this.renderInvalid()
         } else{
-          return this.renderValid();
+          toRender = this.renderValid()
         }
+      return (
+        <div>
+          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          {toRender}
+        </div>
+      )
     }
 }
 

@@ -49,43 +49,50 @@ class TotalEscuela extends Component {
     getEscuelaId = () => {
       return `${this.props.match.params.distritoId} ${this.props.match.params.escuelaId}`
     }
-
+    // <Container text>
+    //   <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+    //   </Container>
     renderValid(){
         return (
-          <Container text>
-            <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-            <PieChartComponent 
-              candidates={this.state.candidates} 
-              counts={this.state.counts} 
-              background={this.state.background} 
-              border={this.state.border} 
-              title={"Resultados Parciales del distrito: " + this.props.match.params.distritoId + " - escuela: " + this.props.match.params.escuelaId} 
+            <PieChartComponent
+              candidates={this.state.candidates}
+              counts={this.state.counts}
+              background={this.state.background}
+              border={this.state.border}
+              title={"Resultados Parciales del distrito: " + this.props.match.params.distritoId + " - escuela: " + this.props.match.params.escuelaId}
               label={"# de votos"}/>
-          </Container>
         )
     }
-
+    // <Container text>
+    //   <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+    // </Container>
     renderInvalid(){
       return (
-        <Container text>
-          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+        <div>
           <Header as='h3'> {this.getEscuelaId()} no corresponde a una escuela válida</Header>
           <Button onClick={event => {
             this.props.history.push("/")
           }}> Inicio
           </Button>
-        </Container>
+        </div>
       )
     }
 
     render () {
+      let toRender = null
       if(this.state.loading){
-        return (<LoadingComponent actve={this.state.loading}/>)
+        toRender = (<LoadingComponent/>)
       } else if(this.state.isMesaInvalid){
-          return this.renderInvalid();
+          toRender = this.renderInvalid();
         } else{
-          return this.renderValid();
+          toRender = this.renderValid();
         }
+      return (
+        <div>
+          <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          {toRender}
+        </div>
+      )
     }
 }
 

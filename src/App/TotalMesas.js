@@ -30,7 +30,7 @@ class TotalMesas extends Component {
 
     render() {
       if(this.state.loading){
-        return (<LoadingComponent active={this.state.loading}/>)
+        return (<LoadingComponent/>)
       }
       if(this.state.errorMessage != ""){
         return (
@@ -40,9 +40,9 @@ class TotalMesas extends Component {
         )
       } else {
         return (
-          <Container>
+          <div>
             <PieChartComponent candidates={this.state.candidates} counts={this.state.counts} background={this.state.background} border={this.state.border} title={"Resultados Parciales de todas las Mesas"} label={"# de votos"}/>
-          </Container>
+          </div>
         )
       }
     }

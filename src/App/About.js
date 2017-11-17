@@ -88,10 +88,10 @@ class About extends Component {
   }
   render() {
       return (
-          <Container text>
-            <Header as='h2'>Sobre Escrutinio Peer to Peer</Header>
+          <div>
+            <Header as='h2' textAlign='center'>Sobre Escrutinio Peer to Peer</Header>
             {this.renderContent()}
-          </Container>
+          </div>
       );
   }
 }
