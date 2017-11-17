@@ -6,6 +6,9 @@ const LocationCtrl = new LocationController()
 
 router.route('/').get(LocationCtrl.getDistritos)
 router.route('/:distritoId').get(LocationCtrl.getDistrito)
+router.route('/:distritoId/escuelas').get(LocationCtrl.getEscuelas)
+router.route('/:distritoId/:escuelaId/mesas').get(LocationCtrl.getMesas)
+
 
 router.route('/:distritoId/:escuelaId/:mesaId').get(LocationCtrl.getMesaTotal)
 router.route('/:distritoId/:escuelaId').get(LocationCtrl.getEscuelaTotal)
