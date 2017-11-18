@@ -30,7 +30,7 @@ class Login extends Component {
       event.preventDefault()
       api.login(this.state.email, this.state.password).then(res => {
         currentUser.setUser(cookie, res.data)
-        utils.showSuccess(this.msg, "Inicio de sesion exitoso", () => {this.props.history.push("/")} )
+        utils.showSuccess(this.msg, "El usuario: " + res.data.email + " ha iniciado sesion correcamente", () => {this.props.history.push("/")} )
         this.setState({email : "", password : ""})
       }).catch(error => {
         utils.showError(this.msg, error.response.data)

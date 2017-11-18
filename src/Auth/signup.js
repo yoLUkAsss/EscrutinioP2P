@@ -1,23 +1,7 @@
-/**
- * React utilities
- */
 import React, { Component } from 'react'
 import { Button, Header, Form , Grid, Segment, Message} from 'semantic-ui-react'
 import {withRouter, Link} from 'react-router-dom'
-// import Center from 'react-center'
 import AlertContainer from 'react-alert'
-
-/**
- * Components
- */
-// import ComponentTitle from '../utils/ComponentTitle.js'
-
-/**
- * Controller for Component
- */
-// import contract from 'truffle-contract'
-// import UserElectionCRUD from '../../build/contracts/UserElectionCRUD.json'
-// import getWeb3 from '../utils/getWeb3'
 import * as utils from '../utils/utils.js'
 import * as api from '../utils/api-call.js'
 
@@ -41,11 +25,12 @@ class Signup extends Component {
 
     handleRegister = (event) => {
       event.preventDefault()
-      api.signup(this.state.email, this.state.password).then(res => {
-        utils.showSuccess(this.msg, "Registro Exitoso")
+      api.signup(this.state.email, this.state.password)
+      .then(res => {
+        utils.showSuccess(this.msg, "Se ha registrado correctamente al usuario: " + res.data)
         this.setState({email : "", password : ""})
-        // utils.showSuccess(this.msg, "Registro exitoso", () => {this.props.history.push("/")})
-      }).catch(error => {
+      })
+      .catch(error => {
         utils.showError(this.msg, error.response.data)
       })
     }
@@ -99,34 +84,3 @@ class Signup extends Component {
 }
 
 export default withRouter(Signup)
-// <Center>
-// <div>
-//     <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-//     <Container>
-//     <ComponentTitle title='Registro'/>
-//     <Form>
-//         <Form.Input
-//             required
-//             inline
-//             type='email'
-//             label='Email'
-//             placeholder='Email'
-//             value={this.state.email}
-//             onChange={this.handleEmail.bind(this)}
-//         />
-//         <Form.Input
-//             required
-//             inline
-//             type='password'
-//             label='Contraseña'
-//             placeholder='Contraseña'
-//             value={this.state.password}
-//             onChange={this.handlePassword.bind(this)}
-//         />
-//         <Button onClick={this.handleRegister}>
-//             Registrar
-//         </Button>
-//     </Form>
-//     </Container>
-// </div>
-// </Center>

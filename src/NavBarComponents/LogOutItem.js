@@ -13,21 +13,15 @@ import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
 
-/**
-usa los siguientes props:
-* history viene con withRouter
 
-*/
 class LogOutItem extends Component {
     handleLogout = (event) => {
       event.preventDefault()
       api.logout(currentUser.getAddress(cookie)).then((res) => {
         currentUser.clean(cookie)
-        currentUser.cleanElection(cookie)
-        utils.showSuccess(this.msg, "Cierre de sesion exitoso", () => {this.props.history.push("/")})
-        // utils.showSuccess(this.msg, "Cierre de sesion exitoso")
+        utils.showSuccess(this.msg, res.data, () => {this.props.history.push("/")})
       }).catch((err) => {
-        utils.showError(this.msg, "Fallo en el cierre de session")
+        utils.showError(this.msg, err.response.data)
       })
     }
     render () {

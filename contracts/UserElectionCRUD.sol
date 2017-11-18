@@ -17,7 +17,7 @@ contract UserElectionCRUD is UserCRUD{
 
     function createUserByEmailVerify(bytes32 email, bytes32 password, uint category) internal returns (bool,bytes32) {
         if(existsUser(emailMap[email])) {
-          return (true, "Username se encuentra en uso");
+          return (true, "Usuario se encuentra en uso");
         } else {
           return (false, "");
         }
