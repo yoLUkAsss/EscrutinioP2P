@@ -30,97 +30,63 @@ function getElectionMap(csv){
 }
 
 export class ElectionController {
-  getHome(req, res){
-    res.status(200).json("HOLA HOME")
-  }
+
+
   getCandidates(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        electionInstance.getCandidates.call(fromObject).then((candidates) => {
-          res.json(candidates.map(x => {return web3.toAscii(x)}))
-        }).catch(error => {
-          res.status(400).json({ message : error.message })
-        })
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
-      })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
-  }
-  //me gustaria pedir, dado un apoderado de partido, pedir su candidato asignado
-  //params email : string
-  getCandidate(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        electionInstance.getCandidates.call(fromObject).then((candidates) => {
-          res.json(web3.toAscii(candidates[0]))
-        }).catch(error => {
-          res.status(400).json({ message : error.message })
-        })
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
-      })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
+    election.deployed()
+    .then( async electionInstance => {
+      let candidates = await electionInstance.getCandidates.call(fromObject)
+      if (candidates.length === 0) {
+        res.status(400).json("La eleccion aun no ha sido creada")
+      } else {
+        res.status(201).json(candidates.map( candidate => {return web3.toAscii(candidate)}))
+      }
+    })
+    .catch( error => {
+      res.status(500).json("Ha ocurrido un error, contacte un administrador")
+    })
   }
 
   getElectionInfo(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        electionInstance.getElectionInfo.call(fromObject).then((result) => {
-          res.status(200).json({created : result[0], distritos : result[1].toNumber(), escuelas : result[2].toNumber(), mesas : result[3].toNumber(), candidates : result[4].map(x => {return web3.toAscii(x)})})
-        }).catch(error => {
-          res.status(400).json({ message : error.message })
-        })
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
-      })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
+    election.deployed()
+    .then( async electionInstance => {
+      let result = await electionInstance.getElectionInfo.call(fromObject)
+      res.status(201).json({created : result[0], distritos : result[1].toNumber(), escuelas : result[2].toNumber(), mesas : result[3].toNumber(), candidates : result[4].map(x => {return web3.toAscii(x)})})
+    })
+    .catch( error => {
+      res.status(500).json("Ha ocurrido un error, contacte un administrador")
+    })
   }
+  
   /* body should have
     email: string*/
   setAutoridadElectoral(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        electionInstance.setAutoridadElectoral.sendTransaction(req.body.email, fromObject).then((result) => {
-          res.status(200).json(result)
-        }).catch(error => {
-          res.status(400).json({ message : error.message })
-        })
+    election.deployed()
+      .then(async electionInstance => {
+        await electionInstance.setAutoridadElectoral.sendTransaction(req.body.email, fromObject)
+        res.status(200).json("Usuario: " + req.body.email + " asignado como Autoridad Electoral")
       }).catch(error => {
-        res.status(400).json({ message : error.message })
+        res.status(500).json("Ha ocurrido un error, contacte un administrador")
       })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
   }
   /* body should have
     autoridadElectoralEmail : string,
     apoderadoDePartidoEmail: string,
     candidate : string */
   setApoderadoDePartido(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        let result = electionInstance.setApoderadoVerify.call(req.body.autoridadElectoralEmail, req.body.apoderadoDePartidoEmail, req.body.candidate, fromObject)
+    election.deployed()
+      .then(async electionInstance => {
+        let result = await electionInstance.setApoderadoVerify.call(req.body.autoridadElectoralEmail, req.body.apoderadoDePartidoEmail, req.body.candidate, fromObject)
         if(result[0]){
-          res.status(400).json( web3.toAscii(result[1]) )
-        } else{
-          electionInstance.setApoderado.sendTransaction(req.body.autoridadElectoralEmail, req.body.apoderadoDePartidoEmail, req.body.candidate, fromObject).then((result) => {
-            res.status(200).json(result)
-          }).catch(error => {
-            res.status(400).json({ message : error.message })
-          })
+          res.status(400).json(web3.toAscii(result[1]))
+        } else {
+          await electionInstance.setApoderado.sendTransaction(req.body.autoridadElectoralEmail, req.body.apoderadoDePartidoEmail, req.body.candidate, fromObject)
+          res.status(200).json("Usuario: " + req.body.apoderadoDePartidoEmail + " asignado como Apoderado del Partido: " +  req.body.candidate)
         }
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
       })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
+      .catch(error => {
+        res.status(500).json("Ha ocurrido un error, contacte un administrador")
+      })
   }
   /* body:
       autoridadElectoralEmail : string,
@@ -128,25 +94,20 @@ export class ElectionController {
       distritoId : int
   */
   setDelegadoDeDistrito(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        let result = electionInstance.setDelegadoDeDistritoVerify.call(req.body.autoridadElectoralEmail, req.body.delegadoDeDistritoEmail, req.body.distritoId, fromObject)
+    election.deployed()
+      .then(async (electionInstance) => {
+        let result = await electionInstance.setDelegadoDeDistritoVerify.call(req.body.autoridadElectoralEmail, req.body.delegadoDeDistritoEmail, req.body.distritoId, fromObject)
         if(result[0]){
           res.status(400).json( web3.toAscii(result[1]) )
         } else {
-          electionInstance.setDelegadoDeDistrito.sendTransaction(req.body.autoridadElectoralEmail, req.body.delegadoDeDistritoEmail, req.body.distritoId, fromObject).then((result) => {
-            res.status(200).json(result)
-          }).catch(error => {
-            res.status(400).json({ message : error.message })
-          })
+          await electionInstance.setDelegadoDeDistrito.sendTransaction(req.body.autoridadElectoralEmail, req.body.delegadoDeDistritoEmail, req.body.distritoId, fromObject)
+          res.status(200).json("Usuario: " + req.body.delegadoDeDistritoEmail + " asignado como Delegado del Distrito: " + req.body.distritoId)
         }
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
       })
-    } catch(error){
-      res.status(400).json({ message : error.message })
+      .catch(error => {
+        res.status(500).json("Ha ocurrido un error, contacte un administrador")
+      })
     }
-  }
   /* body:
       delegadoDeDistritoEmail : string,
       delegadoDeEscuelaEmail : string,
@@ -154,24 +115,19 @@ export class ElectionController {
       escuelaId : int
   */
   setDelegadoDeEscuela(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
+    election.deployed()
+      .then(async electionInstance => {
         let result = electionInstance.setDelegadoDeEscuelaVerify.call(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject)
         if(result[0]){
-          res.status(400).json( web3.toAscii(result[1]) )
+          res.status(400).json(web3.toAscii(result[1]))
         } else {
-          electionInstance.setDelegadoDeEscuela.sendTransaction(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject).then((result) => {
-            res.status(200).json(result)
-          }).catch(error => {
-            res.status(400).json({ message : error.message })
-          })
+          await electionInstance.setDelegadoDeEscuela.sendTransaction(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject)
+          res.status(200).json("Usuario: " + req.body.delegadoDeEscuelaEmail + " fue asignado como Delegado de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
         }
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
       })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
+      .catch(error => {
+        res.status(500).json("Ha ocurrido un error, contacte un administrador")
+      })
   }
   /* body:
       delegadoDeEscuelaEmail : string,
@@ -181,24 +137,19 @@ export class ElectionController {
       mesaId : int
   */
   setPresidenteDeMesa(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        let result = electionInstance.setPresidenteDeMesaVerify.call(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.presidenteDeMesaEmail, fromObject)
+    election.deployed()
+      .then(async electionInstance => {
+        let result = await electionInstance.setPresidenteDeMesaVerify.call(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.presidenteDeMesaEmail, fromObject)
         if(result[0]){
-          res.status(400).json( web3.toAscii(result[1]) )
+          res.status(400).json(web3.toAscii(result[1]))
         } else {
-          electionInstance.setPresidenteDeMesa.sendTransaction(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.presidenteDeMesaEmail, fromObject).then((result) => {
-            res.status(200).json(result)
-          }).catch(error => {
-            res.status(400).json({ message : error.message })
-          })
+          await electionInstance.setPresidenteDeMesa.sendTransaction(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.presidenteDeMesaEmail, fromObject)
+          res.status(200).json("Usuario: " + req.body.presidenteDeMesaEmail + " fue asignado como Presidente de la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId) 
         }
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
       })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
+      .catch(error => {
+        res.status(500).json("Ha ocurrido un error, contacte un administrador")
+      })
   }
   /* body:
       delegadoDeEscuelaEmail : string,
