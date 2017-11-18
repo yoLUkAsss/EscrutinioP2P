@@ -45,7 +45,7 @@ class App extends Component{
           <Route path='/tareas' component={Task}/>
           <Route path='/resultados' component={SearchResults}/>
           <Route path='/guia' component={Guide}/>
-          <Route path='/about' component={About}/>
+          <Route path='/nosotros' component={About}/>
 
 
           <Route path='/acceder' component={Login}/>

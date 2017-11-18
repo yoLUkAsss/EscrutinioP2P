@@ -12,6 +12,7 @@ router.route('/:distritoId/:escuelaId/mesas').get(LocationCtrl.getMesas)
 router.route('/:distritoId/:escuelaId/:mesaId/user').get(LocationCtrl.getMesaUser)
 router.route('/:distritoId/:escuelaId/:mesaId/participants').get(LocationCtrl.getMesaParticipants)
 router.route('/:distritoId/:escuelaId/:mesaId/checkmesa').post(LocationCtrl.checkMesa)
+router.route('/:distritoId/:escuelaId/:mesaId/checkmesafiscal').post(LocationCtrl.checkMesaFiscal)
 router.route('/:distritoId/:escuelaId/:mesaId/loadmesa').post(LocationCtrl.loadMesa)
 
 export default router;

@@ -7,7 +7,7 @@ export class CountsController {
     counts.deployed()
     .then( async countsInstance => {
       let result
-      let ids = []
+      // let ids = []
       if(req.query.mesa === ''){
         if(req.query.escuela === ''){
           if(req.query.distrito === ''){
@@ -27,12 +27,12 @@ export class CountsController {
         // ids.push(parseInt(req.query.escuela))
         // ids.push(parseInt(req.query.mesa))
       }
-      if (result.total[1].length === 0) {
+      if (result[1].length === 0) {
         res.status(400).json("No existen datos iniciales")
       } else {
         res.status(200).json({
-          "candidates" : result.total[0].map(x => {return web3.toAscii(x)}),
-          "counts" : result.total[1].map(x => {return x.toNumber()})
+          "candidates" : result[0].map(x => {return web3.toAscii(x)}),
+          "counts" : result[1].map(x => {return x.toNumber()})
         })
       }
     })

@@ -37,6 +37,12 @@ export function checkMesa(userEmail, distrito, escuela, mesa){
   })
 }
 
+export function checkMesaFiscal(userEmail, distrito, escuela, mesa){
+  return axios.post(urlBase + `locations/${distrito}/${escuela}/${mesa}/checkmesafiscal`, {
+    email : userEmail
+  })
+}
+
 export function loadMesa(userEmail, loadcandidates, distrito, escuela, mesa){
   return axios.post(urlBase + `locations/${distrito}/${escuela}/${mesa}/loadmesa`, {
     email : userEmail,

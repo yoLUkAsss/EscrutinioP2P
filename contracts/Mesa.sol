@@ -6,28 +6,28 @@ contract Mesa {
 
     enum ParticipantCategory {Fiscal, PresidenteMesa, VicepresidenteMesa}
     // Total por candidato
-    mapping (bytes32 => uint8) total;
+    /*mapping (bytes32 => uint8) total;*/
     ////////////////////////////////////////
+    bool public checked;
+    uint cantidadDePersonas;
+    address countsAddress;
     bytes32[] candidateList;
     bytes32[] participantList;
-    mapping (bytes32 => ParticipantData) participantMap;
     bytes32 public presidenteDeMesaAsignado;
-    bool private existPresidenteMesa;
     bytes32 public vicepresidenteDeMesaAsignado;
+    bool private existPresidenteMesa;
     bool private existVicepresidenteMesa;
+    /*mapping(bytes32 => bool) participanteValidoConteo;*/
+    mapping (bytes32 => ParticipantData) participantMap;
     mapping (bytes32 => CandidateData) candidateMap;
     //Datos cargados y validados al sistema
-    bool public checked;
-    address countsAddress;
-    uint cantidadDePersonas;
     //Conteo de un partipante (fiscal/presidente/vice) para todos los candidatos
     struct ParticipantData {
       bool isValidParticipant;
       ParticipantCategory category;
+      bool checked;
       mapping (bytes32 => uint8) votes;
     }
-    mapping(bytes32 => bool) participanteValidoConteo;
-
     struct CandidateData {
       bool isValidCandidate;
       uint8 votes;
@@ -52,7 +52,7 @@ contract Mesa {
       if(participantMap[p].isValidParticipant) revert();
       participantMap[p] = pd;
       participantList.push(p);
-      participanteValidoConteo[p] = false;
+      /*participanteValidoConteo[p] = false;*/
     }
     function getCandidatesList() public constant returns (bytes32[]){
         return candidateList;
@@ -61,7 +61,7 @@ contract Mesa {
         return participantList;
     }
 
-    function getCounting ( bytes32 participant ) public constant returns (bytes32, bytes32[], uint8[]) {
+    function getCounting ( bytes32 participant ) public constant returns (bytes32, bytes32[], uint8[], bool) {
       require(isValidParticipant(participant));
       bytes32[] memory resultCandidatos = new bytes32[](candidateList.length);
       uint8[] memory resultConteos = new uint8[](candidateList.length);
@@ -69,7 +69,7 @@ contract Mesa {
         resultCandidatos[i] = candidateList[i];
         resultConteos[i] = participantMap[participant].votes[candidateList[i]];
       }
-      return (participant, resultCandidatos, resultConteos);
+      return (participant, resultCandidatos, resultConteos, participantMap[participant].checked);
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,22 +110,22 @@ contract Mesa {
       return presidenteDeMesaAsignado == participant;
     }
     function setFiscalVerify(bytes32 fiscal) public returns (bool, bytes32) {
-      return addParticipantVerify(fiscal, ParticipantData(true, ParticipantCategory.Fiscal));
+      return addParticipantVerify(fiscal, ParticipantData(true, ParticipantCategory.Fiscal, false));
     }
     function setFiscal(bytes32 fiscal) public {
-      addParticipant(fiscal, ParticipantData(true, ParticipantCategory.Fiscal));
+      addParticipant(fiscal, ParticipantData(true, ParticipantCategory.Fiscal, false));
     }
 
     function setPresidenteDeMesaVerify(bytes32 presidente) public returns (bool, bytes32) {
       if (existPresidenteMesa) {
         return (true, "Ya existe presidente asignado");
       } else {
-        return addParticipantVerify(presidente, ParticipantData(true, ParticipantCategory.PresidenteMesa));
+        return addParticipantVerify(presidente, ParticipantData(true, ParticipantCategory.PresidenteMesa, false));
       }
     }
     function setPresidenteDeMesa(bytes32 presidente) public{
       require(! existPresidenteMesa);
-      addParticipant(presidente, ParticipantData(true, ParticipantCategory.PresidenteMesa));
+      addParticipant(presidente, ParticipantData(true, ParticipantCategory.PresidenteMesa, false));
       presidenteDeMesaAsignado = presidente;
       existPresidenteMesa = true;
     }
@@ -134,7 +134,7 @@ contract Mesa {
       require(! existVicepresidenteMesa);
       vicepresidenteDeMesaAsignado = vicepresidente;
       existVicepresidenteMesa = true;
-      addParticipant(vicepresidente, ParticipantData(true, ParticipantCategory.VicepresidenteMesa));
+      addParticipant(vicepresidente, ParticipantData(true, ParticipantCategory.VicepresidenteMesa, false));
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,9 +153,10 @@ contract Mesa {
       Counts countsCopy = Counts(countsAddress);
       uint8[] memory result = new uint8[](candidateList.length);
       for (uint8 index = 0 ; index < candidateList.length ; index++) {
-        total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
+        /*total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];*/
         result[index] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
       }
+      participantMap[presi].checked = true;
       countsCopy.setData(distritoId, escuelaId, mesaId, result);
     }
 
@@ -163,15 +164,15 @@ contract Mesa {
       if (! isValidParticipant(participant)) {
         return (true, "Debe ser fiscal en la mesa");
       }
-      if (participanteValidoConteo[participant] == true) {
+      if (participantMap[participant].checked == true) {
         return (true, "Planilla ya validada");
       } else {
         return (false, "");
       }
     }
     function checkFiscal(bytes32 participant) public {
-      require(isValidParticipant(participant) && participanteValidoConteo[participant] == false);
-      participanteValidoConteo[participant] = true;
+      require(isValidParticipant(participant) && !participantMap[participant].checked);
+      participantMap[participant].checked = true;
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -182,9 +183,9 @@ contract Mesa {
       if (! isValidParticipant(participante)) {
         return (true, "Participante no valido");
       }
-      /*if (! conteoValido(conteos)) {
-        return (true, "Valores en el conteo invalidos");
-      }*/
+      if (participantMap[participante].checked) {
+        return (true, "Planilla ya validada");
+      }
       for (uint8 i=0 ; i<candidatos.length ; i++) {
         bool huboError;
         bytes32 mensaje;

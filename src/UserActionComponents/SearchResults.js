@@ -40,12 +40,11 @@ class SearchResults extends Component {
       api.getTotal(this.state.distritoId, this.state.escuelaId, this.state.mesaId).then(results => {
         this.setState({
           candidates : results.data.candidates,
-          counts : results.data.counts
+          counts : results.data.counts,
           loading : false,
           errorMessage : ""
         })
       }).catch(error => {
-        console.log(error.response.data)
         //utils.showError(this.msg, "Ingrese id de distrito, id de escuela e id de mesa")
         utils.showError(this.msg, error.response.data)
         this.setState({loading : false, errorMessage : error.response.data})
@@ -78,7 +77,6 @@ class SearchResults extends Component {
           loadingMesas : false,
         })
       }).catch(error => {
-        console.log("something failed")
         this.setState({loadingMesas : false})
       })
       this.setState({loadingMesas : true, mesas : []})
@@ -111,7 +109,7 @@ class SearchResults extends Component {
       )
     }
 
-    renderSinCandidatos(){
+    renderFalloConsulta(){
       return (
         <div>
           {this.state.errorMessage === "" ? <Header as='h3' textAlign='center'>Realiza una consulta</Header> : <Header as='h3' textAlign='center'>Aun no se cargaron datos iniciales</Header>}
@@ -138,7 +136,7 @@ class SearchResults extends Component {
             <Form.Button content='Buscar' onClick={this.handleSearch.bind(this)}/>
           </Form>
           <Divider/>
-          {this.state.candidates.length === 0 ? this.renderSinCandidatos() : <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>}
+          {this.state.candidates.length === 0 || this.state.errorMessage !== ""? this.renderFalloConsulta() : <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>}
         </div>
       );
     }

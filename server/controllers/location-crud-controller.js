@@ -69,6 +69,7 @@ export class LocationController {
           }
           participant.name = web3.toAscii(r[0])
           participant.candidates = candidates
+          participant.checked = r[3]
           response.push(participant)
         })
         res.status(200).json(response)
@@ -105,14 +106,12 @@ export class LocationController {
   async checkMesa(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
-      console.log(req.body)
       let mesaAddress = await distritoCRUDInstance.getMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(mesaAddress)
       let result = await mesaInstance.checkVerify.call(req.body.email, parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
       if (result[0]) {
         res.status(400).json( web3.toAscii(result[1]) )
       } else {
-        console.log("ANTES DE MANDAR CHECK")
         await mesaInstance.check.sendTransaction(req.body.email, parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
         res.status(200).json("checked correctly")
       }
@@ -120,6 +119,26 @@ export class LocationController {
       res.status(500).json("Error desconocido, por favor contacte un administrador" )
     })
   }
+
+  //params :- distritoId : int, escuelaId : int, mesaId : int
+  //body: email : string
+  async checkMesaFiscal(req, res){
+    distritoCRUD.deployed()
+    .then(async distritoCRUDInstance => {
+      let mesaAddress = await distritoCRUDInstance.getMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
+      let mesaInstance = await mesa.at(mesaAddress)
+      let result = await mesaInstance.checkFiscalVerify.call(req.body.email, fromObject)
+      if (result[0]) {
+        res.status(400).json( web3.toAscii(result[1]) )
+      } else {
+        await mesaInstance.checkFiscal.sendTransaction(req.body.email, fromObject)
+        res.status(200).json("checked correctly")
+      }
+    }).catch(error => {
+      res.status(500).json("Error desconocido, por favor contacte un administrador" )
+    })
+  }
+
   //params :- distritoId : int, escuelaId : int, mesaId : int
   //body: email : string, candidates : [{name : string, counts : int}]
   async loadMesa(req, res){

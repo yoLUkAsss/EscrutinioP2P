@@ -49,7 +49,7 @@ class Footer extends Component {
 
                     <List.Item as='a'>
                       <List.Icon name='mail' />
-                      <List.Content> Laime Jesus: TODO </List.Content>
+                      <List.Content> Laime Jesus: laimejesu@gmail.com </List.Content>
                     </List.Item>
                   </List>
 

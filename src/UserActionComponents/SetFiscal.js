@@ -2,7 +2,7 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Container, Button, Header, Form, Confirm, Loader } from 'semantic-ui-react'
+import { Button, Header, Form, Confirm, Loader } from 'semantic-ui-react'
 // import Center from 'react-center'
 
 /**

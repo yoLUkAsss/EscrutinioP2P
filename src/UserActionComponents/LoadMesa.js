@@ -1,6 +1,6 @@
 // react utilities
 import React, { Component } from 'react';
-import { Button, Form, Header, Divider} from 'semantic-ui-react'
+import { Button, Form, Header, Divider, Loader} from 'semantic-ui-react'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'
@@ -55,25 +55,32 @@ class LoadMesa extends Component {
     /////////////////////////////////////////////////////////////////////////////////
     handleCheckMesa = (event) => {
       event.preventDefault()
-      api.checkMesa(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
-        utils.showSuccess(this.msg, "Validacion de votos correcto")
-        this.setState({loadingCM : false})
-      }).catch(error => {
-        utils.showError(this.msg, error.response.data)
-        this.setState({loadingCM : false})
-      })
+      if(currentUser.isPresidenteDeMesa(cookie)){
+        // console.log("soy presidente de mesa")
+        api.checkMesa(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
+          utils.showSuccess(this.msg, "Validacion de presidente de mesa correcto")
+          this.setState({loadingCM : false})
+        }).catch(error => {
+          utils.showError(this.msg, error.response.data)
+          this.setState({loadingCM : false})
+        })
+      } else{
+        api.checkMesaFiscal(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
+          utils.showSuccess(this.msg, "Validacion de fiscal correcto")
+          this.setState({loadingCM : false})
+        }).catch(error => {
+          utils.showError(this.msg, error.response.data)
+          this.setState({loadingCM : false})
+        })
+      }
       this.setState({loadingCM : true})
     }
     renderCanCheck(){
-      if(currentUser.isPresidenteDeMesa(cookie)){
         return (
           <Button basic color="green" onClick={this.handleCheckMesa.bind(this)}>
             Validar conteo
           </Button>
         )
-      } else {
-        return null
-      }
     }
     getMesaId = () => {
       return `${currentUser.getDistrito(cookie)}${currentUser.getEscuela(cookie)}${currentUser.getMesa(cookie)}`
@@ -104,7 +111,7 @@ class LoadMesa extends Component {
     renderMesaLoadable(){
         return (
           <div>
-            <Header as='h2' textAlign='center'>Cargar Mesa: {this.mesa} de la Escuela: {this.escuela} del distrito: {this.distrito}</Header>
+            <Header as='h2' textAlign='center'>Cargar Mesa: {this.mesa} de la Escuela: {this.escuela} del Distrito: {this.distrito}</Header>
             {this.state.loadingCM ? <Loader active inline='centered'/> : null}
             {this.renderLoadUser()}
             {this.renderCanCheck()}
@@ -134,7 +141,7 @@ class LoadMesa extends Component {
               return (
                 <div key={idX}>
                   <Header as='h3' textAlign='center'>Conteo del candidato: {x.name}</Header>
-                  <CustomTable key={idX} itemsHeader={["Candidato","Conteo"]} itemsBody={x.candidates}/>
+                  <CustomTable key={idX} itemsHeader={["Candidato","Conteo"]} itemsBody={x.candidates} color={x.checked ? 'green' : 'red'}/>
                   <Divider/>
                 </div>
               )
@@ -168,7 +175,7 @@ class LoadMesa extends Component {
     render () {
       let toRender = null
       if(this.state.loading){
-        toRender = <LoadingComponent/>
+        toRender = <Loader size='massive' content='Loading' active inline='centered'/>
       }else if(this.state.isMesaInvalid){
         toRender = this.renderInvalidMesa()
       } else{

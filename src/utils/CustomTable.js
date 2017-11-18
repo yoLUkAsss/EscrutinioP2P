@@ -6,7 +6,7 @@ import {Table} from 'semantic-ui-react'
 class CustomTable extends Component{
   render(){
     return (
-      <Table celled size='small'>
+      <Table celled size='small' color={this.props.color}>
         <Table.Header>
           <Table.Row>
             {
