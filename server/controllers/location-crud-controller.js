@@ -1,4 +1,4 @@
-import { fromObject, distritoCRUD, distrito, escuela, mesa, web3, counts } from '../utils/web3-utils.js'
+import { fromObject, distritoCRUD, distrito, escuela, mesa, web3 } from '../utils/web3-utils.js'
 
 export class LocationController {
   /*    returns locationsId : [int]   */
@@ -46,73 +46,6 @@ export class LocationController {
       res.status(201).json(result)
     })
     .catch( error => {
-      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
-    })
-  }
-  //params :- distritoId : int, escuelaId : int, mesaId : int
-  //body :- candidate : string
-  //return :- candidates : [{name : string, counts : int}]
-  getMesaTotal(req, res){
-    console.log(JSON.stringify(req.params, undefined, 2))
-    counts.deployed()
-    .then( async countsInstance => {
-      let result = await countsInstance.getByMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
-
-      if (result[1].length == 0) {
-        res.status(400).json("No existen datos cargados sobre esta mesa")
-      } else {
-        let parsedResult = [];
-        for (var index = 0; index < result[0].length; index++) {
-          parsedResult.push({ 'name':web3.toAscii(result[0][index]), 'counts':result[1][index].toNumber() })
-        }
-        res.status(200).json(parsedResult)
-      }
-    }).catch(error => {
-      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
-    })
-  }
-
-
-  //params :- distritoId : int
-  //return :- candidates : [{name : string, counts : int}]
-  totalDistrito(req, res) {
-    console.log(JSON.stringify(req.body, undefined, 2))
-    counts.deployed()
-    .then( async countsInstance => {
-      let result = await countsInstance.getByDistrict.call(req.body.distritoId, fromObject)
-      console.log(JSON.stringify(result, undefined, 2))
-      if (result[1].length == 0) {
-        res.status(400).json("No existen datos iniciales")
-      } else {
-        res.status(200).json({
-          "candidates" : result[0].map(x => {return web3.toAscii(x)}),
-          "counts" : result[1].map(x => {return x.toNumber()})
-        })
-      }
-    })
-    .catch(err => {
-      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
-    })
-  }
-
-  //params :- distritoId : int, escuelaId : int
-  //return :- candidates : [{name : string, counts : int}]
-  getEscuelaTotal(req, res){
-    console.log(JSON.stringify(req.params, undefined, 2))
-    counts.deployed()
-    .then( async countsInstance => {
-      let result = await countsInstance.getBySchool.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), fromObject)
-      console.log(JSON.stringify(result, undefined, 2))
-      if (result[1].length == 0) {
-        res.status(400).json("No existen datos iniciales")
-      } else {
-        res.status(200).json({
-          "candidates" : result[0].map(x => {return web3.toAscii(x)}),
-          "counts" : result[1].map(x => {return x.toNumber()})
-        })
-      }
-    })
-    .catch(err => {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )
     })
   }
@@ -172,12 +105,14 @@ export class LocationController {
   async checkMesa(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
+      console.log(req.body)
       let mesaAddress = await distritoCRUDInstance.getMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(mesaAddress)
       let result = await mesaInstance.checkVerify.call(req.body.email, parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
       if (result[0]) {
         res.status(400).json( web3.toAscii(result[1]) )
       } else {
+        console.log("ANTES DE MANDAR CHECK")
         await mesaInstance.check.sendTransaction(req.body.email, parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
         res.status(200).json("checked correctly")
       }
@@ -190,7 +125,6 @@ export class LocationController {
   async loadMesa(req, res){
     distritoCRUD.deployed()
     .then( async distritoCRUDInstance => {
-
       let mesaAddress = await distritoCRUDInstance.getMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
       let mesaInstance = await mesa.at(mesaAddress)
       let parsedCandidates = []
@@ -212,3 +146,72 @@ export class LocationController {
     })
   }
 }
+
+
+//params :- distritoId : int, escuelaId : int, mesaId : int
+//body :- candidate : string
+//return :- candidates : [{name : string, counts : int}]
+// getMesaTotal(req, res){
+//   console.log(JSON.stringify(req.params, undefined, 2))
+//   counts.deployed()
+//   .then( async countsInstance => {
+//     let result = await countsInstance.getByMesa.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
+//
+//     if (result[1].length == 0) {
+//       res.status(400).json("No existen datos cargados sobre esta mesa")
+//     } else {
+//       let parsedResult = [];
+//       for (var index = 0; index < result[0].length; index++) {
+//         parsedResult.push({ 'name':web3.toAscii(result[0][index]), 'counts':result[1][index].toNumber() })
+//       }
+//       res.status(200).json(parsedResult)
+//     }
+//   }).catch(error => {
+//     res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+//   })
+// }
+
+
+//params :- distritoId : int
+//return :- candidates : [{name : string, counts : int}]
+// totalDistrito(req, res) {
+//   console.log(JSON.stringify(req.body, undefined, 2))
+//   counts.deployed()
+//   .then( async countsInstance => {
+//     let result = await countsInstance.getByDistrict.call(req.body.distritoId, fromObject)
+//     console.log(JSON.stringify(result, undefined, 2))
+//     if (result[1].length == 0) {
+//       res.status(400).json("No existen datos iniciales")
+//     } else {
+//       res.status(200).json({
+//         "candidates" : result[0].map(x => {return web3.toAscii(x)}),
+//         "counts" : result[1].map(x => {return x.toNumber()})
+//       })
+//     }
+//   })
+//   .catch(err => {
+//     res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+//   })
+// }
+
+//params :- distritoId : int, escuelaId : int
+//return :- candidates : [{name : string, counts : int}]
+// getEscuelaTotal(req, res){
+//   console.log(JSON.stringify(req.params, undefined, 2))
+//   counts.deployed()
+//   .then( async countsInstance => {
+//     let result = await countsInstance.getBySchool.call(parseInt(req.params.distritoId), parseInt(req.params.escuelaId), fromObject)
+//     console.log(JSON.stringify(result, undefined, 2))
+//     if (result[1].length == 0) {
+//       res.status(400).json("No existen datos iniciales")
+//     } else {
+//       res.status(200).json({
+//         "candidates" : result[0].map(x => {return web3.toAscii(x)}),
+//         "counts" : result[1].map(x => {return x.toNumber()})
+//       })
+//     }
+//   })
+//   .catch(err => {
+//     res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+//   })
+// }
