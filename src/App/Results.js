@@ -10,7 +10,7 @@ class Results extends Component {
     } else {
       return (
         <div>
-          <PieChartComponent candidates={this.props.candidates} counts={this.props.counts} background={this.props.background} border={this.props.border} title={"Resultados Parciales de todas las Mesas"} label={"# de votos"}/>
+          <PieChartComponent candidates={this.props.candidates} counts={this.props.counts} background={this.props.background} border={this.props.border} title={"Resultados Parciales de la busqueda actual"} label={"#conteo"}/>
         </div>
       )
     }

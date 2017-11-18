@@ -58,7 +58,7 @@ class LoadMesa extends Component {
       if(currentUser.isPresidenteDeMesa(cookie)){
         // console.log("soy presidente de mesa")
         api.checkMesa(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
-          utils.showSuccess(this.msg, "Validacion de presidente de mesa correcto")
+          utils.showSuccess(this.msg, res.data)
           this.setState({loadingCM : false})
         }).catch(error => {
           utils.showError(this.msg, error.response.data)
@@ -66,7 +66,7 @@ class LoadMesa extends Component {
         })
       } else{
         api.checkMesaFiscal(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
-          utils.showSuccess(this.msg, "Validacion de fiscal correcto")
+          utils.showSuccess(this.msg, res.data)
           this.setState({loadingCM : false})
         }).catch(error => {
           utils.showError(this.msg, error.response.data)
@@ -100,7 +100,7 @@ class LoadMesa extends Component {
       event.preventDefault()
       api.loadMesa(currentUser.getEmail(cookie), this.state.candidates, this.distrito, this.escuela, this.mesa).then(res => {
         this.setState({ loadingCM : false })
-        utils.showSuccess(this.msg, "Carga de datos correcta")
+        utils.showSuccess(this.msg, res.tada)
       }).catch(error => {
         this.setState({loadingCM : false})
         utils.showError(this.msg, error.response.data)
