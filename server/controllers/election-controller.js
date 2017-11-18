@@ -70,7 +70,7 @@ export class ElectionController {
     try{
       election.deployed().then((electionInstance) => {
         electionInstance.getElectionInfo.call(fromObject).then((result) => {
-          res.status(200).json({created : result[0], distritos : result[1].toNumber(), escuelas : result[2].toNumber(), mesas : result[3].toNumber()})
+          res.status(200).json({created : result[0], distritos : result[1].toNumber(), escuelas : result[2].toNumber(), mesas : result[3].toNumber(), candidates : result[4].map(x => {return web3.toAscii(x)})})
         }).catch(error => {
           res.status(400).json({ message : error.message })
         })
@@ -263,12 +263,13 @@ export class ElectionController {
       let electionInstance = await election.deployed()
       let countsInstance = await counts.deployed()
       let candidates = req.body.candidates.split(',')
-      candidates.push('votos en blanco')
-      candidates.push('votos nulos')
       let result = await electionInstance.createElectionVerify.call(req.body.email, candidates, fromObject)
       if (result[0]) {
         res.status(400).json( web3.toAscii(result[1]) )
       } else {
+        candidates.push('Votos en Blanco')
+        candidates.push('Votos Nulos')
+        candidates.push('Votos Impugnados')
         if(!req.file){
           res.status(400).send('No files were uploaded.')
         } else {

@@ -41,7 +41,7 @@ class NavBar extends Component {
   }
 
   getCanCreateElection(){
-    return currentUser.isLogged(cookie) && !currentUser.getElectionCreated(cookie)
+    return currentUser.isLogged(cookie) && !currentUser.isElectionActive(cookie)
   }
 
   handleItemClick = (e, {name}) => {

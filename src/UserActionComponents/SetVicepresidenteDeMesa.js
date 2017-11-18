@@ -58,9 +58,9 @@ class SetVicepresidenteDeMesa extends Component {
     handleMesa = (event, {value}) => { this.setState({ mesa : value }) }
     render () {
         return (
-            <Container text>
+            <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' color='teal' textAlign='center'>Asignar Vicepresidente de Mesa</Header>
+              <Header as='h2' textAlign='center'>Asignar Vicepresidente de Mesa</Header>
               <Form>
                 <Form.Input
                     required
@@ -87,7 +87,7 @@ class SetVicepresidenteDeMesa extends Component {
                   onConfirm={this.handleSetVicepresidenteDeMesa.bind(this)}
                 />
               </Form>
-            </Container>
+            </div>
         );
     }
 }

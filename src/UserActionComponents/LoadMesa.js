@@ -1,6 +1,6 @@
 // react utilities
 import React, { Component } from 'react';
-import { Button, Form, Header, Container, Divider} from 'semantic-ui-react'
+import { Button, Form, Header, Divider} from 'semantic-ui-react'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'
@@ -104,8 +104,8 @@ class LoadMesa extends Component {
     renderMesaLoadable(){
         return (
           <div>
-            {this.state.loadingCM ? (<LoadingComponent/>) : (null)}
-            <Header as='h2' textAlign='center'>Cargar Mesa: {this.getMesaId()}</Header>
+            <Header as='h2' textAlign='center'>Cargar Mesa: {this.mesa} de la Escuela: {this.escuela} del distrito: {this.distrito}</Header>
+            {this.state.loadingCM ? <Loader active inline='centered'/> : null}
             {this.renderLoadUser()}
             {this.renderCanCheck()}
             <Divider/>
@@ -118,7 +118,7 @@ class LoadMesa extends Component {
     renderInvalidMesa(){
       return (
         <div>
-          <Header as='h3' color='teal' textAlign='center'> {this.getMesaId()} no corresponde a una mesa válida</Header>
+          <Header as='h3' textAlign='center'> {this.getMesaId()} no corresponde a una mesa válida</Header>
           <Button basic onClick={event => {
             this.props.history.push("/mesas")
           }}> Volver a las mesas

@@ -118,9 +118,9 @@ class SetFiscal extends Component {
     }
     render () {
         return (
-            <Container text>
+            <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' color='teal' textAlign='center'>Asignar Fiscal a una Mesa</Header>
+              <Header as='h2' textAlign='center'>Asignar Fiscal a una Mesa</Header>
               <Form>
                   <Form.Input
                       required
@@ -157,7 +157,7 @@ class SetFiscal extends Component {
                     onConfirm={this.handleSetFiscal.bind(this)}
                   />
               </Form>
-            </Container>
+            </div>
         );
     }
 }

@@ -1,14 +1,12 @@
 // react utilities
 import React, { Component } from 'react';
-import { Form, Container, Divider, Header} from 'semantic-ui-react'
+import { Form, Divider, Header, Loader} from 'semantic-ui-react'
 import AlertContainer from 'react-alert'
 
 // componentes
 import Results from '../App/Results.js'
 import * as utils from '../utils/utils.js'
 import * as api from '../utils/api-call.js'
-import * as currentUser from '../utils/user_session.js'
-import cookie from 'react-cookies'
 class SearchResults extends Component {
     constructor(props) {
         super(props);
@@ -16,14 +14,17 @@ class SearchResults extends Component {
           distritoId : "",
           escuelaId : "",
           mesaId : "",
-          candidato : "",
           candidates : [],
           loading : false,
-          errorMessage : ""
+          loadingEscuelas : false,
+          loadingMesas : false,
+          errorMessage : "",
+          distritos : [],
+          escuelas : [],
+          mesas : []
         }
         this.background = []
         this.border = []
-        this.electionActive = currentUser.getElectionCreated(cookie)
     }
     componentWillMount(){
       api.getDistritos().then(resDistritos => {
@@ -35,90 +36,42 @@ class SearchResults extends Component {
       })
     }
 
-
-    handleSearchTotal(event){
-      api.getTotal(this.state.candidato).then(results => {
-        console.log("buscando total")
+    handleSearch(event){
+      api.getTotal(this.state.distritoId, this.state.escuelaId, this.state.mesaId).then(results => {
         this.setState({
           candidates : results.data.candidates,
-          counts : results.data.counts,
-          loading : false
+          counts : results.data.counts
+          loading : false,
+          errorMessage : ""
         })
       }).catch(error => {
-        console.log(error)
-        utils.showError(this.msg, "Ingrese id de distrito, id de escuela e id de mesa")
+        console.log(error.response.data)
+        //utils.showError(this.msg, "Ingrese id de distrito, id de escuela e id de mesa")
+        utils.showError(this.msg, error.response.data)
         this.setState({loading : false, errorMessage : error.response.data})
       })
-      this.setState({loading : true, errorMessage : ""})
+      this.setState({loading : true})
     }
-
-    handleSearchTotalMesa = (event) => {
-      api.getTotalMesa(this.state.distritoId, this.state.escuelaId, this.state.mesaId, this.state.candidato).then(results => {
-        console.log("buscando total mesa")
-        this.setState({
-          candidates : results.data.candidates,
-          counts : results.data.counts,
-          loading : false
-        })
-      }).catch(error => {
-        utils.showError(this.msg, "Ingrese id de distrito, id de escuela e id de mesa")
-        this.setState({loading : false, errorMessage : error.response.data})
-      })
-      this.setState({loading : true, errorMessage : ""})
-    }
-
-    handleSearchTotalEscuela = (event) => {
-      api.getTotalEscuela(this.state.distritoId, this.state.escuelaId, this.state.candidato).then(results => {
-        console.log("buscando total escuela")
-        this.setState({
-          candidates : results.data.candidates,
-          counts : results.data.counts,
-          loading : false
-        })
-      }).catch(error => {
-        utils.showError(this.msg, "Ingrese id de distrit y id de escuela")
-        this.setState({loading : false, errorMessage : error.response.data})
-      })
-      this.setState({loading : true, errorMessage : ""})
-    }
-
-    handleSearchTotalDistrito = (event) => {
-      api.getTotalDistrito(this.state.distritoId, this.state.candidato).then(results => {
-        console.log("buscando total distrito")
-        this.setState({
-          candidates : results.data.candidates,
-          counts : results.data.counts,
-          loading : false
-        })
-      }).catch(error => {
-        utils.showError(this.msg, "Ingrese id de distrito")
-        this.setState({loading : false, errorMessage : error.response.data})
-      })
-      this.setState({loading : true, errorMessage : ""})
-    }
-
-    handleCandidato = (evt) => {this.setState({ candidato : evt.target.value })}
 
     handleDistrito = (event, {value}) => {
       api.getEscuelas(value).then(res => {
         this.setState({
-          distrito : value,
+          distritoId : value,
           escuelas : res.data.map((x, idX) => {
             return { key : idX, value : x, text : x}
           }),
           loadingEscuelas : false
         })
       }).catch(error => {
-        console.log("something failed")
         this.setState({loadingEscuelas : false})
       })
       this.setState({loadingEscuelas : true, escuelas : [], mesas : []})
     }
 
     handleEscuela = (event, {value}) => {
-      api.getMesas(this.state.distrito, value).then(res => {
+      api.getMesas(this.state.distritoId, value).then(res => {
         this.setState({
-          escuela : value ,
+          escuelaId : value ,
           mesas : res.data.map((x, idX) => {
             return { key : idX, value : x, text : x}
           }),
@@ -131,7 +84,7 @@ class SearchResults extends Component {
       this.setState({loadingMesas : true, mesas : []})
     }
 
-    handleMesa = (event, {value}) => { this.setState({ mesa : value }) }
+    handleMesa = (event, {value}) => { this.setState({ mesaId : value }) }
 
     renderEscuelas(){
       return (
@@ -158,46 +111,34 @@ class SearchResults extends Component {
       )
     }
 
+    renderSinCandidatos(){
+      return (
+        <div>
+          {this.state.errorMessage === "" ? <Header as='h3' textAlign='center'>Realiza una consulta</Header> : <Header as='h3' textAlign='center'>Aun no se cargaron datos iniciales</Header>}
+        </div>
+      )
+    }
+
     renderForms () {
       return (
         <div>
           <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
+          <Header as='h2' textAlign='center'>Consulta de resultados</Header>
             <Form >
-              <Form.Input
-                type='text'
-                label='Lista a buscar'
-                placeholder="Lista a buscar"
-                value={this.state.candidato}
-                onChange={this.handleCandidato.bind(this)}
-              />
-              <Form.Button content='Buscar' onClick={this.handleSearchTotal.bind(this)}/>
-              <Form.Input
-                type="number"
+              <Form.Dropdown
+                required
                 label='ID del Distrito'
-                placeholder="ID del Distrito"
-                value={this.state.distritoId}
-                onChange={this.handleDistrito.bind(this)}/>
-              <Form.Button content='Buscar' onClick={this.handleSearchTotalDistrito.bind(this)}/>
+                placeholder='Distrito'
+                options={this.state.distritos}
+                selection
+                onChange={this.handleDistrito.bind(this)}
+              />
               {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
               {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
-              <Form.Input
-                type="number"
-                label='ID de la Escuela'
-                placeholder="ID de la Escuela"
-                value={this.state.escuelaId}
-                onChange={this.handleEscuela.bind(this)}/>
-              <Form.Button content='Buscar' onClick={this.handleSearchTotalEscuela.bind(this)}/>
-              <Form.Input
-                type="number"
-                label='ID de la Mesa'
-                placeholder="ID de la Mesa"
-                value={this.state.mesaId}
-                onChange={this.handleMesa.bind(this)}/>
-
-            <Form.Button content='Buscar' onClick={this.handleSearchTotalMesa.bind(this)}/>
+            <Form.Button content='Buscar' onClick={this.handleSearch.bind(this)}/>
           </Form>
           <Divider/>
-          <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border} errorMessage={this.state.errorMessage}/>
+          {this.state.candidates.length === 0 ? this.renderSinCandidatos() : <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>}
         </div>
       );
     }
@@ -210,9 +151,8 @@ class SearchResults extends Component {
       )
     }
     render(){
-      return !this.electionActive ? this.renderElectionInactive() : this.renderForms()
+      return this.state.distritos.length === 0 ? this.renderElectionInactive() : this.renderForms()
     }
-
 }
 
 export default SearchResults

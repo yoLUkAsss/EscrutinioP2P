@@ -15,7 +15,7 @@ contract Election {
     uint distritos;
     uint escuelas;
     uint mesas;
-    
+
     mapping (bytes32 => bytes32) apoderados;
     bool public created;
     bytes32 autoridadElectoralAsignada;
@@ -59,8 +59,8 @@ contract Election {
       mesas = cantidadMesas;
     }
 
-    function getElectionInfo() constant public returns(bool,uint,uint,uint){
-      return (created, distritos, escuelas, mesas);
+    function getElectionInfo() constant public returns(bool,uint,uint,uint, bytes32[]){
+      return (created, distritos, escuelas, mesas, candidates);
     }
 
     function verifyAutoridadElectoral(bytes32 email) public returns(bool){

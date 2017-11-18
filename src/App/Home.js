@@ -15,15 +15,16 @@ class Home extends Component {
       mesas : "",
       candidates : []
     }
-    this.electionActive = currentUser.getElectionCreated(cookie)
   }
 
   componentWillMount(){
+    // console.log(currentUser.getElectionCreated(cookie))
+    // this.electionActive = currentUser.getElectionCreated(cookie)
     api.getElectionInfo().then(res => {
       currentUser.setElectionCreated(cookie, res.data.created)
       this.setState({created : res.data.created, distritos : res.data.distritos, escuelas : res.data.escuelas, mesas : res.data.mesas, candidates : res.data.candidates})
     }).catch(error => {
-      // this.setState({created : false})
+      this.setState({created : false})
     })
   }
   renderContentsTable(){
@@ -77,8 +78,8 @@ class Home extends Component {
             </List.Description>
             <List.List>
             {
-              this.state.candidates.map(x => {
-                return (<List.Item>{x}</List.Item>)
+              this.state.candidates.map((x, idX) => {
+                return (<List.Item key={idX}>{x}</List.Item>)
               })
             }
             </List.List>
@@ -102,7 +103,7 @@ class Home extends Component {
               <Header as='h2' textAlign='center'>Bienvenidos a Escrutinio Peer to Peer</Header>
               {this.renderContentsTable()}
               <Divider/>
-              {this.electionActive ? this.renderBody() : this.renderElectionInactive()}
+              {this.state.created ? this.renderBody() : this.renderElectionInactive()}
           </div>
       );
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Container, Button, Form, Header } from 'semantic-ui-react'
+import { Grid, Container, Button, Form, Header, Loader } from 'semantic-ui-react'
 import AlertContainer from 'react-alert'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
@@ -14,7 +14,8 @@ class Election extends Component {
         super()
         this.state = {
             candidates : [],
-            dataFile : null
+            dataFile : null,
+            loading : false
         }
         this.uploadFile = this.uploadFile.bind(this)
       }
@@ -24,6 +25,7 @@ class Election extends Component {
     }
     handleCreateElection(event){
       event.preventDefault()
+      this.setState({loading : true})
       if (this.state.dataFile !== null) {
         let data = new FormData()
         data.append('file', this.state.dataFile)
@@ -34,15 +36,15 @@ class Election extends Component {
         api.initElectionByCSV(data).then((res) => {
           currentUser.setElectionCreated(cookie, true)
           currentUser.setCategory(cookie, "0")
-          console.log(res.data)
-          utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion, por favor vuelve a logear para ver los cambios")
-          // utils.showSuccess(this.msg, "Eleccion creada, eres la Autoridad Electoral para esta eleccion", () => {this.props.history.push("/")})
+          this.setState({loading : false})
+          utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion")
         }).catch(error => {
-          console.log(error)
           utils.showError(this.msg, error.response.data)
+          this.setState({loading : false})
         })
       } else {
         utils.showError(this.msg, "Debes agregar informacion de los distritos/escuelas/mesas")
+        this.setState({loading : false})
       }
     }
     handleNewCandidates = (newCandidates) => {
@@ -64,6 +66,7 @@ class Election extends Component {
         return (
           <div>
             <Header as='h2' textAlign='center'>Crear Eleccion con los siguientes candidatos</Header>
+            {this.state.loading ? <Loader active inline='centered'/> : null}
             <Grid centered>
               <Grid.Column stretched>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />

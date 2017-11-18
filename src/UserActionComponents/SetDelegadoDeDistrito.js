@@ -54,9 +54,9 @@ class SetDelegadoDeDistrito extends Component {
     handleDistrito = (e, { value }) => { this.setState({ distrito : value }) }
     render () {
         return (
-            <Container text>
+            <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Header as='h2' color='teal' textAlign='center'>Asignar Delegado de Distrito</Header>
+                <Header as='h2' textAlign='center'>Asignar Delegado de Distrito</Header>
                 <Form>
                     <Form.Input
                       required
@@ -83,7 +83,7 @@ class SetDelegadoDeDistrito extends Component {
                       onConfirm={this.handleSetDelegadoDeDistrito.bind(this)}
                     />
                 </Form>
-            </Container>
+            </div>
         );
     }
 }

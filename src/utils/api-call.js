@@ -117,33 +117,12 @@ export function getElectionInfo(){
   return axios.get(urlBase + 'election/info')
 }
 
-export function getTotal(candidato){
+export function getTotal(distritoId, escuelaId, mesaId){
   return axios.get(urlBase + 'counts/', {
     params : {
-      candidato : candidato || "oficial"
-    }
-  })
-}
-
-export function getTotalDistrito(distrito, candidato) {
-  return axios.get(urlBase + `counts/${distrito}`, {
-    params : {
-      candidato : candidato || "oficial"
-    }
-  })
-}
-export function getTotalEscuela(distrito, escuela, candidato) {
-  return axios.get(urlBase + `counts/${distrito}/${escuela}`, {
-    params : {
-      candidato : candidato || "oficial"
-    }
-  })
-}
-
-export function getTotalMesa(distrito, escuela, mesa, candidato){
-  return axios.get(urlBase + `counts/${distrito}/${escuela}/${mesa}`, {
-    params : {
-      candidato : candidato || "oficial"
+      distrito : distritoId,
+      escuela : escuelaId,
+      mesa : mesaId
     }
   })
 }

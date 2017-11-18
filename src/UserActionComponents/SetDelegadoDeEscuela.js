@@ -55,9 +55,9 @@ class SetDelegadoDeEscuela extends Component {
 
     render () {
         return (
-            <Container text>
+            <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' color='teal' textAlign='center'>Asignar Delegado de Escuela</Header>
+              <Header as='h2' textAlign='center'>Asignar Delegado de Escuela</Header>
               <Form>
                   <Form.Input
                       required
@@ -84,7 +84,7 @@ class SetDelegadoDeEscuela extends Component {
                     onConfirm={this.handleSetDelegadoDeEscuela.bind(this)}
                   />
               </Form>
-            </Container>
+            </div>
         );
     }
 }

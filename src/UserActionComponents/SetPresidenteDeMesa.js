@@ -58,9 +58,9 @@ class SetPresidenteDeMesa extends Component {
     handleMesa = (event, {value}) => { this.setState({ mesa : value }) }
     render () {
         return (
-            <Container text>
+            <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' color='teal' textAlign='center'>Asignar Presidente de Mesa</Header>
+              <Header as='h2' textAlign='center'>Asignar Presidente de Mesa</Header>
               <Form>
                 <Form.Input
                     required
@@ -87,7 +87,7 @@ class SetPresidenteDeMesa extends Component {
                   onConfirm={this.handleSetPresidenteDeMesa.bind(this)}
                 />
               </Form>
-            </Container>
+            </div>
         );
     }
 }

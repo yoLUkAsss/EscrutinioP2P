@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Header} from 'semantic-ui-react'
 import PieChartComponent from '../utils/PieChartComponent.js'
 import LoadingComponent from '../utils/LoadingComponent.js'
 
@@ -6,13 +7,6 @@ class Results extends Component {
   render() {
     if(this.props.loading){
       return (<LoadingComponent/>)
-    }
-    if(this.props.errorMessage !== ""){
-      return (
-        <div>
-          <PieChartComponent title={this.props.errorMessage}/>
-        </div>
-      )
     } else {
       return (
         <div>
