@@ -14,10 +14,6 @@ export function logout(userAddress){
   return axios.post(urlBase + 'users/logout', {address : userAddress})
 }
 
-export function getMesaTotal(distrito, escuela, mesa){
-  return axios.get(urlBase + `locations/${distrito}/${escuela}/${mesa}`)
-}
-
 export function getMesaUser(userEmail, distrito, escuela, mesa){
   return axios.get(urlBase + `locations/${distrito}/${escuela}/${mesa}/user`, {
     params : {
@@ -121,19 +117,36 @@ export function getElectionInfo(){
   return axios.get(urlBase + 'election/info')
 }
 
-export function getTotal(){
-  return axios.get(urlBase + 'election/total')
-}
-
-export function getTotalDistrito(distrito) {
-  return axios.post(urlBase + 'locations/totaldistrito', {
-    distritoId : distrito
+export function getTotal(candidato){
+  return axios.get(urlBase + 'counts/', {
+    params : {
+      candidato : candidato || "oficial"
+    }
   })
 }
-export function getTotalEscuela(distrito, escuela) {
-  return axios.get(urlBase + `locations/${distrito}/${escuela}`)
+
+export function getTotalDistrito(distrito, candidato) {
+  return axios.get(urlBase + `counts/${distrito}`, {
+    params : {
+      candidato : candidato || "oficial"
+    }
+  })
+}
+export function getTotalEscuela(distrito, escuela, candidato) {
+  return axios.get(urlBase + `counts/${distrito}/${escuela}`, {
+    params : {
+      candidato : candidato || "oficial"
+    }
+  })
 }
 
+export function getTotalMesa(distrito, escuela, mesa, candidato){
+  return axios.get(urlBase + `counts/${distrito}/${escuela}/${mesa}`, {
+    params : {
+      candidato : candidato || "oficial"
+    }
+  })
+}
 
 ///////////////////////
 //getters de ids distritos, escuelas, mesas

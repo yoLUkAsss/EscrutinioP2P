@@ -12,16 +12,18 @@ class Home extends Component {
       created : false,
       distritos : "",
       escuelas : "",
-      mesas : ""
+      mesas : "",
+      candidates : []
     }
+    this.electionActive = currentUser.getElectionCreated(cookie)
   }
 
   componentWillMount(){
     api.getElectionInfo().then(res => {
       currentUser.setElectionCreated(cookie, res.data.created)
-      this.setState({created : res.data.created, distritos : res.data.distritos, escuelas : res.data.escuelas, mesas : res.data.mesas})
+      this.setState({created : res.data.created, distritos : res.data.distritos, escuelas : res.data.escuelas, mesas : res.data.mesas, candidates : res.data.candidates})
     }).catch(error => {
-      this.setState({created : false})
+      // this.setState({created : false})
     })
   }
   renderContentsTable(){
@@ -74,12 +76,23 @@ class Home extends Component {
               Actualmente participan los siguientes candidatos:
             </List.Description>
             <List.List>
-              <List.Item>Candidato azul</List.Item>
-              <List.Item>Candidato rojo</List.Item>
+            {
+              this.state.candidates.map(x => {
+                return (<List.Item>{x}</List.Item>)
+              })
+            }
             </List.List>
           </List.Item>
         </List>
       </Container>
+    )
+  }
+  renderElectionInactive(){
+    return (
+      <div>
+        <Header as='h2' textAlign='center'>La eleccion aun no se encuentra activa</Header>
+        <p>Por favor vuelva cuando se haya iniciado</p>
+      </div>
     )
   }
   //falta buscar los candidatos
@@ -89,7 +102,7 @@ class Home extends Component {
               <Header as='h2' textAlign='center'>Bienvenidos a Escrutinio Peer to Peer</Header>
               {this.renderContentsTable()}
               <Divider/>
-              {this.state.created === true? this.renderBody() : (<p>Eleccion aun no creada</p>)}
+              {this.electionActive ? this.renderBody() : this.renderElectionInactive()}
           </div>
       );
   }

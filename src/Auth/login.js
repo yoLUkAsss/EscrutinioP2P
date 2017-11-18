@@ -2,7 +2,7 @@
  * React utilities
  */
 import React, { Component } from 'react'
-import { Button, Header, Container, Form , Grid, Segment, Message} from 'semantic-ui-react'
+import { Button, Header, Form , Grid, Segment, Message} from 'semantic-ui-react'
 import {withRouter, Link} from 'react-router-dom'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'

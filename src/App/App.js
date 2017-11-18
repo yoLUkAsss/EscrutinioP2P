@@ -5,7 +5,7 @@ import { Container, Divider} from 'semantic-ui-react'
 import Home from './Home.js'
 import Election from './Election.js'
 import Task from './Task.js'
-import SearchMesa from '../UserActionComponents/SearchMesa.js'
+import SearchResults from '../UserActionComponents/SearchResults.js'
 import Guide from './Guide.js'
 import About from './About.js'
 
@@ -43,7 +43,7 @@ class App extends Component{
           <Route exact path='/' component={Home}/>
           <Route path='/eleccion' component={Election}/>
           <Route path='/tareas' component={Task}/>
-          <Route path='/resultados' component={SearchMesa}/>
+          <Route path='/resultados' component={SearchResults}/>
           <Route path='/guia' component={Guide}/>
           <Route path='/about' component={About}/>
 
