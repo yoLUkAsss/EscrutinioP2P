@@ -13,7 +13,7 @@ import CreateElectionItem from '../NavBarComponents/CreateElectionItem.js'
 import LogInItem from '../NavBarComponents/LogInItem.js'
 import SignUpItem from '../NavBarComponents/SignUpItem.js'
 import LogOutItem from '../NavBarComponents/LogOutItem.js'
-import ResultsItem from '../NavBarComponents/ResultsItem.js'
+// import ResultsItem from '../NavBarComponents/ResultsItem.js'
 import TaskItem from '../NavBarComponents/TaskItem.js'
 
 import * as currentUser from '../utils/user_session.js'
@@ -41,7 +41,7 @@ class NavBar extends Component {
   }
 
   getCanCreateElection(){
-    return currentUser.isLogged(cookie) && !currentUser.isElectionActive(cookie)
+    return currentUser.isLogged(cookie) && !currentUser.getElectionCreated(cookie)
   }
 
   handleItemClick = (e, {name}) => {
