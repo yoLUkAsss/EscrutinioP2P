@@ -71,7 +71,7 @@ class CreateDistrito extends Component {
                         value={this.state.escuelas}
                         onChange={this.handleEscuelas.bind(this)}
                     />
-                    <Button onClick={this.handleCreateDistrito.bind(this)}>
+                    <Button basic color="green" onClick={this.handleCreateDistrito.bind(this)}>
                         Crear Distrito
                     </Button>
                   </Form>

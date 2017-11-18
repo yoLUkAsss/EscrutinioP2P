@@ -70,7 +70,7 @@ class TotalEscuela extends Component {
       return (
         <div>
           <Header as='h3'> {this.getEscuelaId()} no corresponde a una escuela válida</Header>
-          <Button onClick={event => {
+          <Button basic onClick={event => {
             this.props.history.push("/")
           }}> Inicio
           </Button>

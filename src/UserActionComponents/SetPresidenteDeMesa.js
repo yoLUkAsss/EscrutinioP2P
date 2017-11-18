@@ -78,7 +78,7 @@ class SetPresidenteDeMesa extends Component {
                   selection
                   onChange={this.handleMesa.bind(this)}
                 />
-                <Button onClick={this.show.bind(this)}>Asignar</Button>
+                <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
                 <Confirm
                   open={this.state.open}
                   header='Asignacion de Presidente'

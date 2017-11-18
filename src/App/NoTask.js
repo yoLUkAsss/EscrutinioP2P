@@ -28,10 +28,10 @@ class NoTask extends Component {
 
         return (
             <Container text>
-              <Button onClick={this.seeinfo}>
+              <Button basic color="blue" onClick={this.seeinfo}>
                   See info
               </Button>
-              <Button onClick={ this.cleaninfo}>
+              <Button basic onClick={ this.cleaninfo}>
                   Clean Cookies
               </Button>
             </Container>

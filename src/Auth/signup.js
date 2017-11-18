@@ -85,7 +85,7 @@ class Signup extends Component {
                     value={this.state.password}
                     onChange={this.handlePassword.bind(this)}
                   />
-                  <Button color='teal' fluid size='large' onClick={this.handleRegister.bind(this)}>Registrar Usuario</Button>
+                  <Button color='teal' basic fluid size='large' onClick={this.handleRegister.bind(this)}>Registrar Usuario</Button>
                 </Segment>
               </Form>
               <Message>

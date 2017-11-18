@@ -86,7 +86,7 @@ class CreateEscuela extends Component {
                       value={this.state.cantidadMesas}
                       onChange={this.handleMesas.bind(this)}
                   />
-                  <Button onClick={this.handleCreateEscuela.bind(this)}>
+                  <Button basic color="green" onClick={this.handleCreateEscuela.bind(this)}>
                       Crear Mesas
                   </Button>
                 </Form>

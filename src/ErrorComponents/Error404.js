@@ -5,8 +5,6 @@ class Error404 extends Component {
     render() {
         return (
             <div>
-                <h1> Will be covered </h1>
-
                 <div className="wrap">
                     <div className="logo">
                     <h1>Error 404</h1>

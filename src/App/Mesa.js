@@ -57,7 +57,7 @@ class Mesa extends Component {
       return (
           <div>
             <Header as='h2' textAlign='center'> {this.getMesaId()} no corresponde a una mesa válida</Header>
-            <Button onClick={event => {
+            <Button basic onClick={event => {
               this.props.history.push("/mesas")
             }}> Volver a las mesas
             </Button>

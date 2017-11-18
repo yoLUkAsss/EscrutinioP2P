@@ -27,29 +27,6 @@ class About extends Component {
             <Image src={image} />
             <Card.Content>
               <Card.Header>
-                Sandoval Lucas
-              </Card.Header>
-              <Card.Meta>
-                <span className='date'>
-                  Ingreso a la UNQ en 2014
-                </span>
-              </Card.Meta>
-              <Card.Description>
-                Software developer, gamer, millenial.
-              </Card.Description>
-            </Card.Content>
-            <Card.Content extra>
-              <a>
-                <Icon name='linkedin' />
-                Linkedin Page
-              </a>
-            </Card.Content>
-          </Card>
-
-          <Card color="teal">
-            <Image src={image} />
-            <Card.Content>
-              <Card.Header>
                 Laime Jesus
               </Card.Header>
               <Card.Meta>
@@ -62,15 +39,31 @@ class About extends Component {
               </Card.Description>
             </Card.Content>
             <Card.Content extra>
+            </Card.Content>
+          </Card>
+
+          <Card color="teal">
+            <Image src={image} />
+            <Card.Content>
+              <Card.Header>
+                Sandoval Lucas
+              </Card.Header>
+              <Card.Meta>
+                <span className='date'>
+                  Ingreso a la UNQ en 2014
+                </span>
+              </Card.Meta>
+              <Card.Description>
+                Estudiante, 23 años, desarrollador de software con 5 meses de experiencia en el rubro 
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
               <List>
                 <List.Item>
-                <a><Icon name='linkedin' />Linkedin Page</a>
+                <a href="//linkedin.com/in/lucas-sandoval-88ba1bb7"><Icon name='linkedin' />Linkedin Page</a>
                 </List.Item>
                 <List.Item>
-                <a><Icon name='facebook' />Facebook Profile</a>
-                </List.Item>
-                <List.Item>
-                <a><Icon name='twitter' />Twitter Account</a>
+                <a href="//facebook.com/yoLUkAsss"><Icon name='facebook' />Facebook Profile</a>
                 </List.Item>
                 <List.Item>
                 <a><Icon name='call' />+54 9 11 31208500</a>

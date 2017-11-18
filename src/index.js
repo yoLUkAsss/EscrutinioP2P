@@ -4,6 +4,7 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './App/App.css'
 import 'semantic-ui-css/semantic.min.css'
+import './ErrorComponents/Error404.css'
 
 // /**
 //  * Auth Components

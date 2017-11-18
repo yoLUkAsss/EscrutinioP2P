@@ -64,7 +64,7 @@ class TotalDistrito extends Component {
       return (
         <div>
           <Header as='h3'> {this.getDistritoId()} no corresponde a un distrito válido</Header>
-          <Button onClick={event => {
+          <Button basic onClick={event => {
             this.props.history.push("/")
           }}> Inicio
           </Button>

@@ -77,7 +77,7 @@ class SetFiscal extends Component {
                       selection
                       onChange={this.handleCandidato.bind(this)}
                     />
-                    <Button onClick={this.show.bind(this)}>Asignar</Button>
+                    <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
                     <Confirm
                       open={this.state.open}
                       header='Asignacion de Apoderado de Partido'

@@ -67,7 +67,7 @@ class LoadMesa extends Component {
     renderCanCheck(){
       if(currentUser.isPresidenteDeMesa(cookie)){
         return (
-          <Button onClick={this.handleCheckMesa.bind(this)}>
+          <Button basic color="green" onClick={this.handleCheckMesa.bind(this)}>
             Validar conteo
           </Button>
         )
@@ -119,7 +119,7 @@ class LoadMesa extends Component {
       return (
         <div>
           <Header as='h3' color='teal' textAlign='center'> {this.getMesaId()} no corresponde a una mesa válida</Header>
-          <Button onClick={event => {
+          <Button basic onClick={event => {
             this.props.history.push("/mesas")
           }}> Volver a las mesas
           </Button>
@@ -158,7 +158,7 @@ class LoadMesa extends Component {
             />
             ))
           }
-          <Button onClick={this.handleLoadMesa.bind(this)}>
+          <Button basic color="green" onClick={this.handleLoadMesa.bind(this)}>
             Cargar Mesa
           </Button>
         </Form>

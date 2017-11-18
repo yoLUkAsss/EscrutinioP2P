@@ -76,7 +76,7 @@ class SearchMesa extends Component {
                   </Grid.Column>
                   
                   <Grid.Column>
-                    <Form.Button content='Buscar' onClick={this.handleSearchTotalDistrito.bind(this)}/>
+                    <Form.Button basic color="green" content='Buscar' onClick={this.handleSearchTotalDistrito.bind(this)}/>
                   </Grid.Column>
 
                 </Grid.Row>
@@ -93,7 +93,7 @@ class SearchMesa extends Component {
                   </Grid.Column>
                   
                   <Grid.Column>
-                    <Form.Button content='Buscar' onClick={this.handleSearchTotalEscuela.bind(this)}/>
+                    <Form.Button basic color="green" content='Buscar' onClick={this.handleSearchTotalEscuela.bind(this)}/>
                   </Grid.Column>
 
                 </Grid.Row>
@@ -110,7 +110,7 @@ class SearchMesa extends Component {
                   </Grid.Column>
                   
                   <Grid.Column>
-                    <Form.Button content='Buscar' onClick={this.handleSearchTotalMesa.bind(this)}/>
+                    <Form.Button basic color="green" content='Buscar' onClick={this.handleSearchTotalMesa.bind(this)}/>
                   </Grid.Column>
 
                 </Grid.Row>

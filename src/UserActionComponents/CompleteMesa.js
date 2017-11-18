@@ -94,7 +94,7 @@ class CompleteMesa extends Component {
                         value={this.state.personas}
                         onChange={(event) => {this.setState({ personas : event.target.value })}}
                     />
-                    <Button onClick={this.handleCompleteMesa.bind(this)}>
+                    <Button basic color="green" onClick={this.handleCompleteMesa.bind(this)}>
                         Cargar Numero de Personas
                     </Button>
                   </Form>

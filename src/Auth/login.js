@@ -71,7 +71,7 @@ class Login extends Component {
                     value={this.state.password}
                     onChange={this.handlePassword.bind(this)}
                   />
-                  <Button color='teal' fluid size='large' onClick={this.handleLogin.bind(this)}>Iniciar Sesion</Button>
+                  <Button color='teal' basic fluid size='large' onClick={this.handleLogin.bind(this)}>Iniciar Sesion</Button>
                 </Segment>
               </Form>
               <Message>

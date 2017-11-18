@@ -75,7 +75,7 @@ class SetDelegadoDeEscuela extends Component {
                     selection
                     onChange={this.handleEscuela.bind(this)}
                   />
-                  <Button onClick={this.show.bind(this)}>Asignar</Button>
+                  <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
                     header='Asignacion de Delegado de Escuela'

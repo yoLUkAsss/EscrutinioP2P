@@ -148,7 +148,7 @@ class SetFiscal extends Component {
                   />
                   {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
                   {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
-                  <Button onClick={this.show.bind(this)}>Asignar</Button>
+                  <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
                     header='Asignacion de Fiscal de Mesa'
