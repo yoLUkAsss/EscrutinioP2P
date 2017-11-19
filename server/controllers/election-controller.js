@@ -211,13 +211,15 @@ export class ElectionController {
       let electionInstance = await election.deployed()
       let countsInstance = await counts.deployed()
       let candidates = req.body.candidates.split(',')
+      // let lists = candidates
+      candidates.push('Votos en Blanco')
+      candidates.push('Votos Nulos')
+      candidates.push('Votos Impugnados')
+
       let result = await electionInstance.createElectionVerify.call(req.body.email, candidates, fromObject)
       if (result[0]) {
         res.status(400).json( web3.toAscii(result[1]) )
       } else {
-        candidates.push('Votos en Blanco')
-        candidates.push('Votos Nulos')
-        candidates.push('Votos Impugnados')
         if(!req.file){
           res.status(400).json('No se ha cargado el archivo correctamente')
         } else {

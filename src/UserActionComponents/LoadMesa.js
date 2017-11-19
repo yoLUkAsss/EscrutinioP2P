@@ -87,15 +87,19 @@ class LoadMesa extends Component {
     //Manejan los cambios en los conteos
     handleCandidatoCountsChange = (idx) => (evt) => {
       evt.preventDefault()
-      const newCandidatos = this.state.candidates.map((candidato, pidx) => {
-        if (idx !== pidx) return candidato
-        return { ...candidato, counts: evt.target.value }
-      })
-      this.setState({ candidates: newCandidatos})
+      const isNumber = /^[0-9\b]+$/
+      if(isNumber.test(evt.target.value) || evt.target.value === ''){
+        const newCandidatos = this.state.candidates.map((candidato, pidx) => {
+          if (idx !== pidx) return candidato
+          return { ...candidato, counts: evt.target.value }
+        })
+        this.setState({ candidates: newCandidatos})
+      }
     }
     //carga los datos de un participante
     handleLoadMesa = (event) => {
       event.preventDefault()
+      //check inputs are not ''
       api.loadMesa(currentUser.getEmail(cookie), this.state.candidates, this.distrito, this.escuela, this.mesa).then(res => {
         this.setState({ loadingCM : false })
         utils.showSuccess(this.msg, res.data)
@@ -154,12 +158,11 @@ class LoadMesa extends Component {
           {
             this.state.candidates.map((candidate, idx) => (
             <Form.Input
-              type='number'
               key={idx}
               label={`Candidato: ${candidate.name}`}
               placeholder={`Candidato: ${idx + 1}`}
               value={candidate.counts}
-              onChange={this.handleCandidatoCountsChange(idx)}
+              onChange={this.handleCandidatoCountsChange(idx).bind(this)}
             />
             ))
           }
