@@ -73,3 +73,13 @@ function getBorderColors(){
     'rgba(46, 223, 188, 1)', 'rgba(58, 46, 223, 1)', 'rgba(46, 223, 61, 1)',
     'rgba(255, 255, 50, 1)', 'rgba(245, 245, 245, 1)', 'rgba(128, 128, 128, 1)']
 }
+
+
+
+export function parseBytes32FromSolidity( listOfStrings ) {
+  var parsedCandidates = listOfStrings.map( element => {
+    var pos = element.indexOf("\u0000")
+    return element.slice(0,pos)
+  })
+  return parsedCandidates
+}

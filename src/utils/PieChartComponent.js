@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import * as utils from './utils.js'
 
 // import {Container, Segment} from 'semantic-ui-react'
 import {Pie} from 'react-chartjs-2'
@@ -8,11 +9,11 @@ class PieChartComponent extends Component{
     constructor(props) {
         super(props)
         this.info = {
-            partidos : this.props.candidates,
+            partidos : utils.parseBytes32FromSolidity(this.props.candidates),
             conteos : this.props.counts
           }
         this.data = {
-          labels: this.props.candidates,
+          labels: utils.parseBytes32FromSolidity(this.props.candidates),
           datasets: [{
             label: this.props.label,
             data: this.props.counts,
@@ -35,6 +36,7 @@ class PieChartComponent extends Component{
           }
         }
     }
+
     render() {
         return (
             <div>
