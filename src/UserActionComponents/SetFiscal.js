@@ -48,10 +48,11 @@ class SetFiscal extends Component {
 
     handleSetFiscal(event) {
       event.preventDefault()
-      api.setFiscal(currentUser.getEmail(cookie), this.state.candidato, this.state.email, this.state.distrito, this.state.escuela, this.state.mesa).then(res => {
-        utils.showSuccess(this.msg, "Fiscal Asignado")
-      }).catch(error => {
-        console.log(error)
+      api.setFiscal(currentUser.getEmail(cookie), this.state.candidato, this.state.email, this.state.distrito, this.state.escuela, this.state.mesa)
+      .then(res => {
+        utils.showSuccess(this.msg, res.data)
+      })
+      .catch(error => {
         utils.showError(this.msg, error.response.data.message)
       })
       this.setState({open : false, email : "", candidato : "", distrito : "", escuela : "", mesa : ""})

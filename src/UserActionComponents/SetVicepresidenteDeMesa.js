@@ -44,10 +44,11 @@ class SetVicepresidenteDeMesa extends Component {
 
     handleSetVicepresidenteDeMesa(event) {
       event.preventDefault()
-      api.setVicepresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.state.mesa).then(res => {
-        utils.showSuccess(this.msg, "Seteado vicepresidente de mesa")
-      }).catch(error => {
-        console.log(error)
+      api.setVicepresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.state.mesa)
+      .then(res => {
+        utils.showSuccess(this.msg, res.data)
+      })
+      .catch(error => {
         utils.showError(this.msg, error.response.data.message)
       })
       this.setState({open : false, email : "", mesa : ""})

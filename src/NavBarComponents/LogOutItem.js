@@ -19,9 +19,10 @@ class LogOutItem extends Component {
       event.preventDefault()
       api.logout(currentUser.getAddress(cookie)).then((res) => {
         currentUser.clean(cookie)
-        utils.showSuccess(this.msg, res.data, () => {this.props.history.push("/")})
+        utils.showSuccessWithRedirect(this.msg, res.data, () => {this.props.history.push("/")})
       }).catch((err) => {
-        utils.showError(this.msg, err.response.data)
+        currentUser.clean(cookie)
+        utils.showErrorWithRedirect(this.msg, err.response.data, () => { this.props.history.push("/") })
       })
     }
     render () {

@@ -8,7 +8,6 @@ import AlertContainer from 'react-alert'
 import * as utils from '../utils/utils.js'
 import * as currentUser from '../utils/user_session.js'
 import * as api from '../utils/api-call.js'
-import LoadingComponent from '../utils/LoadingComponent.js'
 import CustomTable from '../utils/CustomTable.js'
 
 //ver si se puede usar RefactoredDLF
@@ -56,7 +55,6 @@ class LoadMesa extends Component {
     handleCheckMesa = (event) => {
       event.preventDefault()
       if(currentUser.isPresidenteDeMesa(cookie)){
-        // console.log("soy presidente de mesa")
         api.checkMesa(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
           utils.showSuccess(this.msg, res.data)
           this.setState({loadingCM : false})
@@ -100,7 +98,7 @@ class LoadMesa extends Component {
       event.preventDefault()
       api.loadMesa(currentUser.getEmail(cookie), this.state.candidates, this.distrito, this.escuela, this.mesa).then(res => {
         this.setState({ loadingCM : false })
-        utils.showSuccess(this.msg, res.tada)
+        utils.showSuccess(this.msg, res.data)
       }).catch(error => {
         this.setState({loadingCM : false})
         utils.showError(this.msg, error.response.data)

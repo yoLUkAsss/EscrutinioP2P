@@ -57,7 +57,7 @@ export class ElectionController {
       res.status(500).json("Ha ocurrido un error, contacte un administrador")
     })
   }
-  
+
   /* body should have
     email: string*/
   setAutoridadElectoral(req, res){
@@ -144,7 +144,7 @@ export class ElectionController {
           res.status(400).json(web3.toAscii(result[1]))
         } else {
           await electionInstance.setPresidenteDeMesa.sendTransaction(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.presidenteDeMesaEmail, fromObject)
-          res.status(200).json("Usuario: " + req.body.presidenteDeMesaEmail + " fue asignado como Presidente de la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId) 
+          res.status(200).json("Usuario: " + req.body.presidenteDeMesaEmail + " fue asignado como Presidente de la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
         }
       })
       .catch(error => {
@@ -157,21 +157,22 @@ export class ElectionController {
       distritoId : int,
       escuelaId : int,
       mesaId : int
+
+    returns: message : string
   */
   setVicepresidenteDeMesa(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        electionInstance.setVicepresidenteDeMesa.sendTransaction(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.vicepresidenteDeMesaEmail, fromObject).then((result) => {
-          res.status(200).json(result)
-        }).catch(error => {
-          res.status(400).json({ message : error.message })
-        })
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
+    election.deployed()
+      .then(async electionInstance => {
+        let result = await electionInstance.setVicepresidenteDeMesaVerify.call(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.vicepresidenteDeMesaEmail, fromObject)
+        if(result[0]){
+          res.status(400).json(web3.toAscii(result[1]))
+        } else {
+          res.status(200).json("Usuario: " + req.body.vicepresidenteDeMesaEmail + " fue asignado como Vicepresidente de la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
+        }
       })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
+      .catch(error => {
+        res.status(500).json("Ha ocurrido un error, contacte un administrador")
+      })
   }
   /* body:
       apoderadoDePartidoEmail : string,
@@ -180,34 +181,30 @@ export class ElectionController {
       distritoId : int,
       escuelaId : int,
       mesaId : int
+    returns: message : string
   */
   setFiscal(req, res){
-    try{
-      election.deployed().then((electionInstance) => {
-        let result = electionInstance.setFiscalVerify.call(req.body.apoderadoDePartidoEmail, req.body.candidate, req.body.fiscalEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, fromObject)
+    election.deployed()
+      .then(async electionInstance => {
+        let result = await electionInstance.setFiscalVerify.call(req.body.apoderadoDePartidoEmail, req.body.candidate, req.body.fiscalEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, fromObject)
         if(result[0]){
-          res.status(400).json( web3.toAscii(result[1]) )
+          res.status(400).json(web3.toAscii(result[1]))
         } else {
-          electionInstance.setFiscal.sendTransaction(req.body.apoderadoDePartidoEmail, req.body.candidate, req.body.fiscalEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, fromObject).then((result) => {
-            res.status(200).json(result)
-          }).catch(error => {
-            res.status(400).json({ message : error.message })
-          })
+          await electionInstance.setFiscal.sendTransaction(req.body.apoderadoDePartidoEmail, req.body.candidate, req.body.fiscalEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, fromObject)
+          res.status(200).json("Usuario: " + req.body.fiscalEmail + " fue asignado como Fiscal del Candidato: " + req.body.candidate + " en la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
         }
-      }).catch(error => {
-        res.status(400).json({ message : error.message })
       })
-    } catch(error){
-      res.status(400).json({ message : error.message })
-    }
+      .catch(error => {
+        res.status(500).json("Ha ocurrido un error, contacte un administrador")
+      })
   }
 
   /*
     req.body:
-      csv de la forma
+      csv de la forma, idDistrito, idEscuela, idMesa, nroPersonas
       email : string
-      locations : [[int, int, id]]
-      [{idDistrito : int, idEscuela : int, idMesa : int, personas : int]]
+      [[idDistrito : int, idEscuela : int, idMesa : int, personas : int]]
+    returns: {nroDistritosCreados : int, nroEscuelasCreadas : int, nroMesasCreadas : int}
   */
   async initByCSV(req, res){
     try{
@@ -222,7 +219,7 @@ export class ElectionController {
         candidates.push('Votos Nulos')
         candidates.push('Votos Impugnados')
         if(!req.file){
-          res.status(400).send('No files were uploaded.')
+          res.status(400).json('No se ha cargado el archivo correctamente')
         } else {
             let electionMap = getElectionMap(req.file.buffer.toString('utf8').split('\n'))
             let finished = electionMap.total.mesas
@@ -248,7 +245,7 @@ export class ElectionController {
           }
         }
       } catch(error){
-        res.status(400).json("algo fallo")
+        res.status(500).json("Ha ocurrido un error, contacte un administrador")
       }
     }
   //returns [{string, int}]
@@ -270,3 +267,4 @@ export class ElectionController {
     })
   }
 }
+// "La Eleccion fue creada con la siguiente cantidad de distritos: " + electionMap.total.distritos + ", de escuelas: " + electionMap.total.escuelas + ", de mesas: " + electionMap.total.mesas

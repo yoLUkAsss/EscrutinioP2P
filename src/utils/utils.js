@@ -16,11 +16,18 @@ export function alertConfig() {
   }
 }
 
-export function showSuccess( ref , text, fun) {
+export function showSuccess( ref , text) {
   ref.show(text, {
     time: 3000,
+    type: 'success'
+  })
+}
+
+export function showSuccessWithRedirect( ref, text, fun) {
+  ref.show(text, {
+    time: 1000,
     type: 'success',
-    onClose: fun
+    onClose : fun
   })
 }
 
@@ -31,14 +38,15 @@ export function showError( ref , text) {
   })
 }
 
-export function showInfo( ref , text) {
+export function showErrorWithRedirect( ref , text, fun) {
   ref.show(text, {
-    time: 3000,
-    type: 'info'
+    time: 1000,
+    type: 'error',
+    onClose : fun
   })
 }
 
-export function showWithRedirect( ref, text) {
+export function showInfo( ref , text) {
   ref.show(text, {
     time: 3000,
     type: 'info'

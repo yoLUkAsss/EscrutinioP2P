@@ -34,20 +34,22 @@ class SetPresidenteDeMesa extends Component {
     }
 
     componentWillMount(){
-      api.getMesas(currentUser.getDistrito(cookie), currentUser.getEscuela(cookie)).then(res => {
-        console.log(res.data)
+      api.getMesas(currentUser.getDistrito(cookie), currentUser.getEscuela(cookie))
+      .then(res => {
         this.setState({mesas : res.data.map((x, idX) => {return {key : idX, value : x, text : x}})})
-      }).catch(error => {
+      })
+      .catch(error => {
         console.log(error)
       })
     }
 
     handleSetPresidenteDeMesa(event) {
       event.preventDefault()
-      api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.state.mesa).then(res => {
-        utils.showSuccess(this.msg, "Seteado presidente de mesa")
-      }).catch(error => {
-        console.log(error)
+      api.setPresidenteDeMesa(currentUser.getEmail(cookie), this.state.email, this.distrito, this.escuela, this.state.mesa)
+      .then(res => {
+        utils.showSuccess(this.msg, res.data)
+      })
+      .catch(error => {  
         utils.showError(this.msg, error.response.data.message)
       })
       this.setState({open : false, email : "", mesa : ""})

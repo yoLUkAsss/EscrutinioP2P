@@ -6,10 +6,10 @@ const upload = multer()
 const router = express.Router()
 const ElectionCtrl = new ElectionController()
 
-router.route('/').get(ElectionCtrl.getHome)
+// router.route('/').get(ElectionCtrl.getHome)
 
 router.route('/candidates').get(ElectionCtrl.getCandidates)
-router.route('/candidate').get(ElectionCtrl.getCandidate)
+// router.route('/candidate').get(ElectionCtrl.getCandidate)
 router.route('/info').get(ElectionCtrl.getElectionInfo)
 router.route('/initbycsv').post(upload.single("file"), ElectionCtrl.initByCSV)
 router.route('/total').get(ElectionCtrl.getTotal)

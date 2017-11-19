@@ -14,7 +14,7 @@ export class LocationController {
     })
   }
 
-  
+
   getEscuelas(req, res){
     distritoCRUD.deployed()
     .then( async distritoCRUDInstance => {
@@ -27,7 +27,7 @@ export class LocationController {
       res.status(500).json("Ha ocurrido un error, contacte un administrador")
     })
   }
-  
+
   getMesas(req, res){
     distritoCRUD.deployed()
     .then( async distritoCRUDInstance => {
@@ -92,8 +92,9 @@ export class LocationController {
     })
   }
 
-  //req.body : email,
+  //req.query : email,
   //req.params : distritoId, escuelaId, mesaId
+  //returns: [{name : string, counts : int}]
   async getMesaUser(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
@@ -114,6 +115,7 @@ export class LocationController {
 
   //params :- distritoId : int, escuelaId : int, mesaId : int
   //body: email : string
+  //returns message : string
   async checkMesa(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
@@ -133,6 +135,7 @@ export class LocationController {
 
   //params :- distritoId : int, escuelaId : int, mesaId : int
   //body: email : string
+  //return message : string
   async checkMesaFiscal(req, res){
     distritoCRUD.deployed()
     .then(async distritoCRUDInstance => {
@@ -152,6 +155,7 @@ export class LocationController {
 
   //params :- distritoId : int, escuelaId : int, mesaId : int
   //body: email : string, candidates : [{name : string, counts : int}]
+  //returns message : string
   async loadMesa(req, res){
     distritoCRUD.deployed()
     .then( async distritoCRUDInstance => {

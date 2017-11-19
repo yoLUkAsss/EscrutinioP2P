@@ -40,10 +40,11 @@ class SetDelegadoDeEscuela extends Component {
     }
     handleSetDelegadoDeEscuela(event) {
       event.preventDefault()
-      api.setDelegadoDeEscuela(currentUser.getEmail(cookie), this.state.correoDelegado, this.distrito, this.state.escuela).then(res => {
-        utils.showSuccess(this.msg, "Delegado de Distrito Asignado Correctamente")
-      }).catch(error => {
-        console.log(error)
+      api.setDelegadoDeEscuela(currentUser.getEmail(cookie), this.state.correoDelegado, this.distrito, this.state.escuela)
+      .then(res => {
+        utils.showSuccess(this.msg, res.data)
+      })
+      .catch(error => {
         utils.showError(this.msg, error.response.data.message)
       })
       this.setState({open : false, correoDelegado : "", escuela : ""})

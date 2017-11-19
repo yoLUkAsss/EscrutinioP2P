@@ -42,10 +42,11 @@ class SetDelegadoDeDistrito extends Component {
 
     handleSetDelegadoDeDistrito(event) {
       event.preventDefault()
-      api.setDelegadoDeDistrito(currentUser.getEmail(cookie), this.state.correoDelegado, this.state.distrito).then(res => {
-        utils.showSuccess(this.msg, "Delegado de Distrito Asignado Correctamente")
-      }).catch(error => {
-        console.log(error)
+      api.setDelegadoDeDistrito(currentUser.getEmail(cookie), this.state.correoDelegado, this.state.distrito)
+      .then(res => {
+        utils.showSuccess(this.msg, res.data)
+      })
+      .catch(error => {
         utils.showError(this.msg, error.response.data.message)
       })
       this.setState({open : false, correoDelegado : "", distrito : ""})

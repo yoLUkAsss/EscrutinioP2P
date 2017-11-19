@@ -28,11 +28,13 @@ class Login extends Component {
 
     handleLogin = (event) => {
       event.preventDefault()
-      api.login(this.state.email, this.state.password).then(res => {
+      api.login(this.state.email, this.state.password)
+      .then(res => {
         currentUser.setUser(cookie, res.data)
-        utils.showSuccess(this.msg, "El usuario: " + res.data.email + " ha iniciado sesion correcamente", () => {this.props.history.push("/")} )
+        utils.showSuccessWithRedirect(this.msg, "El usuario: " + res.data.email + " ha iniciado sesion correctamente", () => {this.props.history.push("/")} )
         this.setState({email : "", password : ""})
-      }).catch(error => {
+      })
+      .catch(error => {
         utils.showError(this.msg, error.response.data)
       })
     }
