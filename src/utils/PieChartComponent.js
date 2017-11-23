@@ -40,7 +40,7 @@ class PieChartComponent extends Component{
     render() {
         return (
             <div>
-                <Pie data={this.data} options={this.options}/>
+                <Pie width={200} height={200} data={this.data} options={this.options}/>
             </div>
         )
     }

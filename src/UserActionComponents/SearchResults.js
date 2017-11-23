@@ -1,6 +1,6 @@
 // react utilities
 import React, { Component } from 'react';
-import { Form, Divider, Header, Loader} from 'semantic-ui-react'
+import { Form, Divider, Header, Loader, Grid, Segment, Button} from 'semantic-ui-react'
 import AlertContainer from 'react-alert'
 
 // componentes
@@ -27,6 +27,7 @@ class SearchResults extends Component {
         this.border = []
     }
     componentWillMount(){
+      this.handleSearch(null)
       api.getDistritos().then(resDistritos => {
         this.setState({
           distritos : resDistritos.data.map((x, idX) => {return { key : idX, value : x, text : x}})
@@ -112,7 +113,7 @@ class SearchResults extends Component {
     renderFalloConsulta(){
       return (
         <div>
-          {this.state.errorMessage === "" ? <Header as='h3' textAlign='center'>Realiza una consulta</Header> : <Header as='h3' textAlign='center'>Aun no se cargaron datos iniciales</Header>}
+          {this.state.errorMessage === "" ? <Header as='h3' textAlign='center'>Aquí se podrán visuarlizar los primeros datos</Header> : <Header as='h3' textAlign='center'>Aun no se cargaron datos iniciales</Header>}
         </div>
       )
     }
@@ -133,10 +134,13 @@ class SearchResults extends Component {
               />
               {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
               {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
-            <Form.Button content='Buscar' onClick={this.handleSearch.bind(this)}/>
-          </Form>
+              <Form.Group>
+                <Form.Button floated="left" basic color="green" width={8} content='Buscar' onClick={this.handleSearch.bind(this)}/>
+                <Form.Button floated="right" basic color="green" width={8} content='Ver Total' onClick={this.handleSearch.bind(this)}/>
+              </Form.Group>
+            
+            </Form>
           <Divider/>
-          {this.state.candidates.length === 0 || this.state.errorMessage !== ""? this.renderFalloConsulta() : <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>}
         </div>
       );
     }
@@ -144,12 +148,34 @@ class SearchResults extends Component {
       return (
         <div>
           <Header as='h2' textAlign='center'>La eleccion aun no se encuentra activa</Header>
-          <p>Por favor vuelva cuando se haya iniciado</p>
+          <Header as='h6' textAlign='center'>Por favor, vuelva cuando la misma haya comenzado</Header>
         </div>
       )
     }
     render(){
-      return this.state.distritos.length === 0 ? this.renderElectionInactive() : this.renderForms()
+      return (
+
+        <div>
+          <Grid columns='one' divided>
+            <Grid.Row>  
+              <Grid.Column>
+                <Segment>
+                  {this.state.distritos.length === 0 ? this.renderElectionInactive() : this.renderForms()}
+                </Segment>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          <Grid columns='one' divided>
+            <Grid.Row>  
+                <Grid.Column>
+                  <Segment>
+                  {this.state.candidates.length === 0 || this.state.errorMessage !== ""? this.renderFalloConsulta() : <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>}
+                  </Segment>
+                </Grid.Column>
+              </Grid.Row>
+          </Grid>
+        </div>
+      )
     }
 }
 
