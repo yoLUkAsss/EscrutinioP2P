@@ -47,7 +47,7 @@ class SetDelegadoDeDistrito extends Component {
         utils.showSuccess(this.msg, res.data)
       })
       .catch(error => {
-        utils.showError(this.msg, error.response.data.message)
+        utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, correoDelegado : "", distrito : ""})
     }
@@ -73,9 +73,10 @@ class SetDelegadoDeDistrito extends Component {
                       placeholder='Distrito'
                       options={this.state.distritos}
                       selection
+                      value={this.state.distrito}
                       onChange={this.handleDistrito.bind(this)}
                     />
-                    <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
+                    <Button basic color="green" disabled={this.state.correoDelegado.length === 0 || this.state.distrito.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                     <Confirm
                       open={this.state.open}
                       header='Asignacion de Delegado de Distrito'

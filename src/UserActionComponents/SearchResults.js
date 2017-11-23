@@ -46,8 +46,8 @@ class SearchResults extends Component {
         })
       }).catch(error => {
         //utils.showError(this.msg, "Ingrese id de distrito, id de escuela e id de mesa")
-        utils.showError(this.msg, error.response.data)
-        this.setState({loading : false, errorMessage : error.response.data})
+        utils.showError(this.msg, error.response)
+        this.setState({loading : false, errorMessage : error.response})
       })
       this.setState({loading : true})
     }
@@ -92,6 +92,7 @@ class SearchResults extends Component {
           placeholder='Escuela'
           options={this.state.escuelas}
           selection
+          value={this.state.escuelaId}
           onChange={this.handleEscuela.bind(this)}
           />
         )
@@ -104,6 +105,7 @@ class SearchResults extends Component {
           placeholder='Mesa'
           options={this.state.mesas}
           selection
+          value={this.state.mesaId}
           onChange={this.handleMesa.bind(this)}
         />
       )
@@ -129,6 +131,7 @@ class SearchResults extends Component {
                 placeholder='Distrito'
                 options={this.state.distritos}
                 selection
+                value={this.state.distritoId}
                 onChange={this.handleDistrito.bind(this)}
               />
               {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}

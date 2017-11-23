@@ -1,6 +1,6 @@
 // react utilities
 import React, { Component } from 'react';
-import { Button, Form, Header, Divider, Loader} from 'semantic-ui-react'
+import { Button, Form, Header, Divider, Loader, Popup} from 'semantic-ui-react'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'
@@ -24,11 +24,16 @@ class LoadMesa extends Component {
           isMesaInvalid : false,
           loading : true,
           candidates : [],
-          loadingCM : false
+          loadingCM : false,
+          isLoadInvalid : false
         }
         this.distrito = currentUser.getUser(cookie).distrito
         this.escuela = currentUser.getUser(cookie).escuela
         this.mesa = currentUser.getUser(cookie).mesa
+
+        this.handleLoadMesa = this.handleLoadMesa.bind(this)
+        this.handleCandidatoCountsChange = this.handleCandidatoCountsChange.bind(this)
+        // this.handleCandidatoCountsChange = this.handleCandidatoCountsChange.bind(this)
     }
 
     componentWillMount() {
@@ -93,7 +98,14 @@ class LoadMesa extends Component {
           if (idx !== pidx) return candidato
           return { ...candidato, counts: evt.target.value }
         })
-        this.setState({ candidates: newCandidatos})
+        const someEmpty = newCandidatos.some((elem, i, arr) => { return elem.counts === '' })
+        console.log(someEmpty)
+        console.log(newCandidatos)
+        if(someEmpty){
+          this.setState({ candidates: newCandidatos, isLoadInvalid : true})
+        } else {
+          this.setState({ candidates: newCandidatos, isLoadInvalid : false})
+        }
       }
     }
     //carga los datos de un participante
@@ -159,19 +171,22 @@ class LoadMesa extends Component {
             this.state.candidates.map((candidate, idx) => (
             <Form.Input
               key={idx}
+              input="text"
               label={`Candidato: ${candidate.name}`}
               placeholder={`Candidato: ${idx + 1}`}
               value={candidate.counts}
-              onChange={this.handleCandidatoCountsChange(idx).bind(this)}
+              onChange={this.handleCandidatoCountsChange(idx)}
             />
             ))
           }
-          <Button basic color="green" onClick={this.handleLoadMesa.bind(this)}>
-            Cargar Mesa
-          </Button>
+          <Button basic color="green" onClick={this.handleLoadMesa} disabled={this.state.isLoadInvalid} content="Cargar Mesa"/>
         </Form>
       )
     }
+    //ui.button.disabled.pointer-events-enabled{pointer-event: auto!important;}
+    // <Popup content={this.state.isLoadInvalid ? "Completa los campos" : "Confirma el registro"}
+    //   trigger={<Button basic color="green" className='pointer-events-enabled' onClick={this.handleLoadMesa} disabled={this.state.isLoadInvalid} content="Cargar Mesa"/>}
+    // />
 
     render () {
       let toRender = null

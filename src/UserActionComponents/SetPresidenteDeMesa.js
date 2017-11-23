@@ -49,8 +49,8 @@ class SetPresidenteDeMesa extends Component {
       .then(res => {
         utils.showSuccess(this.msg, res.data)
       })
-      .catch(error => {  
-        utils.showError(this.msg, error.response.data.message)
+      .catch(error => {
+        utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, email : "", mesa : ""})
     }
@@ -78,9 +78,10 @@ class SetPresidenteDeMesa extends Component {
                   placeholder='Mesa'
                   options={this.state.mesas}
                   selection
+                  value={this.state.mesa}
                   onChange={this.handleMesa.bind(this)}
                 />
-                <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
+                <Button basic color="green" disabled={this.state.email.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                 <Confirm
                   open={this.state.open}
                   header='Asignacion de Presidente'

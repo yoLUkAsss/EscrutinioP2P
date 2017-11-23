@@ -48,7 +48,7 @@ class SetFiscal extends Component {
         utils.showSuccess(this.msg, res.data)
       }).catch(error => {
         console.log(error)
-        utils.showError(this.msg, error.response.data.message)
+        utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, email : "", candidato : ""})
     }
@@ -75,9 +75,10 @@ class SetFiscal extends Component {
                       placeholder='Partido Politico Asociado'
                       options={this.state.candidatos}
                       selection
+                      value={this.state.candidato}
                       onChange={this.handleCandidato.bind(this)}
                     />
-                    <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
+                    <Button basic color="green" disabled={this.state.email.length === 0 || this.state.candidato.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                     <Confirm
                       open={this.state.open}
                       header='Asignacion de Apoderado de Partido'

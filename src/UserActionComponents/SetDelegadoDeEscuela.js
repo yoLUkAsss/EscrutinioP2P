@@ -45,7 +45,7 @@ class SetDelegadoDeEscuela extends Component {
         utils.showSuccess(this.msg, res.data)
       })
       .catch(error => {
-        utils.showError(this.msg, error.response.data.message)
+        utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, correoDelegado : "", escuela : ""})
     }
@@ -74,9 +74,10 @@ class SetDelegadoDeEscuela extends Component {
                     placeholder='Escuela'
                     options={this.state.escuelas}
                     selection
+                    value={this.state.escuela}
                     onChange={this.handleEscuela.bind(this)}
                   />
-                  <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
+                  <Button basic color="green" disabled={this.state.correoDelegado.length === 0 || this.state.escuela.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
                     header='Asignacion de Delegado de Escuela'

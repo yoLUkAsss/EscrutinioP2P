@@ -53,7 +53,7 @@ class SetFiscal extends Component {
         utils.showSuccess(this.msg, res.data)
       })
       .catch(error => {
-        utils.showError(this.msg, error.response.data.message)
+        utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, email : "", candidato : "", distrito : "", escuela : "", mesa : ""})
     }
@@ -145,11 +145,12 @@ class SetFiscal extends Component {
                     placeholder='Distrito'
                     options={this.state.distritos}
                     selection
+                    value={this.state.distrito}
                     onChange={this.handleDistrito.bind(this)}
                   />
                   {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
                   {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
-                  <Button basic color="green" onClick={this.show.bind(this)}>Asignar</Button>
+                  <Button basic color="green" disabled={this.state.correoDelegado.length === 0 || this.state.candidato.length === 0 || this.state.distrito.length === 0 || this.state.escuela.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
                     header='Asignacion de Fiscal de Mesa'
@@ -162,7 +163,7 @@ class SetFiscal extends Component {
         );
     }
 }
-
+//falta agregar disabled si no esta elegido un d
 export default SetFiscal
 // <Form.Field
 //   control='input'

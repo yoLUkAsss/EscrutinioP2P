@@ -117,7 +117,7 @@ export class ElectionController {
   setDelegadoDeEscuela(req, res){
     election.deployed()
       .then(async electionInstance => {
-        let result = electionInstance.setDelegadoDeEscuelaVerify.call(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject)
+        let result = await electionInstance.setDelegadoDeEscuelaVerify.call(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject)
         if(result[0]){
           res.status(400).json(web3.toAscii(result[1]))
         } else {
@@ -160,6 +160,7 @@ export class ElectionController {
 
     returns: message : string
   */
+  //falta set vice verify
   setVicepresidenteDeMesa(req, res){
     election.deployed()
       .then(async electionInstance => {
@@ -167,6 +168,7 @@ export class ElectionController {
         if(result[0]){
           res.status(400).json(web3.toAscii(result[1]))
         } else {
+          await electionInstance.setVicepresidenteDeMesa.sendTransaction(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.vicepresidenteDeMesaEmail, fromObject)
           res.status(200).json("Usuario: " + req.body.vicepresidenteDeMesaEmail + " fue asignado como Vicepresidente de la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
         }
       })
