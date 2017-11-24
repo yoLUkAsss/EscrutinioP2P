@@ -32,7 +32,6 @@ class SetDelegadoDeEscuela extends Component {
     }
     componentWillMount(){
       api.getEscuelas(currentUser.getDistrito(cookie)).then(res => {
-        console.log(res.data)
         this.setState({escuelas : res.data.map((x, idX) => {return {key : idX, value : x, text : x}})})
       }).catch(error => {
         console.log(error)
@@ -58,7 +57,12 @@ class SetDelegadoDeEscuela extends Component {
         return (
             <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' textAlign='center'>Asignar Delegado de Escuela</Header>
+              <Header as='h2' textAlign='center'>
+                Asignar Delegado de Escuela
+                <Header.Subheader>
+                  Al distrito: {this.distrito}
+                </Header.Subheader>
+              </Header>
               <Form>
                   <Form.Input
                       required

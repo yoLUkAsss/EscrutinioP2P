@@ -61,7 +61,12 @@ class SetVicepresidenteDeMesa extends Component {
         return (
             <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' textAlign='center'>Asignar Vicepresidente de Mesa</Header>
+              <Header as='h2' textAlign='center'>
+                Asignar Vicepresidente de Mesa
+                <Header.Subheader>
+                  A la escuela: {this.escuela} del distrito: {this.distrito}
+                </Header.Subheader>
+              </Header>
               <Form>
                 <Form.Input
                     required

@@ -1,9 +1,10 @@
-import { fromObject, userCRUD, user, web3 } from '../utils/web3-utils.js'
+import { fromObject, userCRUD, user } from '../utils/web3-utils.js'
+import {fromSolidity2String, bytes32ListToStringList} from '../utils/utils.js'
 
 function userToJson(user){
   return {
           "address" : user[0],
-          "email" : web3.toAscii(user[1]),
+          "email" : fromSolidity2String(user[1]),
           "category" : user[2].toNumber(),
           "distrito" : user[3].toNumber(),
           "escuela" : user[4].toNumber(),
@@ -46,8 +47,8 @@ export class UserCRUDController {
     userCRUD.deployed()
     .then( async (currentInstance) => {
       let signupVerify = await currentInstance.signupVerify.call(req.body.email, req.body.password, fromObject)
-      if (signupVerify[0]) { 
-        res.status(400).json(web3.toAscii(signupVerify[1])) 
+      if (signupVerify[0]) {
+        res.status(400).json(fromSolidity2String(signupVerify[1]))
       } else {
         await currentInstance.signup.sendTransaction(req.body.email, req.body.password, fromObject)
         res.status(201).json(req.body.email)
@@ -65,14 +66,14 @@ export class UserCRUDController {
     userCRUD.deployed()
     .then( async (currentInstance) => {
       let userAddressVerify = await currentInstance.getUserByEmailVerify.call(req.body.email, fromObject)
-      if (userAddressVerify[0]) { 
-        res.status(400).json(web3.toAscii(userAddressVerify[1])) 
+      if (userAddressVerify[0]) {
+        res.status(400).json(fromSolidity2String(userAddressVerify[1]))
       } else {
         let userAddress = await currentInstance.getUserByEmail.call(req.body.email, fromObject)
         let userInstance = await user.at(userAddress)
         let loginVerify = await userInstance.loginVerify.call(req.body.password, fromObject)
-        if (loginVerify[0]) { 
-          res.status(400).json(web3.toAscii(loginVerify[1])) 
+        if (loginVerify[0]) {
+          res.status(400).json(fromSolidity2String(loginVerify[1]))
         } else {
           await userInstance.login.sendTransaction(req.body.password, fromObject)
           let loggedUser = await userInstance.getUser.call(fromObject)

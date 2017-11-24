@@ -1,4 +1,5 @@
-import { fromObject, counts, web3 } from '../utils/web3-utils.js'
+import { fromObject, counts } from '../utils/web3-utils.js'
+import {fromSolidity2String, bytes32ListToStringList} from '../utils/utils.js'
 
 export class CountsController {
   //req.query.candidato : string
@@ -31,7 +32,7 @@ export class CountsController {
         res.status(400).json("No existen datos iniciales")
       } else {
         res.status(200).json({
-          "candidates" : result[0].map(x => {return web3.toAscii(x)}),
+          "candidates" : result[0].map(x => {return fromSolidity2String(x)}),
           "counts" : result[1].map(x => {return x.toNumber()})
         })
       }

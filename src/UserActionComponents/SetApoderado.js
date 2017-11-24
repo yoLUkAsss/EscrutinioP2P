@@ -46,7 +46,6 @@ class SetFiscal extends Component {
       api.setApoderadoDePartido(currentUser.getEmail(cookie), this.state.email, this.state.candidato).then(res => {
         utils.showSuccess(this.msg, res.data)
       }).catch(error => {
-        console.log(error)
         utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, email : "", candidato : ""})

@@ -57,7 +57,9 @@ class SetDelegadoDeDistrito extends Component {
         return (
             <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Header as='h2' textAlign='center'>Asignar Delegado de Distrito</Header>
+                <Header as='h2' textAlign='center'>
+                  Asignar Delegado de Distrito
+                </Header>
                 <Form>
                     <Form.Input
                       required
