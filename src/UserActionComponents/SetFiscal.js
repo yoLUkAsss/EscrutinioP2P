@@ -44,6 +44,15 @@ class SetFiscal extends Component {
       }).catch(error => {
         console.log(error)
       })
+      api.getCandidateForApoderado(currentUser.getEmail(cookie))
+      .then( result => {
+        this.setState({
+          candidato : result.data
+        })
+      })
+      .catch( error => {
+
+      })
     }
 
     handleSetFiscal(event) {
@@ -121,7 +130,14 @@ class SetFiscal extends Component {
         return (
             <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' textAlign='center'>Asignar Fiscal a una Mesa</Header>
+
+              <Header as='h2' textAlign='center'>
+                Asignar Fiscal
+                <Header.Subheader>
+                  A la lista: {this.state.candidato}
+                </Header.Subheader>
+              </Header>
+
               <Form>
                   <Form.Input
                       required
@@ -130,14 +146,6 @@ class SetFiscal extends Component {
                       placeholder='Correo del Fiscal'
                       value={this.state.email}
                       onChange={this.handleFiscal.bind(this)}
-                  />
-                  <Form.Input
-                      required
-                      type="email"
-                      label='Candidato'
-                      placeholder='Partido Policito asociado'
-                      value={this.state.candidato}
-                      onChange={this.handleCandidato.bind(this)}
                   />
                   <Form.Dropdown
                     required
@@ -150,7 +158,7 @@ class SetFiscal extends Component {
                   />
                   {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
                   {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
-                  <Button basic color="green" disabled={this.state.correoDelegado.length === 0 || this.state.candidato.length === 0 || this.state.distrito.length === 0 || this.state.escuela.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
+                  <Button basic color="green" disabled={this.state.email.length === 0 || this.state.candidato.length === 0 || this.state.distrito.length === 0 || this.state.escuela.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
                     header='Asignacion de Fiscal de Mesa'

@@ -103,6 +103,9 @@ export function setApoderadoDePartido(autoridad, apoderado, partido){
   })
 }
 
+export function getCandidateForApoderado(apoderado) {
+  return axios.get(urlBase + `election/${apoderado}`)
+}
 
 export function cargarPersonasALaMesa(autoridad, distrito, escuela, mesa, personas) {
   return axios.post(urlBase + `locations/${distrito}/${escuela}/${mesa}/completemesa`, {

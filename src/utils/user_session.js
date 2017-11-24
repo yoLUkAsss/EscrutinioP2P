@@ -72,8 +72,7 @@ export function setElectionCreated(cookie, value){
 }
 
 export function isElectionActive(cookie){
-  return Object.is(cookie.load("current_user_election_created"), true)
-  // return cookie.load("current_user_election_created") !== undefined && cookie.load("current_user_election_created")
+  return getElectionCreated(cookie)
 }
 
 export function canLoadMesaUser(cookie){

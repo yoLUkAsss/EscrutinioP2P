@@ -270,5 +270,21 @@ export class ElectionController {
       res.status(500).json( "Error desconocido, por favor contacte un administrador" )
     })
   }
+
+  getCandidateForApoderado(req, res) {
+    election.deployed()
+    .then( async electionInstance => {
+      let result = await electionInstance.getCandidateForApoderado.call(req.params.apoderado, fromObject)
+      let value = web3.toAscii(result)
+      if (value === '') {
+        res.status(400).json(value)
+      } else {
+        res.status(201).json(web3.toAscii(result))
+      }
+    })
+    .catch( error => {
+      res.status(500).json( "Error desconocido, por favor contacte un administrador" )
+    })
+  }
 }
 // "La Eleccion fue creada con la siguiente cantidad de distritos: " + electionMap.total.distritos + ", de escuelas: " + electionMap.total.escuelas + ", de mesas: " + electionMap.total.mesas
