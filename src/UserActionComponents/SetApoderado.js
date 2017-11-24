@@ -35,7 +35,6 @@ class SetFiscal extends Component {
 
     componentWillMount(){
       api.getCandidatos().then(res => {
-        console.log(res.data)
         this.setState({candidatos : res.data.map((x, idX) => {return { key : idX, value : x, text : x}})})
       }).catch(error => {
         console.log(error)

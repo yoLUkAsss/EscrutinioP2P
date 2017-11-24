@@ -1,4 +1,4 @@
-import { web3 } from '../utils/web3-utils.js'
+import { web3 } from './web3-utils.js'
 
 const defaultCandidates = ['Votos en Blanco', 'Votos Nulos', 'Votos Impugnados']
 

@@ -64,7 +64,7 @@ class SetFiscal extends Component {
       .catch(error => {
         utils.showError(this.msg, error.response.data)
       })
-      this.setState({open : false, email : "", candidato : "", distrito : "", escuela : "", mesa : ""})
+      this.setState({open : false, email : "", distrito : "", escuela : "", mesa : ""})
     }
 
     handleFiscal = (event) => { this.setState({ email : event.target.value }) }

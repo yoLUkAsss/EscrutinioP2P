@@ -1,5 +1,5 @@
 import { fromObject, election, web3, distritoCRUD, distrito, escuela, mesa, counts} from '../utils/web3-utils.js'
-import {fromSolidity2String, bytes32ListToStringList, clearDefaultCandidates} from '../utils/utils.js'
+import {fromSolidity2String, bytes32ListToStringList, clearDefaultCandidates, defaultCandidates} from '../utils/utils.js'
 
 function getElectionMap(csv){
   let distritos = new Map()
