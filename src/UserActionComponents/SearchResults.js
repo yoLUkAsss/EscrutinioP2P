@@ -140,7 +140,7 @@ class SearchResults extends Component {
                 <Form.Button floated="left" basic color="green" width={8} content='Buscar' onClick={this.handleSearch.bind(this)}/>
                 <Form.Button floated="right" basic color="green" width={8} content='Ver Total' onClick={this.handleSearch.bind(this)}/>
               </Form.Group>
-            
+
             </Form>
           <Divider/>
         </div>
@@ -159,7 +159,7 @@ class SearchResults extends Component {
 
         <div>
           <Grid columns='one' divided>
-            <Grid.Row>  
+            <Grid.Row>
               <Grid.Column>
                 <Segment>
                   {this.state.distritos.length === 0 ? this.renderElectionInactive() : this.renderForms()}
@@ -168,7 +168,7 @@ class SearchResults extends Component {
             </Grid.Row>
           </Grid>
           <Grid columns='one' divided>
-            <Grid.Row>  
+            <Grid.Row>
                 <Grid.Column>
                   <Segment>
                   {this.state.candidates.length === 0 || this.state.errorMessage !== ""? this.renderFalloConsulta() : <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>}

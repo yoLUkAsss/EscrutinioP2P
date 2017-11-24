@@ -71,6 +71,7 @@ export class LocationController {
       let promises = participantList.map(p => {
         return mesaInstance.getCounting.call(p, fromObject)
       })
+      let totalMesa = await mesaInstance.cantidadDePersonas.call(fromObject)
       Promise.all(promises).then(results => {
         let response = []
         results.forEach(r => {
@@ -84,7 +85,7 @@ export class LocationController {
           participant.checked = r[3]
           response.push(participant)
         })
-        res.status(200).json(response)
+        res.status(200).json({"participants" : response, "total" : totalMesa.toNumber()})
       }).catch(error => {
         res.status(500).json("Ha ocurrido un error, contacte un administrador")
       })
