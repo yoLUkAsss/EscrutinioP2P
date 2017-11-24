@@ -14,6 +14,8 @@ router.route('/info').get(ElectionCtrl.getElectionInfo)
 router.route('/initbycsv').post(upload.single("file"), ElectionCtrl.initByCSV)
 router.route('/total').get(ElectionCtrl.getTotal)
 
+router.route('/:apoderado').get(ElectionCtrl.getCandidateForApoderado)
+
 router.route('/setautoridadelectoral').post(ElectionCtrl.setAutoridadElectoral)
 router.route('/setapoderadodepartido').post(ElectionCtrl.setApoderadoDePartido)
 router.route('/setdelegadodedistrito').post(ElectionCtrl.setDelegadoDeDistrito)

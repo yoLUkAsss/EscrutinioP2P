@@ -18,11 +18,13 @@ class Election extends Component {
             loading : false
         }
         this.uploadFile = this.uploadFile.bind(this)
-      }
+    }
+
     uploadFile(event){
       event.preventDefault()
       this.setState({dataFile : event.target.files[0]})
     }
+
     handleCreateElection(event){
       event.preventDefault()
       this.setState({loading : true})
@@ -37,7 +39,7 @@ class Election extends Component {
           currentUser.setElectionCreated(cookie, true)
           currentUser.setCategory(cookie, "0")
           this.setState({loading : false})
-          utils.showSuccess(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion")
+          utils.showSuccessWithRedirect(this.msg, "Eleccion creada y Autoridad Electoral seteada para esta eleccion", () => { this.props.history.push('/') })
         }).catch(error => {
           utils.showError(this.msg, error.response.data)
           this.setState({loading : false})
@@ -47,25 +49,27 @@ class Election extends Component {
         this.setState({loading : false})
       }
     }
+
     handleNewCandidates = (newCandidates) => {
       this.setState({candidates : newCandidates})
     }
+
     renderFileReader = () => {
       return (
-            <div>
-              <span>
-                <input type="file"
-                name="electionFile"
-                accept="text/csv"
-                onChange={this.uploadFile} />
-              </span>
-            </div>
-             )
+        <div>
+          <span>
+            <input type="file"
+            name="electionFile"
+            accept="text/csv"
+            onChange={this.uploadFile} />
+          </span>
+        </div>
+      )
     }
     render () {
         return (
           <div>
-            <Header as='h2' textAlign='center'>Crear Eleccion con los siguientes candidatos</Header>
+            <Header as='h2' textAlign='center'>Crear Elección</Header>
             {this.state.loading ? <Loader active inline='centered'/> : null}
             <Grid centered>
               <Grid.Column stretched>
@@ -82,7 +86,7 @@ class Election extends Component {
                       del={"Eliminar Candidato"}
                     />
                     <Button basic positive floated="left" onClick={this.handleCreateElection.bind(this)}>
-                        Crear Eleccion
+                        Crear
                     </Button>
                   </Form>
                 </Container>

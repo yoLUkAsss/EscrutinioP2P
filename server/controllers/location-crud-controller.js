@@ -7,7 +7,7 @@ export class LocationController {
     distritoCRUD.deployed()
     .then( async distritoCRUDInstance => {
       let result = await distritoCRUDInstance.getDistritos.call(fromObject)
-      res.status(201).json(result.map(x => {return x.toNumber()}))
+      res.status(201).json(result.map(x => {return x.toNumber()}).sort())
     })
     .catch( error => {
       res.status(500).json("Ha ocurrido un error, contacte un administrador")
@@ -21,7 +21,8 @@ export class LocationController {
       let distritoAddress = await distritoCRUDInstance.getDistrito.call(req.params.distritoId, fromObject)
       let distritoInstance = await distrito.at(distritoAddress)
       let result = await distritoInstance.getEscuelas.call(fromObject)
-      res.status(201).json(result.map(x => {return x.toNumber()}))
+      console.log(JSON.stringify( result, undefined, 2 ))
+      res.status(201).json(result.map(x => {return x.toNumber()}).sort())
     })
     .catch( error => {
       res.status(500).json("Ha ocurrido un error, contacte un administrador")
@@ -34,7 +35,8 @@ export class LocationController {
       let escuelaAddress = await distritoCRUDInstance.getEscuela.call(req.params.distritoId, req.params.escuelaId, fromObject)
       let escuelaInstance = await escuela.at(escuelaAddress)
       let result = await escuelaInstance.getMesas.call(fromObject)
-      res.status(201).json(result.map(x => {return x.toNumber()}))
+      console.log(JSON.stringify( result, undefined, 2 ))
+      res.status(201).json(result.map(x => {return x.toNumber()}).sort())
     })
     .catch( error => {
       res.status(500).json("Ha ocurrido un error, contacte un administrador")

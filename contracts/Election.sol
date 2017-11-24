@@ -17,6 +17,8 @@ contract Election {
     uint mesas;
 
     mapping (bytes32 => bytes32) apoderados;
+    mapping (bytes32 => bytes32) partidos;
+
     bool public created;
     bytes32 autoridadElectoralAsignada;
     bytes32[] candidates;
@@ -71,6 +73,9 @@ contract Election {
       return candidates;
     }
 
+    function getCandidateForApoderado (bytes32 apoderado) public constant returns (bytes32) {
+      return partidos[apoderado];
+    }
 
     function isValidCandidate(bytes32 candidate) public constant returns(bool){
       for(uint8 index = 0; index < candidates.length; index++){
@@ -97,6 +102,7 @@ contract Election {
     function setApoderado(bytes32 autoridadElectoral, bytes32 apoderado, bytes32 candidato) public {
         require(autoridadElectoralAsignada == autoridadElectoral && apoderados[candidato] == "" && isValidCandidate(candidato));
         apoderados[candidato] = apoderado;
+        partidos[apoderado] = candidato;
         UserElectionCRUD(userCRUDaddress).setApoderado(apoderado);
     }
 

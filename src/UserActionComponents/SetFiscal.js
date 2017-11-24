@@ -44,6 +44,15 @@ class SetFiscal extends Component {
       }).catch(error => {
         console.log(error.response)
       })
+      api.getCandidateForApoderado(currentUser.getEmail(cookie))
+      .then( result => {
+        this.setState({
+          candidato : result.data
+        })
+      })
+      .catch( error => {
+
+      })
     }
 
     handleSetFiscal(event) {
@@ -121,7 +130,14 @@ class SetFiscal extends Component {
         return (
             <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' textAlign='center'>Asignar Fiscal a una Mesa</Header>
+
+              <Header as='h2' textAlign='center'>
+                Asignar Fiscal
+                <Header.Subheader>
+                  A la lista: {this.state.candidato}
+                </Header.Subheader>
+              </Header>
+
               <Form>
                   <Form.Input
                       required
@@ -130,14 +146,6 @@ class SetFiscal extends Component {
                       placeholder='Correo del Fiscal'
                       value={this.state.email}
                       onChange={this.handleFiscal.bind(this)}
-                  />
-                  <Form.Input
-                      required
-                      type="email"
-                      label='Candidato'
-                      placeholder='Partido Policito asociado'
-                      value={this.state.candidato}
-                      onChange={this.handleCandidato.bind(this)}
                   />
                   <Form.Dropdown
                     required

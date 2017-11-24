@@ -24,6 +24,7 @@ import LoadMesa from '../UserActionComponents/LoadMesa.js'
 
 //removed text in container navbar
 class App extends Component{
+
   render() {
     return (
       <div>

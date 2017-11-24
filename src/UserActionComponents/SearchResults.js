@@ -46,7 +46,6 @@ class SearchResults extends Component {
           errorMessage : ""
         })
       }).catch(error => {
-        //utils.showError(this.msg, "Ingrese id de distrito, id de escuela e id de mesa")
         utils.showError(this.msg, error.response.data)
         this.setState({loading : false, errorMessage : error.response.data})
       })

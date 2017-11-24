@@ -40,10 +40,6 @@ class NavBar extends Component {
     return currentUser.getTasks(cookie).all
   }
 
-  getCanCreateElection(){
-    return currentUser.isLogged(cookie) && !currentUser.isElectionActive(cookie)
-  }
-
   handleItemClick = (e, {name}) => {
     this.setState({activeItem : name})
   }
@@ -54,18 +50,18 @@ class NavBar extends Component {
         <Menu.Item as={Link} to="/" name='inicio' active={this.state.activeItem === 'inicio'} onClick={this.handleItemClick}>
           Inicio
         </Menu.Item>
-        <CreateElectionItem activeItem={this.state.activeItem === 'eleccion'} activate={this.handleItemClick.bind(this)} canCreate={this.getCanCreateElection()}/>
+        <CreateElectionItem activeItem={this.state.activeItem === 'eleccion'} activate={this.handleItemClick.bind(this)} />
 
         <TaskItem activeItem={this.state.activeItem} activate={this.handleItemClick.bind(this)} tasks={this.getTasks()}/>
 
-        <Menu.Item as={Link} to="/resultados" name='resultados' active={this.state.activeItem === 'resultados'} onClick={this.handleItemClick}>
+        <Menu.Item as={Link} to="/resultados" name='resultados' active={this.state.activeItem === 'resultados'} onClick={this.handleItemClick.bind(this)}>
           Resultados
         </Menu.Item>
 
-        <Menu.Item as={Link} to="/guia" name='guia' active={this.state.activeItem === 'guia'} onClick={this.handleItemClick}>
+        <Menu.Item as={Link} to="/guia" name='guia' active={this.state.activeItem === 'guia'} onClick={this.handleItemClick.bind(this)}>
           Guia
         </Menu.Item>
-        <Menu.Item as={Link} to="/nosotros" name='nosotros' active={this.state.activeItem === 'nosotros'} onClick={this.handleItemClick}>
+        <Menu.Item as={Link} to="/nosotros" name='nosotros' active={this.state.activeItem === 'nosotros'} onClick={this.handleItemClick.bind(this)}>
           About
         </Menu.Item>
         <Menu.Menu position='right'>
