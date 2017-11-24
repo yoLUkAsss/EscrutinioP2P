@@ -9,7 +9,7 @@ contract Mesa {
     /*mapping (bytes32 => uint8) total;*/
     ////////////////////////////////////////
     bool public checked;
-    uint cantidadDePersonas;
+    uint public cantidadDePersonas;
     address countsAddress;
     bytes32[] candidateList;
     bytes32[] participantList;
@@ -79,9 +79,6 @@ contract Mesa {
       }
       if (! isValidParticipant(participant)) {
         return (true, "Participante no valido");
-      }
-      if (cantidadDePersonas == 0) {
-        return (true, "Falta asignar total de personas");
       } else {
         return (false, "");
       }
@@ -186,13 +183,18 @@ contract Mesa {
       if (participantMap[participante].checked) {
         return (true, "Planilla ya validada");
       }
+      uint totalDeCarga = 0;
       for (uint8 i=0 ; i<candidatos.length ; i++) {
         bool huboError;
         bytes32 mensaje;
         (huboError, mensaje) = loadVotesForParticipantVerify(participante, candidatos[i], conteos[i]);
+        totalDeCarga += conteos[i];
         if (huboError) {
           return (huboError, mensaje);
         }
+      }
+      if(totalDeCarga != cantidadDePersonas){
+        return (true, "Debe coincidir con personas");
       }
       return (false, "");
     }

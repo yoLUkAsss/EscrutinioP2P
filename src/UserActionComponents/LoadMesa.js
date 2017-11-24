@@ -1,6 +1,6 @@
 // react utilities
 import React, { Component } from 'react';
-import { Button, Form, Header, Divider, Loader, Popup} from 'semantic-ui-react'
+import { Button, Form, Header, Divider, Loader, Popup, Modal, Dimmer} from 'semantic-ui-react'
 import {withRouter} from 'react-router-dom'
 import cookie from 'react-cookies'
 import AlertContainer from 'react-alert'
@@ -25,7 +25,12 @@ class LoadMesa extends Component {
           loading : true,
           candidates : [],
           loadingCM : false,
-          isLoadInvalid : false
+          isLoadInvalid : false,
+          total : 0,
+
+          modalOpen : false,
+          loadingCheck : false,
+          toValidate : []
         }
         this.distrito = currentUser.getUser(cookie).distrito
         this.escuela = currentUser.getUser(cookie).escuela
@@ -41,14 +46,18 @@ class LoadMesa extends Component {
         api.getMesaParticipants(this.distrito, this.escuela, this.mesa).then((res) => {
           let candidates2load = []
           let newparticipants = []
-          res.data.forEach(x => {
+          res.data.participants.forEach(x => {
             if(x.name === currentUser.getEmail(cookie)){
               candidates2load = x.candidates
             } else {
               newparticipants.push(x)
             }
           })
-          this.setState({participants : newparticipants, loading : false, candidates : candidates2load})
+          this.setState({
+            participants : newparticipants,
+            loading : false,
+            candidates : candidates2load,
+            total : res.data.total})
         }).catch(error => {
           this.setState({isMesaInvalid : true, loading : false})
         })
@@ -62,29 +71,64 @@ class LoadMesa extends Component {
       if(currentUser.isPresidenteDeMesa(cookie)){
         api.checkMesa(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
           utils.showSuccess(this.msg, res.data)
-          this.setState({loadingCM : false})
+          this.setState({loadingCheck : false, modalOpen : false})
         }).catch(error => {
           utils.showError(this.msg, error.response.data)
-          this.setState({loadingCM : false})
+          this.setState({loadingCheck : false, modalOpen : false})
         })
       } else{
         api.checkMesaFiscal(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
           utils.showSuccess(this.msg, res.data)
-          this.setState({loadingCM : false})
+          this.setState({loadingCheck : false, modalOpen : false})
         }).catch(error => {
           utils.showError(this.msg, error.response.data)
-          this.setState({loadingCM : false})
+          this.setState({loadingCheck : false, modalOpen : false})
         })
       }
-      this.setState({loadingCM : true})
+      this.setState({loadingCheck : true})
+    }
+    handleModalCheckMesa = (event) => {
+      api.getMesaUser(currentUser.getEmail(cookie), this.distrito, this.escuela, this.mesa).then(res => {
+        this.setState({loadingCheck : false, toValidate : res.data})
+      }).catch(error => {
+        this.setState({loadingCheck : false, modalOpen : false})
+      })
+      this.setState({loadingCheck : true, modalOpen : true})
+    }
+    handleModalClose = () => {
+      this.setState({modalOpen : false})
     }
     renderCanCheck(){
         return (
-          <Button basic color="green" onClick={this.handleCheckMesa.bind(this)}>
-            Validar conteo
-          </Button>
+          <Modal
+            trigger={
+              <Button basic color="green" onClick={this.handleModalCheckMesa.bind(this)}>
+                Validar conteo
+              </Button>
+            }
+            open={this.state.modalOpen}
+            >
+            <Modal.Header content={<Header as='h3' textAlign='center' content='Planilla a validar'/>}/>
+            <Modal.Content>
+              {
+                this.state.loadingCheck ? (<Dimmer active={this.state.modalOpen} inverted><Loader size='small' content='Loading' active inline='centered'/></Dimmer>) : <CustomTable itemsHeader={["Candidato","Conteo"]} itemsBody={this.state.toValidate}/>
+              }
+
+            </Modal.Content>
+            <Modal.Actions>
+              <Button negative onClick={this.handleModalClose.bind(this)}>
+                Cerrar
+              </Button>
+              <Button basic color="green" onClick={this.handleCheckMesa.bind(this)}>
+                Validar conteo
+              </Button>
+            </Modal.Actions>
+          </Modal>
         )
     }
+    // this.state.loadingCheck ? <Loader size='massive' content='Loading' active inline='centered'/> : <p>Hola</p>
+
+
     getMesaId = () => {
       return `${currentUser.getDistrito(cookie)}${currentUser.getEscuela(cookie)}${currentUser.getMesa(cookie)}`
     }
@@ -99,8 +143,6 @@ class LoadMesa extends Component {
           return { ...candidato, counts: evt.target.value }
         })
         const someEmpty = newCandidatos.some((elem, i, arr) => { return elem.counts === '' })
-        console.log(someEmpty)
-        console.log(newCandidatos)
         if(someEmpty){
           this.setState({ candidates: newCandidatos, isLoadInvalid : true})
         } else {
@@ -125,7 +167,12 @@ class LoadMesa extends Component {
     renderMesaLoadable(){
         return (
           <div>
-            <Header as='h2' textAlign='center'>Cargar Mesa: {this.mesa} de la Escuela: {this.escuela} del Distrito: {this.distrito}</Header>
+            <Header as='h3' textAlign='center'>
+              Cargar {'<'}Mesa: {this.mesa}{'>'}{'<'}Escuela: {this.escuela}{'>'}{'<'}Distrito: {this.distrito}{'>'}
+              <Header.Subheader>
+                Hay {this.state.total} personas en esta mesa
+              </Header.Subheader>
+            </Header>
             {this.state.loadingCM ? <Loader active inline='centered'/> : null}
             {this.renderLoadUser()}
             {this.renderCanCheck()}
