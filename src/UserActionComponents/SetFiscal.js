@@ -42,7 +42,7 @@ class SetFiscal extends Component {
           distritos : resDistritos.data.map((x, idX) => {return { key : idX, value : x, text : x}})
         })
       }).catch(error => {
-        console.log(error)
+        console.log(error.response)
       })
     }
 
@@ -150,7 +150,7 @@ class SetFiscal extends Component {
                   />
                   {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
                   {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
-                  <Button basic color="green" disabled={this.state.correoDelegado.length === 0 || this.state.candidato.length === 0 || this.state.distrito.length === 0 || this.state.escuela.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
+                  <Button basic color="green" disabled={this.state.email.length === 0 || this.state.candidato.length === 0 || this.state.distrito.length === 0 || this.state.escuela.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
                     header='Asignacion de Fiscal de Mesa'

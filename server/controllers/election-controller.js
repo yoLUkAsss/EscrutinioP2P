@@ -1,4 +1,5 @@
 import { fromObject, election, web3, distritoCRUD, distrito, escuela, mesa, counts} from '../utils/web3-utils.js'
+import {fromSolidity2String, bytes32ListToStringList, clearDefaultCandidates} from '../utils/utils.js'
 
 function getElectionMap(csv){
   let distritos = new Map()
@@ -36,10 +37,11 @@ export class ElectionController {
     election.deployed()
     .then( async electionInstance => {
       let candidates = await electionInstance.getCandidates.call(fromObject)
+      candidates = bytes32ListToStringList(candidates)
       if (candidates.length === 0) {
         res.status(400).json("La eleccion aun no ha sido creada")
       } else {
-        res.status(201).json(candidates.map( candidate => {return web3.toAscii(candidate)}))
+        res.status(201).json(clearDefaultCandidates(candidates))
       }
     })
     .catch( error => {
@@ -51,7 +53,8 @@ export class ElectionController {
     election.deployed()
     .then( async electionInstance => {
       let result = await electionInstance.getElectionInfo.call(fromObject)
-      res.status(201).json({created : result[0], distritos : result[1].toNumber(), escuelas : result[2].toNumber(), mesas : result[3].toNumber(), candidates : result[4].map(x => {return web3.toAscii(x)})})
+      let list = bytes32ListToStringList(result[4])
+      res.status(201).json({created : result[0], distritos : result[1].toNumber(), escuelas : result[2].toNumber(), mesas : result[3].toNumber(), candidates : clearDefaultCandidates(list)})
     })
     .catch( error => {
       res.status(500).json("Ha ocurrido un error, contacte un administrador")
@@ -213,11 +216,7 @@ export class ElectionController {
       let electionInstance = await election.deployed()
       let countsInstance = await counts.deployed()
       let candidates = req.body.candidates.split(',')
-      // let lists = candidates
-      candidates.push('Votos en Blanco')
-      candidates.push('Votos Nulos')
-      candidates.push('Votos Impugnados')
-
+      candidates = candidates.concat(defaultCandidates)
       let result = await electionInstance.createElectionVerify.call(req.body.email, candidates, fromObject)
       if (result[0]) {
         res.status(400).json( web3.toAscii(result[1]) )
