@@ -51,7 +51,7 @@ class SetFiscal extends Component {
         })
       })
       .catch( error => {
-
+        console.log(error.response)
       })
     }
 
@@ -60,7 +60,7 @@ class SetFiscal extends Component {
       api.setFiscal(currentUser.getEmail(cookie), this.state.candidato, this.state.email, this.state.distrito, this.state.escuela, this.state.mesa)
       .then(res => {
         utils.showSuccess(this.msg, res.data)
-        this.setState({email : "", distrito : "", escuela : "", mesa : ""})
+        this.setState({email : "", distrito : "", escuela : "", mesa : "", escuelas : [], mesas : []})
       })
       .catch(error => {
         utils.showError(this.msg, error.response.data)
@@ -92,10 +92,9 @@ class SetFiscal extends Component {
           mesas : res.data.map((x, idX) => {
             return { key : idX, value : x, text : x}
           }),
-          loadingMesas : false,
+          loadingMesas : false
         })
       }).catch(error => {
-        console.log("something failed")
         this.setState({loadingMesas : false})
       })
       this.setState({loadingMesas : true, mesas : []})
@@ -103,30 +102,49 @@ class SetFiscal extends Component {
     handleMesa = (event, {value}) => { this.setState({ mesa : value }) }
     show = () => this.setState({ open: true })
     close = () => this.setState({ open: false })
+    // {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
     renderEscuelas(){
-      return (
-        <Form.Dropdown
-          required
-          label='ID de la Escuela'
-          placeholder='Escuela'
-          options={this.state.escuelas}
-          selection
-          onChange={this.handleEscuela.bind(this)}
+      if(this.state.escuelas.length === 0){
+        if(this.state.loadingEscuelas){
+          return (<Loader active inline='centered'/>)
+        } else {
+          return null
+        }
+      } else {
+        return (
+          <Form.Dropdown
+            required
+            label='ID de la Escuela'
+            placeholder='Escuela'
+            options={this.state.escuelas}
+            selection
+            onChange={this.handleEscuela.bind(this)}
+            />
+          )
+      }
+    }
+    // {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
+    renderMesas(){
+      if(this.state.mesas.length === 0){
+        if(this.state.loadingMesas){
+          return (<Loader active inline='centered'/>)
+        } else {
+          return null
+        }
+      } else {
+        return (
+          <Form.Dropdown
+            required
+            label='ID de la Mesa'
+            placeholder='Mesa'
+            options={this.state.mesas}
+            selection
+            onChange={this.handleMesa.bind(this)}
           />
         )
+      }
     }
-    renderMesas(){
-      return (
-        <Form.Dropdown
-          required
-          label='ID de la Mesa'
-          placeholder='Mesa'
-          options={this.state.mesas}
-          selection
-          onChange={this.handleMesa.bind(this)}
-        />
-      )
-    }
+
     render () {
         return (
             <div>
@@ -157,8 +175,8 @@ class SetFiscal extends Component {
                     value={this.state.distrito}
                     onChange={this.handleDistrito.bind(this)}
                   />
-                  {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
-                  {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
+                  {this.renderEscuelas()}
+                  {this.renderMesas()}
                   <Button basic color="green" disabled={this.state.email.length === 0 || this.state.candidato.length === 0 || this.state.distrito.length === 0 || this.state.escuela.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}

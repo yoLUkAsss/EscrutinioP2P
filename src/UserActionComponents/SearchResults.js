@@ -83,6 +83,28 @@ class SearchResults extends Component {
     }
 
     handleMesa = (event, {value}) => { this.setState({ mesaId : value }) }
+    // {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
+    // renderEscuelas(){
+    //   if(this.state.escuelas.length === 0){
+    //     if(this.state.loadingEscuelas){
+    //       return (<Loader active inline='centered'/>)
+    //     } else {
+    //       return null
+    //     }
+    //   } else {
+    //     return (
+    //       <Form.Dropdown
+    //         required
+    //         label='ID de la Escuela'
+    //         placeholder='Escuela'
+    //         options={this.state.escuelas}
+    //         selection
+    //         value={this.state.escuelaId}
+    //         onChange={this.handleEscuela.bind(this)}
+    //         />
+    //     )
+    //   }
+    // }
 
     renderEscuelas(){
       return (
