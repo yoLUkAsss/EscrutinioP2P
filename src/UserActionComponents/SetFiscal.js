@@ -190,35 +190,5 @@ class SetFiscal extends Component {
         );
     }
 }
-//falta agregar disabled si no esta elegido un d
+
 export default SetFiscal
-// <Form.Field
-//   control='input'
-//   min={1}
-//   required
-//   type='number'
-//   label='ID del Distrito'
-//   placeholder='ID del Distrito'
-//   value={this.state.distrito}
-//   onChange={this.handleDistrito.bind(this)}
-// />
-// <Form.Field
-//   control='input'
-//   min={1}
-//   required
-//   type='number'
-//   label='ID de la Escuela'
-//   placeholder='ID de la Escuela'
-//   value={this.state.escuela}
-//   onChange={this.handleEscuela.bind(this)}
-// />
-// <Form.Field
-//   control='input'
-//   min={1}
-//   required
-//   type='number'
-//   label='ID de la Mesa'
-//   placeholder='ID de la Mesa'
-//   value={this.state.mesa}
-//   onChange={this.handleMesa.bind(this)}
-// />

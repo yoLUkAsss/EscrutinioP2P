@@ -126,14 +126,32 @@ export function getElectionInfo(){
   return axios.get(urlBase + 'election/info')
 }
 
-export function getTotal(distritoId, escuelaId, mesaId){
-  return axios.get(urlBase + 'counts/', {
-    params : {
-      distrito : distritoId,
-      escuela : escuelaId,
-      mesa : mesaId
+export function searchResults(distritoId, escuelaId, mesaId){
+  if(mesaId === ''){
+    if(escuelaId === ''){
+      if(distritoId === ''){
+        return getTotal()
+      } else {
+        return getDistritoTotal(distritoId)
+      }
+    } else {
+      return getEscuelaTotal(distritoId, escuelaId)
     }
-  })
+  } else {
+    return getMesaTotal(distritoId, escuelaId, mesaId)
+  }
+}
+export function getTotal(){
+  return axios.get(urlBase + 'counts/')
+}
+export function getDistritoTotal(distritoId){
+  return axios.get(urlBase + `counts/${distritoId}`)
+}
+export function getEscuelaTotal(distritoId, escuelaId){
+  return axios.get(urlBase + `counts/${distritoId}/${escuelaId}`)
+}
+export function getMesaTotal(distritoId, escuelaId, mesaId){
+  return axios.get(urlBase + `counts/${distritoId}/${escuelaId}/${mesaId}`)
 }
 
 ///////////////////////
