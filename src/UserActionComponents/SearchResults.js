@@ -26,6 +26,7 @@ class SearchResults extends Component {
         this.background = []
         this.border = []
     }
+    //hacer el handleSearchTotal hace que se vea un toq q no se cargaron datos en toda la eleccion, hacer 1 consulta o hacer otra cosa
     componentWillMount(){
       this.handleSearchTotal()
       api.getDistritos().then(resDistritos => {
@@ -41,6 +42,8 @@ class SearchResults extends Component {
 
     handleSearch(event){
       api.searchResults(this.state.distritoId, this.state.escuelaId, this.state.mesaId).then(results => {
+        this.background = utils.getBackground(results.data.candidates.length)
+        this.border = utils.getBorder(results.data.candidates.length)
         this.setState({
           candidates : results.data.candidates,
           counts : results.data.counts,
@@ -60,6 +63,8 @@ class SearchResults extends Component {
 
     handleSearchTotal(event){
       api.getTotal().then(results => {
+        this.background = utils.getBackground(results.data.candidates.length)
+        this.border = utils.getBorder(results.data.candidates.length)
         this.setState({
           candidates : results.data.candidates,
           counts : results.data.counts,
@@ -156,15 +161,6 @@ class SearchResults extends Component {
         )
       }
     }
-
-    renderFalloConsulta(){
-      return (
-        <div>
-          {this.state.errorMessage === "" ? <Header as='h3' textAlign='center'>Aquí se podrán visuarlizar los primeros datos</Header> : <Header as='h3' textAlign='center'>Aun no se cargaron datos iniciales</Header>}
-        </div>
-      )
-    }
-
     renderForms () {
       return (
         <div>
@@ -186,23 +182,44 @@ class SearchResults extends Component {
                 <Form.Button floated="left" basic color="green" width={8} content='Buscar' onClick={this.handleSearch.bind(this)}/>
                 <Form.Button floated="right" basic color="green" width={8} content='Ver Total' onClick={this.handleSearchTotal.bind(this)}/>
               </Form.Group>
-
             </Form>
           <Divider/>
         </div>
       );
     }
+    //          <Header as='h6' textAlign='center'>Por favor, vuelva cuando la misma haya comenzado</Header>
     renderElectionInactive(){
       return (
         <div>
-          <Header as='h2' textAlign='center'>La eleccion aun no se encuentra activa</Header>
-          <Header as='h6' textAlign='center'>Por favor, vuelva cuando la misma haya comenzado</Header>
+          <Header as='h2' textAlign='center'>
+            La elección aún no se encuentra activa
+            <Header.Subheader>
+              Por favor vuelva cuando haya comenzado
+            </Header.Subheader>
+          </Header>
         </div>
       )
     }
+
+    renderFalloConsulta(){
+      return (
+        <div>
+          {this.state.errorMessage === "" ? <Header as='h3' textAlign='center'>Aquí se podrán visualizar los primeros datos</Header> : <Header as='h3' textAlign='center'>Aún no se cargaron datos iniciales</Header>}
+        </div>
+      )
+    }
+
+    renderConsulta(){
+      // {this.state.candidates.length === 0 || this.state.errorMessage !== ""? this.renderFalloConsulta() : <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>}
+      if(this.state.errorMessage === ""){
+        return (<Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>)
+      } else {
+        return (<Header as='h3' textAlign='center'>Aquí se podrán visualizar los primeros datos</Header>)
+      }
+    }
+
     render(){
       return (
-
         <div>
           <Grid columns='one' divided>
             <Grid.Row>

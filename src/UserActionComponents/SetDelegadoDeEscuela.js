@@ -84,7 +84,7 @@ class SetDelegadoDeEscuela extends Component {
                   <Button basic color="green" disabled={this.state.correoDelegado.length === 0 || this.state.escuela.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
-                    header='Asignacion de Delegado de Escuela'
+                    header='Asignación de Delegado de Escuela'
                     content={`Estas seguro de asignar al usuario: ${this.state.correoDelegado}, como delegado de la escuela: ${this.state.escuela} del distrito: ${this.distrito}`}
                     onCancel={this.close.bind(this)}
                     onConfirm={this.handleSetDelegadoDeEscuela.bind(this)}

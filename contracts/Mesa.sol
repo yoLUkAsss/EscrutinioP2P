@@ -193,8 +193,8 @@ contract Mesa {
           return (huboError, mensaje);
         }
       }
-      if(totalDeCarga != cantidadDePersonas){
-        return (true, "Debe coincidir con personas");
+      if(totalDeCarga > cantidadDePersonas){
+        return (true, "Excede la cantidad de personas");
       }
       return (false, "");
     }

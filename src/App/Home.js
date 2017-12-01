@@ -33,11 +33,11 @@ class Home extends Component {
         <Header as='h3'>Tabla de Contenidos</Header>
         <Segment compact>
           <List ordered link>
-            <List.Item as={Scrollchor} to="#eleccion">Informacion de la eleccion</List.Item>
-            <List.Item as={Scrollchor} to="#distritos">Informacion de los distritos</List.Item>
-            <List.Item as={Scrollchor} to="#escuelas">Informacion de las escuelas</List.Item>
-            <List.Item as={Scrollchor} to="#mesas">Informacion de las mesas</List.Item>
-            <List.Item as={Scrollchor} to="#candidatos">Informacion de los candidatos</List.Item>
+            <List.Item as={Scrollchor} to="#eleccion">información de la elección</List.Item>
+            <List.Item as={Scrollchor} to="#distritos">información de los distritos</List.Item>
+            <List.Item as={Scrollchor} to="#escuelas">información de las escuelas</List.Item>
+            <List.Item as={Scrollchor} to="#mesas">información de las mesas</List.Item>
+            <List.Item as={Scrollchor} to="#candidatos">información de los candidatos</List.Item>
           </List>
         </Segment>
       </Container>
@@ -48,31 +48,31 @@ class Home extends Component {
       <Container text>
         <List ordered>
           <List.Item>
-            <List.Header id="eleccion">Informacion de la eleccion</List.Header>
+            <List.Header id="eleccion">Información de la elección</List.Header>
             <List.Description>
-              La eleccion se encuentra creada
+              La elección se encuentra creada
             </List.Description>
           </List.Item>
           <List.Item>
-            <List.Header id="distritos">Informacion de los distritos</List.Header>
+            <List.Header id="distritos">información de los distritos</List.Header>
             <List.Description>
               Actualmente participan {this.state.distritos} distritos
             </List.Description>
           </List.Item>
           <List.Item>
-            <List.Header id="escuelas">Informacion de las escuelas</List.Header>
+            <List.Header id="escuelas">información de las escuelas</List.Header>
             <List.Description>
               Actualmente participan {this.state.escuelas} escuelas
             </List.Description>
           </List.Item>
           <List.Item>
-            <List.Header id="mesas">Informacion de las mesas</List.Header>
+            <List.Header id="mesas">información de las mesas</List.Header>
             <List.Description>
               Actualmente participan {this.state.mesas} mesas
             </List.Description>
           </List.Item>
           <List.Item>
-            <List.Header id="candidatos">Informacion de los candidatos</List.Header>
+            <List.Header id="candidatos">información de los candidatos</List.Header>
             <List.Description>
               Actualmente participan los siguientes candidatos:
             </List.Description>
@@ -91,11 +91,17 @@ class Home extends Component {
   renderElectionInactive(){
     return (
       <div>
-        <Header as='h2' textAlign='center'>La eleccion aun no se encuentra activa</Header>
-        <p>Por favor vuelva cuando se haya iniciado</p>
+        <Header as='h2' textAlign='center'>
+          La elección aún no se encuentra activa
+          <Header.Subheader>
+            Por favor vuelva cuando haya comenzado
+          </Header.Subheader>
+        </Header>
+
       </div>
     )
   }
+  //<p>Por favor vuelva cuando se haya iniciado</p>
   //falta buscar los candidatos
   render() {
       return (

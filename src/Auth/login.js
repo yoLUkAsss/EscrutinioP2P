@@ -31,13 +31,14 @@ class Login extends Component {
       api.login(this.state.email, this.state.password)
       .then(res => {
         currentUser.setUser(cookie, res.data)
-        utils.showSuccessWithRedirect(this.msg, "El usuario: " + res.data.email + " ha iniciado sesion correctamente", () => {this.props.history.push("/")} )
+        utils.showSuccessWithRedirect(this.msg, "El usuario: " + res.data.email + " ha iniciado sesión correctamente", () => {this.props.history.push("/")} )
         this.setState({email : "", password : ""})
       })
       .catch(error => {
         utils.showError(this.msg, error.response.data)
       })
     }
+    //<Header as='h2' color='teal' textAlign='center'>
     render () {
         return (
           <div>
@@ -48,8 +49,8 @@ class Login extends Component {
             verticalAlign='middle'
           >
             <Grid.Column style={{ maxWidth: 450 }}>
-              <Header as='h2' color='teal' textAlign='center'>
-                Iniciar Sesion en EP2P
+              <Header as='h2' textAlign='center'>
+                Iniciar Sesión en EP2P
               </Header>
               <Form size='large'>
                 <Segment stacked>
@@ -80,7 +81,7 @@ class Login extends Component {
                     size='large'
                     disabled={!(this.state.email.length > 0 && this.state.password.length > 0)} onClick={this.handleLogin.bind(this)}
                   >
-                    Iniciar Sesion
+                    Iniciar Sesión
                   </Button>
                 </Segment>
               </Form>

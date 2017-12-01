@@ -180,7 +180,7 @@ class SetFiscal extends Component {
                   <Button basic color="green" disabled={this.state.email.length === 0 || this.state.candidato.length === 0 || this.state.distrito.length === 0 || this.state.escuela.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
-                    header='Asignacion de Fiscal de Mesa'
+                    header='Asignación de Fiscal de Mesa'
                     content={`Estas seguro de asignar al usuario: ${this.state.email}, como fiscal de la mesa:  ${this.state.mesa} de la escuela: ${this.state.escuela} del distrito: ${this.state.distrito}, para el candidato: ${this.state.candidato}`}
                     onCancel={this.close.bind(this)}
                     onConfirm={this.handleSetFiscal.bind(this)}

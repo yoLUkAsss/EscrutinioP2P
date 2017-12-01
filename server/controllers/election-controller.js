@@ -275,7 +275,6 @@ export class ElectionController {
     .then( async electionInstance => {
       let result = await electionInstance.getCandidateForApoderado.call(req.params.apoderado, fromObject)
       let value = fromSolidity2String(result)
-      console.log(value)
       if (value === '') {
         res.status(400).json(value)
       } else {

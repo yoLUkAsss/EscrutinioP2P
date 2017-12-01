@@ -36,7 +36,6 @@ export class LocationController {
       let escuelaAddress = await distritoCRUDInstance.getEscuela.call(req.params.distritoId, req.params.escuelaId, fromObject)
       let escuelaInstance = await escuela.at(escuelaAddress)
       let result = await escuelaInstance.getMesas.call(fromObject)
-      console.log(JSON.stringify( result, undefined, 2 ))
       res.status(201).json(result.map(x => {return x.toNumber()}).sort())
     })
     .catch( error => {

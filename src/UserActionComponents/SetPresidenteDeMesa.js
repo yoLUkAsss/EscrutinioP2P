@@ -89,7 +89,7 @@ class SetPresidenteDeMesa extends Component {
                 <Button basic color="green" disabled={this.state.email.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                 <Confirm
                   open={this.state.open}
-                  header='Asignacion de Presidente'
+                  header='Asignación de Presidente'
                   content={`Estas seguro de asignar al usuario: ${this.state.email}, como presidente de la mesa: ${this.state.mesa} de la escuela: ${this.escuela} del distrito: ${this.distrito}`}
                   onCancel={this.close.bind(this)}
                   onConfirm={this.handleSetPresidenteDeMesa.bind(this)}
