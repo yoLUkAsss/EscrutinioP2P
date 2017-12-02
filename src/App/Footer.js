@@ -13,7 +13,7 @@ class Footer extends Component {
 
 
                 <Grid.Column width={5}>
-                  <Header inverted as='h4' content='Links Utiles' />
+                  <Header inverted as='h4' content='Links Útiles' />
                   <List animated link inverted>
 
                     <List.Item as='a' href="//github.com/yoLUkAsss/DEscrutinio" >

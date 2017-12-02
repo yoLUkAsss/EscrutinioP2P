@@ -1,4 +1,4 @@
-import { fromObject, election, web3, distritoCRUD, distrito, escuela, mesa, counts} from '../utils/web3-utils.js'
+import { fromObject, election, distritoCRUD, distrito, escuela, mesa, counts} from '../utils/web3-utils.js'
 import {fromSolidity2String, bytes32ListToStringList, clearDefaultCandidates, defaultCandidates} from '../utils/utils.js'
 
 function getElectionMap(csv){
@@ -81,7 +81,7 @@ export class ElectionController {
       .then(async electionInstance => {
         let result = await electionInstance.setApoderadoVerify.call(req.body.autoridadElectoralEmail, req.body.apoderadoDePartidoEmail, req.body.candidate, fromObject)
         if(result[0]){
-          res.status(400).json(web3.toAscii(result[1]))
+          res.status(400).json(fromSolidity2String(result[1]))
         } else {
           await electionInstance.setApoderado.sendTransaction(req.body.autoridadElectoralEmail, req.body.apoderadoDePartidoEmail, req.body.candidate, fromObject)
           res.status(200).json("Usuario: " + req.body.apoderadoDePartidoEmail + " asignado como Apoderado del Partido: " +  req.body.candidate)
@@ -101,7 +101,7 @@ export class ElectionController {
       .then(async (electionInstance) => {
         let result = await electionInstance.setDelegadoDeDistritoVerify.call(req.body.autoridadElectoralEmail, req.body.delegadoDeDistritoEmail, req.body.distritoId, fromObject)
         if(result[0]){
-          res.status(400).json( web3.toAscii(result[1]) )
+          res.status(400).json( fromSolidity2String(result[1]) )
         } else {
           await electionInstance.setDelegadoDeDistrito.sendTransaction(req.body.autoridadElectoralEmail, req.body.delegadoDeDistritoEmail, req.body.distritoId, fromObject)
           res.status(200).json("Usuario: " + req.body.delegadoDeDistritoEmail + " asignado como Delegado del Distrito: " + req.body.distritoId)
@@ -122,7 +122,7 @@ export class ElectionController {
       .then(async electionInstance => {
         let result = await electionInstance.setDelegadoDeEscuelaVerify.call(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject)
         if(result[0]){
-          res.status(400).json(web3.toAscii(result[1]))
+          res.status(400).json(fromSolidity2String(result[1]))
         } else {
           await electionInstance.setDelegadoDeEscuela.sendTransaction(req.body.delegadoDeDistritoEmail, req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, fromObject)
           res.status(200).json("Usuario: " + req.body.delegadoDeEscuelaEmail + " fue asignado como Delegado de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
@@ -144,7 +144,7 @@ export class ElectionController {
       .then(async electionInstance => {
         let result = await electionInstance.setPresidenteDeMesaVerify.call(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.presidenteDeMesaEmail, fromObject)
         if(result[0]){
-          res.status(400).json(web3.toAscii(result[1]))
+          res.status(400).json(fromSolidity2String(result[1]))
         } else {
           await electionInstance.setPresidenteDeMesa.sendTransaction(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.presidenteDeMesaEmail, fromObject)
           res.status(200).json("Usuario: " + req.body.presidenteDeMesaEmail + " fue asignado como Presidente de la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
@@ -169,7 +169,7 @@ export class ElectionController {
       .then(async electionInstance => {
         let result = await electionInstance.setVicepresidenteDeMesaVerify.call(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.vicepresidenteDeMesaEmail, fromObject)
         if(result[0]){
-          res.status(400).json(web3.toAscii(result[1]))
+          res.status(400).json(fromSolidity2String(result[1]))
         } else {
           await electionInstance.setVicepresidenteDeMesa.sendTransaction(req.body.delegadoDeEscuelaEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, req.body.vicepresidenteDeMesaEmail, fromObject)
           res.status(200).json("Usuario: " + req.body.vicepresidenteDeMesaEmail + " fue asignado como Vicepresidente de la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
@@ -193,7 +193,7 @@ export class ElectionController {
       .then(async electionInstance => {
         let result = await electionInstance.setFiscalVerify.call(req.body.apoderadoDePartidoEmail, req.body.candidate, req.body.fiscalEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, fromObject)
         if(result[0]){
-          res.status(400).json(web3.toAscii(result[1]))
+          res.status(400).json(fromSolidity2String(result[1]))
         } else {
           await electionInstance.setFiscal.sendTransaction(req.body.apoderadoDePartidoEmail, req.body.candidate, req.body.fiscalEmail, req.body.distritoId, req.body.escuelaId, req.body.mesaId, fromObject)
           res.status(200).json("Usuario: " + req.body.fiscalEmail + " fue asignado como Fiscal del Candidato: " + req.body.candidate + " en la Mesa: " + req.body.mesaId + " de la Escuela: " + req.body.escuelaId + " del Distrito: " + req.body.distritoId)
@@ -219,7 +219,7 @@ export class ElectionController {
       candidates = candidates.concat(defaultCandidates)
       let result = await electionInstance.createElectionVerify.call(req.body.email, candidates, fromObject)
       if (result[0]) {
-        res.status(400).json( web3.toAscii(result[1]) )
+        res.status(400).json( fromSolidity2String(result[1]) )
       } else {
         if(!req.file){
           res.status(400).json('No se ha cargado el archivo correctamente')
@@ -260,7 +260,7 @@ export class ElectionController {
         res.status(400).json("No existen datos iniciales")
       } else {
         res.status(200).json({
-          "candidates" : result[0].map(x => {return web3.toAscii(x)}),
+          "candidates" : result[0].map(x => {return fromSolidity2String(x)}),
           "counts" : result[1].map(x => {return x.toNumber()})
         })
       }
@@ -274,11 +274,11 @@ export class ElectionController {
     election.deployed()
     .then( async electionInstance => {
       let result = await electionInstance.getCandidateForApoderado.call(req.params.apoderado, fromObject)
-      let value = web3.toAscii(result)
+      let value = fromSolidity2String(result)
       if (value === '') {
         res.status(400).json(value)
       } else {
-        res.status(201).json(web3.toAscii(result))
+        res.status(201).json(fromSolidity2String(result))
       }
     })
     .catch( error => {

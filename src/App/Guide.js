@@ -3,8 +3,6 @@ import Scrollchor from 'react-scrollchor'
 import { Container, Header, Divider, List, Segment} from 'semantic-ui-react'
 
 class Guide extends Component {
-  // handleInfoEleccion(event){
-  // }
   renderContentsTable(){
     return (
       <Container text>
@@ -30,8 +28,8 @@ class Guide extends Component {
           <List.Item>
             <List.Header id="autoridad">Guia de la autoridad electoral</List.Header>
             <List.Description>
-              Es la persona encargada de generar la eleccion con los candidatos que participaran de la eleccion.
-              Ademas de generar los distritos participantes de la eleccion, junto con la cantidad de escuelas y mesas disponibles. Por ultimo, tambien debe asignar los siguientes roles a los usuarios del sistema: apoderado de partido y delegado de distrito.
+              Es la persona encargada de generar la elección con los candidatos que participaran de la elección.
+              Ademas de generar los distritos participantes de la elección, junto con la cantidad de escuelas y mesas disponibles. También debe asignar los siguientes roles: apoderado de partido y delegado de distrito.
             </List.Description>
           </List.Item>
           <List.Item>

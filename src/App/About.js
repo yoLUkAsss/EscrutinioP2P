@@ -10,10 +10,10 @@ class About extends Component {
     return (
       <Container text>
         <p>
-          EP2P fue desarrollado en el marco del Trabajo de Insercion Profesional de la carrera Tecnicatura en Programacion Informatica, de la Universidad Nacional de Quilmes. Por parte de los estudiantes Lucas Sandoval y Jesus Laime.
+          EP2P fue desarrollado en el marco del Trabajo de Inserción Profesional de la carrera Tecnicatura en Programacion Informática, de la Universidad Nacional de Quilmes. Por parte de los estudiantes Lucas Sandoval y Jesus Laime.
         </p>
         <p>
-          El impulsor de la idea fue Leonardo Marina, actualmente pertenece(trabajo) en la Universidad de Quilmes.
+          El impulsor de la idea fue Leonardo Marina, actualmente trabaja en la Universidad Nacional de Quilmes.
         </p>
         <p>
           Ante cualquier problema, no dudes en contactarnos.
@@ -54,7 +54,7 @@ class About extends Component {
                 </span>
               </Card.Meta>
               <Card.Description>
-                Estudiante, 23 años, desarrollador de software con 5 meses de experiencia en el rubro 
+                Estudiante, 23 años, desarrollador de software con 5 meses de experiencia en el rubro
               </Card.Description>
             </Card.Content>
             <Card.Content extra>

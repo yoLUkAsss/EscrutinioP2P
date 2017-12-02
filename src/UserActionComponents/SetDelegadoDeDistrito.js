@@ -57,7 +57,9 @@ class SetDelegadoDeDistrito extends Component {
         return (
             <div>
                 <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-                <Header as='h2' textAlign='center'>Asignar Delegado de Distrito</Header>
+                <Header as='h2' textAlign='center'>
+                  Asignar Delegado de Distrito
+                </Header>
                 <Form>
                     <Form.Input
                       required
@@ -79,7 +81,7 @@ class SetDelegadoDeDistrito extends Component {
                     <Button basic color="green" disabled={this.state.correoDelegado.length === 0 || this.state.distrito.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                     <Confirm
                       open={this.state.open}
-                      header='Asignacion de Delegado de Distrito'
+                      header='Asignación de Delegado de Distrito'
                       content={`Estas seguro de asignar al usuario: ${this.state.correoDelegado}, como delegado del distrito: ${this.state.distrito}`}
                       onCancel={this.close.bind(this)}
                       onConfirm={this.handleSetDelegadoDeDistrito.bind(this)}

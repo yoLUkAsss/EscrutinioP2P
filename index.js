@@ -26,7 +26,8 @@ app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname,'dist','index.html'))
 })
 
-// Start Server
+// Start Server ip beltran 172.32.200.140
+// app.listen(serverConfig.port, '172.32.200.140', function() {
 app.listen(serverConfig.port, function() {
   console.log(`Listening on ${serverConfig.base_url}`)
 })

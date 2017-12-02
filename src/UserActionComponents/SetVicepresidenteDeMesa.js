@@ -61,7 +61,12 @@ class SetVicepresidenteDeMesa extends Component {
         return (
             <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' textAlign='center'>Asignar Vicepresidente de Mesa</Header>
+              <Header as='h2' textAlign='center'>
+                Asignar Vicepresidente de Mesa
+                <Header.Subheader>
+                  A la escuela: {this.escuela} del distrito: {this.distrito}
+                </Header.Subheader>
+              </Header>
               <Form>
                 <Form.Input
                     required
@@ -83,7 +88,7 @@ class SetVicepresidenteDeMesa extends Component {
                 <Button basic color="green" disabled={this.state.email.length === 0 || this.state.mesa.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                 <Confirm
                   open={this.state.open}
-                  header='Asignacion de Vicepresidente'
+                  header='Asignación de Vicepresidente'
                   content={`Estas seguro de asignar al usuario: ${this.state.email}, como vicepresidente de la mesa: ${this.state.mesa} de la escuela: ${this.escuela} del distrito: ${this.distrito}`}
                   onCancel={this.close.bind(this)}
                   onConfirm={this.handleSetVicepresidenteDeMesa.bind(this)}

@@ -46,7 +46,6 @@ class SetFiscal extends Component {
       api.setApoderadoDePartido(currentUser.getEmail(cookie), this.state.email, this.state.candidato).then(res => {
         utils.showSuccess(this.msg, res.data)
       }).catch(error => {
-        console.log(error)
         utils.showError(this.msg, error.response.data)
       })
       this.setState({open : false, email : "", candidato : ""})
@@ -80,7 +79,7 @@ class SetFiscal extends Component {
                     <Button basic color="green" disabled={this.state.email.length === 0 || this.state.candidato.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                     <Confirm
                       open={this.state.open}
-                      header='Asignacion de Apoderado de Partido'
+                      header='Asignación de Apoderado de Partido'
                       content={`Estas seguro de asignar al usuario: ${this.state.email}, como apoderado del candidato:  ${this.state.candidato}`}
                       onCancel={this.close.bind(this)}
                       onConfirm={this.handleSetApoderado.bind(this)}

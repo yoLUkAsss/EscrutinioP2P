@@ -32,7 +32,6 @@ class SetDelegadoDeEscuela extends Component {
     }
     componentWillMount(){
       api.getEscuelas(currentUser.getDistrito(cookie)).then(res => {
-        console.log(res.data)
         this.setState({escuelas : res.data.map((x, idX) => {return {key : idX, value : x, text : x}})})
       }).catch(error => {
         console.log(error)
@@ -58,7 +57,12 @@ class SetDelegadoDeEscuela extends Component {
         return (
             <div>
               <AlertContainer ref={a => this.msg = a} {...utils.alertConfig()} />
-              <Header as='h2' textAlign='center'>Asignar Delegado de Escuela</Header>
+              <Header as='h2' textAlign='center'>
+                Asignar Delegado de Escuela
+                <Header.Subheader>
+                  Al distrito: {this.distrito}
+                </Header.Subheader>
+              </Header>
               <Form>
                   <Form.Input
                       required
@@ -80,7 +84,7 @@ class SetDelegadoDeEscuela extends Component {
                   <Button basic color="green" disabled={this.state.correoDelegado.length === 0 || this.state.escuela.length === 0} onClick={this.show.bind(this)}>Asignar</Button>
                   <Confirm
                     open={this.state.open}
-                    header='Asignacion de Delegado de Escuela'
+                    header='Asignación de Delegado de Escuela'
                     content={`Estas seguro de asignar al usuario: ${this.state.correoDelegado}, como delegado de la escuela: ${this.state.escuela} del distrito: ${this.distrito}`}
                     onCancel={this.close.bind(this)}
                     onConfirm={this.handleSetDelegadoDeEscuela.bind(this)}

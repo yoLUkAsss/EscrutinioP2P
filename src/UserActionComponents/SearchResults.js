@@ -26,11 +26,14 @@ class SearchResults extends Component {
         this.background = []
         this.border = []
     }
+    //hacer el handleSearchTotal hace que se vea un toq q no se cargaron datos en toda la eleccion, hacer 1 consulta o hacer otra cosa
     componentWillMount(){
-      this.handleSearch(null)
+      this.handleSearchTotal()
       api.getDistritos().then(resDistritos => {
         this.setState({
-          distritos : resDistritos.data.map((x, idX) => {return { key : idX, value : x, text : x}})
+          distritos : resDistritos.data.map((x, idX) => {return { key : idX, value : x, text : x}}),
+          escuelas : [],
+          mesas : []
         })
       }).catch(error => {
         console.log(error)
@@ -38,7 +41,9 @@ class SearchResults extends Component {
     }
 
     handleSearch(event){
-      api.getTotal(this.state.distritoId, this.state.escuelaId, this.state.mesaId).then(results => {
+      api.searchResults(this.state.distritoId, this.state.escuelaId, this.state.mesaId).then(results => {
+        this.background = utils.getBackground(results.data.candidates.length)
+        this.border = utils.getBorder(results.data.candidates.length)
         this.setState({
           candidates : results.data.candidates,
           counts : results.data.counts,
@@ -46,8 +51,33 @@ class SearchResults extends Component {
           errorMessage : ""
         })
       }).catch(error => {
-        utils.showError(this.msg, error.response.data)
-        this.setState({loading : false, errorMessage : error.response.data})
+        if(error.response){
+          utils.showError(this.msg, error.response.data)
+          this.setState({loading : false, errorMessage : error.response.data})
+        } else {
+          console.log(error)
+        }
+      })
+      this.setState({loading : true})
+    }
+
+    handleSearchTotal(event){
+      api.getTotal().then(results => {
+        this.background = utils.getBackground(results.data.candidates.length)
+        this.border = utils.getBorder(results.data.candidates.length)
+        this.setState({
+          candidates : results.data.candidates,
+          counts : results.data.counts,
+          loading : false,
+          errorMessage : ""
+        })
+      }).catch(error => {
+        if(error.response){
+          utils.showError(this.msg, error.response.data)
+          this.setState({loading : false, errorMessage : error.response.data})
+        } else {
+          console.log(error)
+        }
       })
       this.setState({loading : true})
     }
@@ -56,6 +86,9 @@ class SearchResults extends Component {
       api.getEscuelas(value).then(res => {
         this.setState({
           distritoId : value,
+          escuelaId : "",
+          mesaId : "",
+          mesas : [],
           escuelas : res.data.map((x, idX) => {
             return { key : idX, value : x, text : x}
           }),
@@ -71,6 +104,7 @@ class SearchResults extends Component {
       api.getMesas(this.state.distritoId, value).then(res => {
         this.setState({
           escuelaId : value ,
+          mesaId : "",
           mesas : res.data.map((x, idX) => {
             return { key : idX, value : x, text : x}
           }),
@@ -83,42 +117,50 @@ class SearchResults extends Component {
     }
 
     handleMesa = (event, {value}) => { this.setState({ mesaId : value }) }
-
+    // {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
     renderEscuelas(){
-      return (
-        <Form.Dropdown
-          required
-          label='ID de la Escuela'
-          placeholder='Escuela'
-          options={this.state.escuelas}
-          selection
-          value={this.state.escuelaId}
-          onChange={this.handleEscuela.bind(this)}
+      if(this.state.escuelas.length === 0){
+        if(this.state.loadingEscuelas){
+          return (<Loader active inline='centered'/>)
+        } else {
+          return null
+        }
+      } else {
+        return (
+          <Form.Dropdown
+            required
+            label='ID de la Escuela'
+            placeholder='Escuela'
+            options={this.state.escuelas}
+            selection
+            value={this.state.escuelaId}
+            onChange={this.handleEscuela.bind(this)}
+            />
+        )
+      }
+    }
+    // {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
+    renderMesas(){
+      if(this.state.mesas.length === 0){
+        if(this.state.loadingMesas){
+          return (<Loader active inline='centered'/>)
+        } else {
+          return null
+        }
+      } else{
+        return (
+          <Form.Dropdown
+            required
+            label='ID de la Mesa'
+            placeholder='Mesa'
+            options={this.state.mesas}
+            selection
+            value={this.state.mesaId}
+            onChange={this.handleMesa.bind(this)}
           />
         )
+      }
     }
-    renderMesas(){
-      return (
-        <Form.Dropdown
-          required
-          label='ID de la Mesa'
-          placeholder='Mesa'
-          options={this.state.mesas}
-          selection
-          value={this.state.mesaId}
-          onChange={this.handleMesa.bind(this)}
-        />
-      )
-    }
-
-    renderFalloConsulta(){
-      return (
-        <div>
-          {this.state.errorMessage === "" ? <Header as='h3' textAlign='center'>Aquí se podrán visuarlizar los primeros datos</Header> : <Header as='h3' textAlign='center'>Aun no se cargaron datos iniciales</Header>}
-        </div>
-      )
-    }
-
     renderForms () {
       return (
         <div>
@@ -134,29 +176,50 @@ class SearchResults extends Component {
                 value={this.state.distritoId}
                 onChange={this.handleDistrito.bind(this)}
               />
-              {this.state.escuelas.length !== 0 ? this.renderEscuelas() : (this.state.loadingEscuelas ? <Loader active inline='centered'/> : null)}
-              {this.state.mesas.length !== 0 ? this.renderMesas() : (this.state.loadingMesas ? <Loader active inline='centered'/> : null)}
+              {this.renderEscuelas()}
+              {this.renderMesas()}
               <Form.Group>
                 <Form.Button floated="left" basic color="green" width={8} content='Buscar' onClick={this.handleSearch.bind(this)}/>
-                <Form.Button floated="right" basic color="green" width={8} content='Ver Total' onClick={this.handleSearch.bind(this)}/>
+                <Form.Button floated="right" basic color="green" width={8} content='Ver Total' onClick={this.handleSearchTotal.bind(this)}/>
               </Form.Group>
-
             </Form>
           <Divider/>
         </div>
       );
     }
+    //          <Header as='h6' textAlign='center'>Por favor, vuelva cuando la misma haya comenzado</Header>
     renderElectionInactive(){
       return (
         <div>
-          <Header as='h2' textAlign='center'>La eleccion aun no se encuentra activa</Header>
-          <Header as='h6' textAlign='center'>Por favor, vuelva cuando la misma haya comenzado</Header>
+          <Header as='h2' textAlign='center'>
+            La elección aún no se encuentra activa
+            <Header.Subheader>
+              Por favor vuelva cuando haya comenzado
+            </Header.Subheader>
+          </Header>
         </div>
       )
     }
+
+    renderFalloConsulta(){
+      return (
+        <div>
+          {this.state.errorMessage === "" ? <Header as='h3' textAlign='center'>Aquí se podrán visualizar los primeros datos</Header> : <Header as='h3' textAlign='center'>Aún no se cargaron datos iniciales</Header>}
+        </div>
+      )
+    }
+
+    renderConsulta(){
+      // {this.state.candidates.length === 0 || this.state.errorMessage !== ""? this.renderFalloConsulta() : <Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>}
+      if(this.state.errorMessage === ""){
+        return (<Results candidates={this.state.candidates} counts={this.state.counts} loading={this.state.loading} background={this.background} border={this.border}/>)
+      } else {
+        return (<Header as='h3' textAlign='center'>Aquí se podrán visualizar los primeros datos</Header>)
+      }
+    }
+
     render(){
       return (
-
         <div>
           <Grid columns='one' divided>
             <Grid.Row>
@@ -182,3 +245,31 @@ class SearchResults extends Component {
 }
 
 export default SearchResults
+
+
+// renderEscuelas(){
+//   return (
+//     <Form.Dropdown
+//       required
+//       label='ID de la Escuela'
+//       placeholder='Escuela'
+//       options={this.state.escuelas}
+//       selection
+//       value={this.state.escuelaId}
+//       onChange={this.handleEscuela.bind(this)}
+//       />
+//     )
+// }
+// renderMesas(){
+//   return (
+//     <Form.Dropdown
+//       required
+//       label='ID de la Mesa'
+//       placeholder='Mesa'
+//       options={this.state.mesas}
+//       selection
+//       value={this.state.mesaId}
+//       onChange={this.handleMesa.bind(this)}
+//     />
+//   )
+// }

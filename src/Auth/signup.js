@@ -34,7 +34,7 @@ class Signup extends Component {
         utils.showError(this.msg, error.response.data)
       })
     }
-
+    //<Header as='h2' color='teal' textAlign='center'>
     render () {
         return (
           <div>
@@ -45,7 +45,7 @@ class Signup extends Component {
             verticalAlign='middle'
           >
             <Grid.Column style={{ maxWidth: 450 }}>
-              <Header as='h2' color='teal' textAlign='center'>
+              <Header as='h2' textAlign='center'>
                 Registrar Usuario en EP2P
               </Header>
               <Form size='large'>
@@ -83,7 +83,7 @@ class Signup extends Component {
                 </Segment>
               </Form>
               <Message>
-                Ya tienes cuenta? <Link to={'/acceder'}>Iniciar Sesion</Link>
+                Ya tienes cuenta? <Link to={'/acceder'}>Iniciar Sesión</Link>
               </Message>
             </Grid.Column>
           </Grid>

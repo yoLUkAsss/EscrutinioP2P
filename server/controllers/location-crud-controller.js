@@ -1,4 +1,5 @@
-import { fromObject, distritoCRUD, distrito, escuela, mesa, web3 } from '../utils/web3-utils.js'
+import { fromObject, distritoCRUD, distrito, escuela, mesa } from '../utils/web3-utils.js'
+import {fromSolidity2String, bytes32ListToStringList} from '../utils/utils.js'
 
 export class LocationController {
 
@@ -35,7 +36,6 @@ export class LocationController {
       let escuelaAddress = await distritoCRUDInstance.getEscuela.call(req.params.distritoId, req.params.escuelaId, fromObject)
       let escuelaInstance = await escuela.at(escuelaAddress)
       let result = await escuelaInstance.getMesas.call(fromObject)
-      console.log(JSON.stringify( result, undefined, 2 ))
       res.status(201).json(result.map(x => {return x.toNumber()}).sort())
     })
     .catch( error => {
@@ -78,9 +78,9 @@ export class LocationController {
           let participant = {}
           let candidates = []
           for(let index = 0; index < r[1].length; index++){
-            candidates.push({"name" : web3.toAscii(r[1][index]), "counts" : r[2][index].toNumber()})
+            candidates.push({"name" : fromSolidity2String(r[1][index]), "counts" : r[2][index].toNumber()})
           }
-          participant.name = web3.toAscii(r[0])
+          participant.name = fromSolidity2String(r[0])
           participant.candidates = candidates
           participant.checked = r[3]
           response.push(participant)
@@ -106,7 +106,7 @@ export class LocationController {
       let result = await mesaInstance.getCounting(req.query.email, fromObject)
       let parsedResult = []
       for (var index = 0; index < result[1].length; index++) {
-        parsedResult.push({"name" : web3.toAscii(result[1][index]), "counts" : result[2][index].toNumber()})
+        parsedResult.push({"name" : fromSolidity2String(result[1][index]), "counts" : result[2][index].toNumber()})
       }
       res.status(201).json(parsedResult)
     })
@@ -126,7 +126,7 @@ export class LocationController {
       let mesaInstance = await mesa.at(mesaAddress)
       let result = await mesaInstance.checkVerify.call(req.body.email, parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
       if (result[0]) {
-        res.status(400).json( web3.toAscii(result[1]) )
+        res.status(400).json( fromSolidity2String(result[1]) )
       } else {
         await mesaInstance.check.sendTransaction(req.body.email, parseInt(req.params.distritoId), parseInt(req.params.escuelaId), parseInt(req.params.mesaId), fromObject)
         res.status(200).json("Verificacion del usuario: " + req.body.email+ " para la mesa: "+parseInt(req.params.mesaId)+", escuela: "+parseInt(req.params.escuelaId)+", mesa: "+parseInt(req.params.distritoId)+" realizada correctamente")
@@ -146,7 +146,7 @@ export class LocationController {
       let mesaInstance = await mesa.at(mesaAddress)
       let result = await mesaInstance.checkFiscalVerify.call(req.body.email, fromObject)
       if (result[0]) {
-        res.status(400).json( web3.toAscii(result[1]) )
+        res.status(400).json( fromSolidity2String(result[1]) )
       } else {
         await mesaInstance.checkFiscal.sendTransaction(req.body.email, fromObject)
         res.status(200).json("Verificacion del usuario: " + req.body.email+ " para la mesa: "+parseInt(req.params.mesaId)+", escuela: "+parseInt(req.params.escuelaId)+", mesa: "+parseInt(req.params.distritoId)+" realizada correctamente")
@@ -172,7 +172,7 @@ export class LocationController {
       })
       let canLoad = await mesaInstance.loadMesaVerify.call(req.body.email, parsedCandidates, parsedCountings, fromObject)
       if (canLoad[0]) {
-        res.status(400).json( web3.toAscii(canLoad[1]) )
+        res.status(400).json( fromSolidity2String(canLoad[1]) )
       } else {
         await mesaInstance.loadMesa.sendTransaction(req.body.email, parsedCandidates, parsedCountings, fromObject)
         res.status(200).json( "Mesa: " + req.params.mesaId + " - Escuela: " + req.params.escuelaId + " - Distrito: " + req.params.distritoId + " cargada correctamente")
