@@ -36,8 +36,6 @@ contract('UserCRUD' ,function(accounts) {
     let zero = "0x0000000000000000000000000000000000000000"
     assert.ok(userAddress != zero, "address is not zero")
     await userCRUDInstance.deleteUser(getId(tx), fromObject)
-    // assert.equal("jesus@gmail.com", web3.toUtf8(user[1]), "mails are equals")
-    // assert.equal("jesus", web3.toUtf8(user[2]), "passwords are equals")
   })
 
   it("delete an user by id decrease the quantity of users", async () => {
