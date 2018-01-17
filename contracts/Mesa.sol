@@ -5,8 +5,6 @@ import "./Counts.sol";
 contract Mesa {
 
     enum ParticipantCategory {Fiscal, PresidenteMesa, VicepresidenteMesa}
-    // Total por candidato
-    /*mapping (bytes32 => uint8) total;*/
     ////////////////////////////////////////
     bool public checked;
     uint public cantidadDePersonas;
@@ -17,7 +15,6 @@ contract Mesa {
     bytes32 public vicepresidenteDeMesaAsignado;
     bool private existPresidenteMesa;
     bool private existVicepresidenteMesa;
-    /*mapping(bytes32 => bool) participanteValidoConteo;*/
     mapping (bytes32 => ParticipantData) participantMap;
     mapping (bytes32 => CandidateData) candidateMap;
     //Datos cargados y validados al sistema
@@ -52,7 +49,6 @@ contract Mesa {
       if(participantMap[p].isValidParticipant) revert();
       participantMap[p] = pd;
       participantList.push(p);
-      /*participanteValidoConteo[p] = false;*/
     }
     function getCandidatesList() public constant returns (bytes32[]){
         return candidateList;
@@ -150,7 +146,6 @@ contract Mesa {
       Counts countsCopy = Counts(countsAddress);
       uint8[] memory result = new uint8[](candidateList.length);
       for (uint8 index = 0 ; index < candidateList.length ; index++) {
-        /*total[candidateList[index]] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];*/
         result[index] = participantMap[presidenteDeMesaAsignado].votes[candidateList[index]];
       }
       participantMap[presi].checked = true;
