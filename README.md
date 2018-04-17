@@ -42,6 +42,19 @@ testrpc --l 500000000
 npm install
 ```
 
+**Instalar Geth**
+
+```
+https://github.com/ethereum/go-ethereum/wiki/Installing-Geth
+```
+
+**Instalar Truffle**
+
+```
+npm install -g truffle
+```
+
+
 **Compilar**
 ```
 truffle compile
